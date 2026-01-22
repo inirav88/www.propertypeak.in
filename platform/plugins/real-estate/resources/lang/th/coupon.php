@@ -1,0 +1,38 @@
+<?php
+
+return [
+    'name' => 'คูปอง',
+    'create' => 'คูปองใหม่',
+    'edit' => 'แก้ไขคูปอง ":name"',
+    'intro' => [
+        'button_text' => 'สร้างคูปอง',
+        'title' => 'จัดการรหัสคูปอง',
+        'description' => 'สร้างและจัดการรหัสคูปองสำหรับลูกค้าของคุณ',
+    ],
+    'types' => [
+        'percentage' => 'เปอร์เซ็นต์',
+        'fixed' => 'จำนวนคงที่',
+    ],
+    'type' => 'ประเภท',
+    'created_message' => 'สร้างคูปองสำเร็จแล้ว',
+    'expires_date' => 'วันที่หมดอายุ',
+    'expires_time' => 'เวลาหมดอายุ',
+    'never_expired' => 'ไม่หมดอายุ?',
+    'save_button' => 'บันทึก',
+    'coupon_code' => 'รหัสคูปอง',
+    'coupon_code_placeholder' => 'ใส่รหัสคูปอง',
+    'generate_code_button' => 'สร้างรหัส',
+    'value' => 'ค่า',
+    'value_placeholder' => 'ใส่ค่าคูปอง',
+    'value_off' => 'ส่วนลด :value',
+    'total_used' => 'ใช้งานแล้ว',
+    'expired' => 'หมดอายุ',
+    'active' => 'ใช้งานได้',
+    'unlimited' => 'คูปองไม่จำกัด?',
+    'quantity' => 'จำนวน',
+    'quantity_placeholder' => 'ใส่จำนวนคูปอง',
+    'discount_amount' => 'จำนวนส่วนลด',
+    'total' => 'รวม',
+    'toggle_coupon_form_text' => 'คุณมีรหัสคูปองหรือไม่?',
+    'apply_coupon_code' => 'ใช้งาน',
+];

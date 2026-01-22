@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'name' => 'चालान',
+    'amount' => 'राशि',
+    'code' => 'कोड',
+    'show' => 'चालान :code',
+    'print' => 'चालान प्रिंट करें',
+    'download' => 'चालान डाउनलोड करें',
+    'heading' => 'चालान',
+    'purchase_at' => 'खरीदारी की तारीख',
+    'sub_total' => 'उप योग',
+    'tax_amount' => 'कर राशि',
+    'discount_amount' => 'छूट राशि',
+    'total_amount' => 'कुल राशि',
+    'status' => 'स्थिति',
+    'account' => 'खाता',
+    'payment_info' => 'भुगतान जानकारी',
+    'payment_method' => 'भुगतान विधि',
+    'payment_status' => 'भुगतान स्थिति',
+    'item' => [
+        'name' => 'नाम',
+        'qty' => 'मात्रा',
+        'description' => 'विवरण',
+    ],
+    'statuses' => [
+        'pending' => 'लंबित',
+        'processing' => 'प्रसंस्करण',
+        'completed' => 'पूर्ण',
+        'canceled' => 'रद्द',
+    ],
+    'template' => [
+        'name' => 'चालान टेम्प्लेट',
+        'setting' => 'चालान सेटिंग्स',
+        'setting_description' => 'चालान टेम्प्लेट के लिए सेटिंग्स',
+        'setting_content' => 'सामग्री',
+        'preview' => 'पूर्वावलोकन',
+        'preview_heading' => 'चालान टेम्प्लेट पूर्वावलोकन',
+    ],
+];

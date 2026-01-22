@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'name' => 'Invoice',
+    'amount' => 'Jumlah',
+    'code' => 'Kode',
+    'show' => 'Invoice :code',
+    'print' => 'Cetak Invoice',
+    'download' => 'Unduh Invoice',
+    'heading' => 'Invoice',
+    'purchase_at' => 'Dibeli pada',
+    'sub_total' => 'Subtotal',
+    'tax_amount' => 'Jumlah pajak',
+    'discount_amount' => 'Jumlah diskon',
+    'total_amount' => 'Jumlah total',
+    'status' => 'Status',
+    'account' => 'Akun',
+    'payment_info' => 'Informasi Pembayaran',
+    'payment_method' => 'Metode pembayaran',
+    'payment_status' => 'Status pembayaran',
+    'item' => [
+        'name' => 'Nama',
+        'qty' => 'Jumlah',
+        'description' => 'Deskripsi',
+    ],
+    'statuses' => [
+        'pending' => 'Menunggu',
+        'processing' => 'Memproses',
+        'completed' => 'Selesai',
+        'canceled' => 'Dibatalkan',
+    ],
+    'template' => [
+        'name' => 'Template Invoice',
+        'setting' => 'Pengaturan Invoice',
+        'setting_description' => 'Pengaturan untuk template invoice',
+        'setting_content' => 'Konten',
+        'preview' => 'Pratinjau',
+        'preview_heading' => 'Pratinjau template invoice',
+    ],
+];

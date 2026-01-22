@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'name' => '請求書',
+    'amount' => '金額',
+    'code' => 'コード',
+    'show' => '請求書 :code',
+    'print' => '請求書印刷',
+    'download' => '請求書ダウンロード',
+    'heading' => '請求書',
+    'purchase_at' => '購入日',
+    'sub_total' => '小計',
+    'tax_amount' => '税額',
+    'discount_amount' => '割引額',
+    'total_amount' => '合計金額',
+    'status' => 'ステータス',
+    'account' => 'アカウント',
+    'payment_info' => '支払い情報',
+    'payment_method' => '支払い方法',
+    'payment_status' => '支払いステータス',
+    'item' => [
+        'name' => '名前',
+        'qty' => '数量',
+        'description' => '説明',
+    ],
+    'statuses' => [
+        'pending' => '保留中',
+        'processing' => '処理中',
+        'completed' => '完了',
+        'canceled' => 'キャンセル',
+    ],
+    'template' => [
+        'name' => '請求書テンプレート',
+        'setting' => '請求書設定',
+        'setting_description' => '請求書テンプレートの設定',
+        'setting_content' => 'コンテンツ',
+        'preview' => 'プレビュー',
+        'preview_heading' => '請求書テンプレートをプレビュー',
+    ],
+];

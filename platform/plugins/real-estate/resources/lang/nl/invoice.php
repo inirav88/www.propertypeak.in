@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'name' => 'Facturen',
+    'amount' => 'Bedrag',
+    'code' => 'Code',
+    'show' => 'Factuur :code',
+    'print' => 'Factuur afdrukken',
+    'download' => 'Factuur downloaden',
+    'heading' => 'Factuur',
+    'purchase_at' => 'Gekocht op',
+    'sub_total' => 'Subtotaal',
+    'tax_amount' => 'BTW-bedrag',
+    'discount_amount' => 'Kortingsbedrag',
+    'total_amount' => 'Totaalbedrag',
+    'status' => 'Status',
+    'account' => 'Account',
+    'payment_info' => 'Betalingsinformatie',
+    'payment_method' => 'Betaalmethode',
+    'payment_status' => 'Betalingsstatus',
+    'item' => [
+        'name' => 'Naam',
+        'qty' => 'Hoeveelheid',
+        'description' => 'Beschrijving',
+    ],
+    'statuses' => [
+        'pending' => 'In afwachting',
+        'processing' => 'Verwerken',
+        'completed' => 'Voltooid',
+        'canceled' => 'Geannuleerd',
+    ],
+    'template' => [
+        'name' => 'Factuursjabloon',
+        'setting' => 'Factuurinstellingen',
+        'setting_description' => 'Instellingen voor factuursjabloon',
+        'setting_content' => 'Inhoud',
+        'preview' => 'Voorbeeld',
+        'preview_heading' => 'Voorbeeld factuursjabloon',
+    ],
+];

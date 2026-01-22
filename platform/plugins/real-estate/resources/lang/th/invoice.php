@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'name' => 'ใบแจ้งหนี้',
+    'amount' => 'จำนวนเงิน',
+    'code' => 'รหัส',
+    'show' => 'ใบแจ้งหนี้ :code',
+    'print' => 'พิมพ์ใบแจ้งหนี้',
+    'download' => 'ดาวน์โหลดใบแจ้งหนี้',
+    'heading' => 'ใบแจ้งหนี้',
+    'purchase_at' => 'ซื้อเมื่อ',
+    'sub_total' => 'ยอดรวมย่อย',
+    'tax_amount' => 'จำนวนภาษี',
+    'discount_amount' => 'จำนวนส่วนลด',
+    'total_amount' => 'จำนวนเงินรวม',
+    'status' => 'สถานะ',
+    'account' => 'บัญชี',
+    'payment_info' => 'ข้อมูลการชำระเงิน',
+    'payment_method' => 'วิธีการชำระเงิน',
+    'payment_status' => 'สถานะการชำระเงิน',
+    'item' => [
+        'name' => 'ชื่อ',
+        'qty' => 'จำนวน',
+        'description' => 'คำอธิบาย',
+    ],
+    'statuses' => [
+        'pending' => 'รอดำเนินการ',
+        'processing' => 'กำลังดำเนินการ',
+        'completed' => 'เสร็จสิ้น',
+        'canceled' => 'ยกเลิก',
+    ],
+    'template' => [
+        'name' => 'แม่แบบใบแจ้งหนี้',
+        'setting' => 'การตั้งค่าใบแจ้งหนี้',
+        'setting_description' => 'การตั้งค่าสำหรับแม่แบบใบแจ้งหนี้',
+        'setting_content' => 'เนื้อหา',
+        'preview' => 'พรีวิว',
+        'preview_heading' => 'พรีวิวแม่แบบใบแจ้งหนี้',
+    ],
+];
