@@ -4,4 +4,5 @@
             style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 286.138;">
         </path>
     </svg>
+    </svg>
 </div>

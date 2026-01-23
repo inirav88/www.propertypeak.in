@@ -127,3 +127,5 @@
 </section>
 
 @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.related-properties'), ['model' => $model])
+
+@include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.mobile-sticky-footer'), ['model' => $model])
