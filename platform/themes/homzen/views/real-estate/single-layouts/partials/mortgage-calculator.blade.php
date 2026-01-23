@@ -10,8 +10,7 @@
 @endphp
 
 <div class="widget-box bg-surface header-property-detail mc-widget-final">
-    <h4 class="title" style="margin-bottom: 20px;">{{ __('Financial Calculator') }} <span
-            style="font-size:10px; color:red;">(v5.0)</span></h4>
+    <h4 class="title" style="margin-bottom: 20px;">{{ __('Financial Calculator') }}</h4>
     <div class="form-comment">
         <h6 style="margin-bottom: 10px; font-size: 14px; color: var(--primary-color);">{{ __('Mortgage') }}</h6>
         <div class="cols">
@@ -78,14 +77,12 @@
         </div>
 
         <div class="button-submit" style="margin-top: 15px;">
-            <button class="tf-btn primary" type="button"
-                onclick="alert('CLICKED'); window.superCalc(this);">{{ __('Calculate') }}</button>
+            <button class="tf-btn primary" type="button" onclick="window.superCalc(this)">{{ __('Calculate') }}</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Define Global Function Explicitly
     window.superCalc = function (btn) {
         var container = btn.closest('.mc-widget-final');
         if (!container) return;
@@ -126,7 +123,7 @@
         }
     };
 
-    // Auto-Run safely
+    // Auto-Run
     setTimeout(function () {
         var btns = document.querySelectorAll('.mc-widget-final button');
         for (var i = 0; i < btns.length; i++) {
