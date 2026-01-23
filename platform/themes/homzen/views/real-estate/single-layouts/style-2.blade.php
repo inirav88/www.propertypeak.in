@@ -10,46 +10,46 @@
     <div class="container">
         <ul class="cate-single-tab">
             <li class="active">
-                <a  class="cate-single-item" href="#description">
+                <a class="cate-single-item" href="#description">
                     {{ __('Description') }}
                 </a>
             </li>
             <li>
-                <a  class="cate-single-item" href="#video">
+                <a class="cate-single-item" href="#video">
                     {{ __('Video') }}
                 </a>
             </li>
             <li>
-                <a  class="cate-single-item" href="#amentities">
+                <a class="cate-single-item" href="#amentities">
                     {{ __('Amenities') }}
                 </a>
             </li>
             <li>
-                <a  class="cate-single-item" href="#nearby">
+                <a class="cate-single-item" href="#nearby">
                     {{ __('Nearby') }}
                 </a>
             </li>
             @if (!$isProject && RealEstateHelper::isEnabledProjects() && $model->project_id && ($project = $model->project))
                 <li>
-                    <a  class="cate-single-item" href="#project">
+                    <a class="cate-single-item" href="#project">
                         {{ __('Project') }}
                     </a>
                 </li>
             @endif
             <li>
-                <a  class="cate-single-item" href="#location">
+                <a class="cate-single-item" href="#location">
                     {{ __('Location') }}
                 </a>
             </li>
             @if (($model->formatted_floor_plans ?? collect())->isNotEmpty())
                 <li>
-                    <a  class="cate-single-item" href="#floor-plans">
+                    <a class="cate-single-item" href="#floor-plans">
                         {{ __('Floor Plans') }}
                     </a>
                 </li>
             @endif
             <li>
-                <a  class="cate-single-item" href="#reviews">
+                <a class="cate-single-item" href="#reviews">
                     {{ __('Reviews') }}
                 </a>
             </li>
@@ -100,10 +100,10 @@
                 </div>
 
                 {!! apply_filters(
-                    BASE_FILTER_PUBLIC_COMMENT_AREA,
-                    null,
-                    $model
-                ) !!}
+    BASE_FILTER_PUBLIC_COMMENT_AREA,
+    null,
+    $model
+) !!}
 
                 <div class="wrapper-onepage" id="reviews">
                     @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.reviews'), ['model' => $model, 'class' => 'widget-box-single'])
@@ -114,6 +114,8 @@
                     {!! apply_filters('ads_render', null, 'detail_page_sidebar_before') !!}
 
                     @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.contact'), ['class' => 'bg-white', 'model' => $model])
+
+                    @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.mortgage-calculator'), ['model' => $model])
 
                     {!! apply_filters('ads_render', null, 'detail_page_sidebar_after') !!}
                 </div>

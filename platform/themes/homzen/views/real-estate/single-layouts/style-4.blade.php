@@ -32,13 +32,15 @@
 
         <div class="single-property-element single-property-contact">
             @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.contact'), ['class' => 'bg-surface', 'model' => $model])
+
+            @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.mortgage-calculator'), ['model' => $model])
         </div>
 
         {!! apply_filters(
-            BASE_FILTER_PUBLIC_COMMENT_AREA,
-            null,
-            $model
-        ) !!}
+    BASE_FILTER_PUBLIC_COMMENT_AREA,
+    null,
+    $model
+) !!}
 
         @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.reviews'), ['model' => $model, 'class' => 'single-property-element'])
 
@@ -47,3 +49,5 @@
 </section>
 
 @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.related-properties'), ['model' => $model])
+
+@include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.mobile-sticky-footer'), ['model' => $model])
