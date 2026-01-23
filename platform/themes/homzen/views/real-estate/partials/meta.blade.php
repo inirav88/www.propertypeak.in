@@ -39,14 +39,19 @@
     @if (RealEstateHelper::isEnabledWishlist())
         <ul class="icon-box">
             <li>
-                <button type="button" class="item" data-type="{{ $model instanceof \Botble\RealEstate\Models\Property ? 'property' : 'project' }}"
-                        data-bb-toggle="add-to-wishlist"
-                        data-id="{{ $model->getKey() }}"
-                        data-add-message="{{ __('Added ":name" to wishlist successfully!', ['name' => $model->name]) }}"
-                        data-remove-message="{{ __('Removed ":name" from wishlist successfully!', ['name' => $model->name]) }}"
-                >
+                <button type="button" class="item"
+                    data-type="{{ $model instanceof \Botble\RealEstate\Models\Property ? 'property' : 'project' }}"
+                    data-bb-toggle="add-to-wishlist" data-id="{{ $model->getKey() }}"
+                    data-add-message="{{ __('Added ":name" to wishlist successfully!', ['name' => $model->name]) }}"
+                    data-remove-message="{{ __('Removed ":name" from wishlist successfully!', ['name' => $model->name]) }}">
                     <x-core::icon name="ti ti-heart" />
                 </button>
+            </li>
+            <li>
+                <a href="https://wa.me/?text={{ urlencode(__('Check out this property: :name :url', ['name' => $model->name, 'url' => $model->url])) }}"
+                    class="item" target="_blank" title="{{ __('Share via WhatsApp') }}">
+                    <x-core::icon name="ti ti-brand-whatsapp" />
+                </a>
             </li>
         </ul>
     @endif

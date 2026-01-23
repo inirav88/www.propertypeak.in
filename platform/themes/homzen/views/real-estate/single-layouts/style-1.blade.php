@@ -33,10 +33,10 @@
                 </div>
 
                 {!! apply_filters(
-                    BASE_FILTER_PUBLIC_COMMENT_AREA,
-                    null,
-                    $model
-                ) !!}
+    BASE_FILTER_PUBLIC_COMMENT_AREA,
+    null,
+    $model
+) !!}
 
                 @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.reviews'), ['model' => $model, 'class' => 'single-property-element'])
             </div>
@@ -45,6 +45,8 @@
                     {!! apply_filters('ads_render', null, 'detail_page_sidebar_before') !!}
 
                     @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.contact'), ['class' => 'bg-surface', 'model' => $model])
+
+                    @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.mortgage-calculator'), ['model' => $model])
 
                     {!! apply_filters('ads_render', null, 'detail_page_sidebar_after') !!}
                 </div>
@@ -56,3 +58,5 @@
 </section>
 
 @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.related-properties'), ['model' => $model])
+
+@include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.mobile-sticky-footer'), ['model' => $model])
