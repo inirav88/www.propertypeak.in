@@ -40,9 +40,9 @@ class ContactRequest extends Request
     {
         $rules = [
             'name' => ['required', 'string', 'max:40'],
-            'email' => ['nullable', new EmailRule(), 'max:80'],
+            'email' => ['nullable', 'email', 'max:80'],
             'content' => ['required', 'string', 'max:10000'],
-            'phone' => ['nullable', new PhoneNumberRule()],
+            'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
             'subject' => ['nullable', 'string', 'max:500'],
         ];
@@ -136,7 +136,7 @@ class ContactRequest extends Request
         $displayFields = [...$this->displayFields, ...$this->alwaysMandatoryFields()];
 
         foreach ($rules as $key => $rule) {
-            if (! in_array($key, $displayFields)) {
+            if (!in_array($key, $displayFields)) {
                 unset($rules[$key]);
             }
         }
@@ -165,8 +165,10 @@ class ContactRequest extends Request
         }
 
         foreach ($mandatoryFields as $mandatoryField) {
-            if (! in_array($mandatoryField, array_keys($rules))
-                && in_array($mandatoryField, $this->displayFields)) {
+            if (
+                !in_array($mandatoryField, array_keys($rules))
+                && in_array($mandatoryField, $this->displayFields)
+            ) {
                 $rules[$mandatoryField] = 'required';
             }
         }
