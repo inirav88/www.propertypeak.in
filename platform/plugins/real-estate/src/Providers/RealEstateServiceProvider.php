@@ -453,6 +453,15 @@ class RealEstateServiceProvider extends ServiceProvider
                         'icon' => 'ti ti-buildings',
                     ]);
                 })
+                ->when(auth('account')->user()->type != 'builder', function (DashboardMenuSupport $dashboardMenu): void {
+                    $dashboardMenu->registerItem([
+                        'id' => 'cms-account-properties',
+                        'priority' => 2,
+                        'name' => 'plugins/real-estate::property.name',
+                        'url' => fn() => route('public.account.properties.index'),
+                        'icon' => 'ti ti-home',
+                    ]);
+                })
                 ->when(RealEstateHelper::isEnabledCreditsSystem(), function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu
                         ->registerItem([
