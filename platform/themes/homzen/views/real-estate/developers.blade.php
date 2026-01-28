@@ -1,0 +1,1 @@
+@extends(Theme::getThemeNamespace('views.real-estate.agents'))

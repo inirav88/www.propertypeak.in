@@ -82,10 +82,12 @@ class LoginController extends BaseController
         if ($this->guard()->validate($this->credentials($request))) {
             $account = $this->guard()->getLastAttempted();
 
-            if (setting(
-                'verify_account_email',
-                false
-            ) && empty($account->confirmed_at)) {
+            if (
+                setting(
+                    'verify_account_email',
+                    false
+                ) && empty($account->confirmed_at)
+            ) {
                 throw ValidationException::withMessages([
                     'confirmation' => [
                         __('The given email address has not been confirmed. <a href=":resend_link">Resend confirmation link.</a>', [
@@ -134,7 +136,7 @@ class LoginController extends BaseController
             }
         }
 
-        if (! $activeGuards) {
+        if (!$activeGuards) {
             $request->session()->flush();
             $request->session()->regenerate();
         }

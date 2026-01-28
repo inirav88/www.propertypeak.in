@@ -80,7 +80,7 @@ class RegisterController extends BaseController
          */
         $account = Account::query()->where('email', $request->input('email'))->first();
 
-        if (! $account) {
+        if (!$account) {
             return $this
                 ->httpResponse()
                 ->setError()
@@ -103,11 +103,13 @@ class RegisterController extends BaseController
     {
         abort_unless(RealEstateHelper::isRegisterEnabled(), 404);
 
-        if (! $request->has('username')) {
-            $request->merge(['username' => Account::generateUsername(
-                $request->input('first_name'),
-                $request->input('last_name')
-            )]);
+        if (!$request->has('username')) {
+            $request->merge([
+                'username' => Account::generateUsername(
+                    $request->input('first_name'),
+                    $request->input('last_name')
+                )
+            ]);
         }
 
         /**
@@ -159,6 +161,7 @@ class RegisterController extends BaseController
             'username' => $data['username'] ?? null,
             'email' => $data['email'] ?? null,
             'phone' => $data['phone'] ?? null,
+            'type' => $data['type'] ?? 'agent',
             'password' => Hash::make($data['password']),
         ]);
     }

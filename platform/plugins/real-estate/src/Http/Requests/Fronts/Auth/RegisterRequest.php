@@ -16,12 +16,13 @@ class RegisterRequest extends Request
             'first_name' => ['required', 'string', 'max:120', 'min:2'],
             'last_name' => ['required', 'string', 'max:120', 'min:2'],
             'username' => [
-                Rule::requiredIf(fn () => ! setting('real_estate_hide_username_in_registration_page', false)),
+                Rule::requiredIf(fn() => !setting('real_estate_hide_username_in_registration_page', false)),
                 'string',
                 'max:120',
                 'min:2',
                 Rule::unique((new Account())->getTable(), 'username'),
             ],
+            'type' => ['required', 'string', Rule::in(['agent', 'builder', 'member'])],
             'email' => ['required', 'max:60', 'min:6', new EmailRule(), 'unique:re_accounts'],
             'phone' => [
                 'nullable',

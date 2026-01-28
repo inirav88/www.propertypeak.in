@@ -85,7 +85,7 @@ class PublicController extends BaseController
                         $field = $customFields->firstWhere('id', $id);
                         $option = $field->options->firstWhere('value', $item);
 
-                        if (! $field) {
+                        if (!$field) {
                             return [];
                         }
 
@@ -151,7 +151,7 @@ class PublicController extends BaseController
 
             $view = Theme::getThemeNamespace('partials.real-estate.projects.items');
 
-            if (! view()->exists($view)) {
+            if (!view()->exists($view)) {
                 $view = Theme::getThemeNamespace('views.real-estate.projects.index');
             }
 
@@ -180,7 +180,7 @@ class PublicController extends BaseController
 
             $view = Theme::getThemeNamespace('partials.real-estate.properties.items');
 
-            if (! view()->exists($view)) {
+            if (!view()->exists($view)) {
                 $view = Theme::getThemeNamespace('views.real-estate.properties.index');
             }
 
@@ -198,7 +198,7 @@ class PublicController extends BaseController
             $title = $request->input('currency');
         }
 
-        if (! $title) {
+        if (!$title) {
             return $this->httpResponse();
         }
 
@@ -393,5 +393,49 @@ class PublicController extends BaseController
         Theme::breadcrumb()->add(__('Agents'), route('public.agents'));
 
         return Theme::scope('real-estate.agents', compact('accounts'), 'plugins/real-estate::themes.agents')->render();
+    }
+
+    public function getDevelopers()
+    {
+        Theme::addBodyAttributes(['id' => 'page-developers']);
+
+        $accounts = Account::query()
+            ->where('type', 'builder')
+            ->where('is_public_profile', true)
+            ->latest('is_featured')
+            ->oldest('first_name')
+            ->withCount([
+                'projects' => function ($query) {
+                    return RepositoryHelper::applyBeforeExecuteQuery($query, $query->getModel());
+                },
+            ])
+            ->with(['avatar'])
+            ->paginate(12);
+
+        SeoHelper::setTitle(__('Developers'));
+
+        Theme::breadcrumb()->add(__('Developers'), route('public.developers'));
+
+        return Theme::scope('real-estate.developers', compact('accounts'), 'plugins/real-estate::themes.developers')->render();
+    }
+
+    public function getAgent(string $slug, \Botble\Slug\Repositories\Interfaces\SlugInterface $slugRepository)
+    {
+        $slug = $slugRepository->getFirstBy(['key' => $slug, 'reference_type' => Account::class]);
+
+        if (!$slug) {
+            abort(404);
+        }
+
+        $account = $slug->reference;
+
+        if (!$account || !$account->is_public_profile) {
+            abort(404);
+        }
+
+        SeoHelper::setTitle($account->name);
+        Theme::breadcrumb()->add($account->name, route('public.agent', $account->username));
+
+        return Theme::scope('real-estate.agent', compact('account'), 'plugins/real-estate::themes.agent')->render();
     }
 }

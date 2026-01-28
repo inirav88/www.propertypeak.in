@@ -62,6 +62,7 @@ class Account extends BaseModel implements
         'city_id',
         'is_featured',
         'is_public_profile',
+        'type',
         'blocked_at',
         'blocked_reason',
         'is_verified',
@@ -155,7 +156,7 @@ class Account extends BaseModel implements
     {
         return Attribute::make(
             get: function () {
-                if (! $this->is_verified) {
+                if (!$this->is_verified) {
                     return '';
                 }
 
@@ -167,23 +168,23 @@ class Account extends BaseModel implements
     protected function firstName(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ucfirst($value),
-            set: fn ($value) => ucfirst($value),
+            get: fn($value) => ucfirst($value),
+            set: fn($value) => ucfirst($value),
         );
     }
 
     protected function lastName(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ucfirst($value),
-            set: fn ($value) => ucfirst($value),
+            get: fn($value) => ucfirst($value),
+            set: fn($value) => ucfirst($value),
         );
     }
 
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn () => trim($this->first_name . ' ' . $this->last_name),
+            get: fn() => trim($this->first_name . ' ' . $this->last_name),
         );
     }
 
@@ -212,7 +213,7 @@ class Account extends BaseModel implements
     protected function fullName(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->name
+            get: fn() => $this->name
         );
     }
 
@@ -220,7 +221,7 @@ class Account extends BaseModel implements
     {
         return Attribute::make(
             get: function ($value) {
-                if (! RealEstateHelper::isEnabledCreditsSystem()) {
+                if (!RealEstateHelper::isEnabledCreditsSystem()) {
                     return 0;
                 }
 
@@ -232,7 +233,7 @@ class Account extends BaseModel implements
     protected function isBlocked(): Attribute
     {
         return Attribute::make(
-            get: fn () => ! is_null($this->blocked_at)
+            get: fn() => !is_null($this->blocked_at)
         );
     }
 
@@ -248,7 +249,7 @@ class Account extends BaseModel implements
 
     public function canPost(): bool
     {
-        return ! RealEstateHelper::isEnabledCreditsSystem() || $this->credits > 0;
+        return !RealEstateHelper::isEnabledCreditsSystem() || $this->credits > 0;
     }
 
     public function transactions(): HasMany
@@ -279,11 +280,11 @@ class Account extends BaseModel implements
 
     public function canReview(Project|Property $model): bool
     {
-        if (! auth('account')->check()) {
+        if (!auth('account')->check()) {
             return false;
         }
 
-        return ! $model
+        return !$model
             ->reviews()
             ->whereNot('status', ReviewStatusEnum::REJECTED)
             ->where('account_id', auth('account')->id())
@@ -293,5 +294,19 @@ class Account extends BaseModel implements
     public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class);
+    }
+
+    public function isBuilder(): bool
+    {
+        return $this->type === 'builder';
+    }
+
+    public function getUrlAttribute(): string
+    {
+        if ($this->type === 'builder') {
+            return route('public.developer', $this->slug);
+        }
+
+        return route('public.agent', $this->slug);
     }
 }

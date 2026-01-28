@@ -23,7 +23,7 @@ class AccountForm extends FormAbstract
     public function setup(): void
     {
         Assets::addStylesDirectly('vendor/core/plugins/real-estate/css/account-admin.css')
-            ->addScriptsDirectly(['/vendor/core/plugins/real-estate/js/account-admin.js']);
+            ->addScriptsDirectly(['/vendor/core/plugins/real-estate/js/account-admin.js?v=' . time()]);
 
         $this
             ->model(Account::class)
@@ -53,6 +53,22 @@ class AccountForm extends FormAbstract
                     'data-counter' => 120,
                 ],
             ])
+            ->add('type', 'select', [
+                'label' => trans('plugins/real-estate::account.type'),
+                'choices' => [
+                    'agent' => __('Agent'),
+                    'builder' => __('Developer'),
+                ],
+                'choices' => [
+                    'agent' => __('Agent'),
+                    'builder' => __('Developer'),
+                ],
+                'selected' => request()->input('type') === 'builder' ? 'builder' : ($this->getModel()->type ?: 'agent'),
+                'attr' => [
+                    'class' => 'form-control select-search-full',
+                ],
+            ])
+
             ->add('company', 'text', [
                 'label' => trans('plugins/real-estate::account.company'),
                 'attr' => [
@@ -155,7 +171,7 @@ class AccountForm extends FormAbstract
                     'data-counter' => 500,
                 ],
             ])
-            ->when(! RealEstateHelper::isDisabledPublicProfile(), function (FormAbstract $form): void {
+            ->when(!RealEstateHelper::isDisabledPublicProfile(), function (FormAbstract $form): void {
                 $form
                     ->add('is_public_profile', 'onOff', [
                         'label' => trans('plugins/real-estate::account.form.is_public_profile'),

@@ -38,6 +38,7 @@ return [
     'email_placeholder' => 'Ex: example@gmail.com',
     'dob' => 'Date of birth',
     'number_of_properties' => 'Number of properties',
+    'type' => 'Type',
     'agents' => 'Agents',
     'status' => 'Status',
     'active' => 'Active',

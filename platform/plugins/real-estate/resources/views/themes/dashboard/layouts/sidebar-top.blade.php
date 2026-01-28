@@ -1,24 +1,19 @@
 <div class="ps-block--user-wellcome">
     <div class="ps-block__left">
-        <img
-            src="{{ auth('account')->user()->avatar_url }}"
-            alt="{{ auth('account')->user()->name }}"
-            class="avatar avatar-lg"
-        />
+        <img src="{{ auth('account')->user()->avatar_url }}" alt="{{ auth('account')->user()->name }}"
+            class="avatar avatar-lg" />
     </div>
     <div class="ps-block__right">
         <p>{{ __('Hello') }}, {{ auth('account')->user()->name }}</p>
         <small>{{ __('Joined on :date', ['date' => auth('account')->user()->created_at->translatedFormat('M d, Y')]) }}</small>
     </div>
-    <div class="ps-block__action">
-        <a
-            href="{{ route('public.account.logout') }}"
-            title="{{ trans('plugins/real-estate::dashboard.header_logout_link') }}"
-            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-        >
-            <x-core::icon name="ti ti-logout" />
-        </a>
-    </div>
+    <a href="#" title="{{ trans('plugins/real-estate::dashboard.header_logout_link') }}"
+        onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
+        <x-core::icon name="ti ti-logout" />
+    </a>
+    <form id="sidebar-logout-form" action="{{ route('public.account.logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
 </div>
 
 @if (RealEstateHelper::isEnabledCreditsSystem())

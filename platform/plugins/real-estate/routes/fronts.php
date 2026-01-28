@@ -50,9 +50,16 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                     ->name('public.properties-by-state');
             }
 
-            if (! RealEstateHelper::isDisabledPublicProfile()) {
+            if (!RealEstateHelper::isDisabledPublicProfile()) {
                 Route::get(SlugHelper::getPrefix(Account::class, 'agents') ?: 'agents', 'PublicController@getAgents')
                     ->name('public.agents');
+
+                Route::get('developers', 'PublicController@getDevelopers')
+                    ->name('public.developers');
+
+                // Custom routes for singular view
+                Route::get('developers/{slug}', 'PublicController@getAgent')->name('public.developer');
+                Route::get('agents/{slug}', 'PublicController@getAgent')->name('public.agent');
             }
 
             Route::post('send-consult', 'PublicController@postSendConsult')
@@ -93,6 +100,12 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 ->name('public.ajax.review.index');
         });
 
+        Route::group(['middleware' => ['web', 'core', 'account', LocaleMiddleware::class]], function (): void {
+            Route::prefix('account')->name('public.account.')->group(function (): void {
+                Route::match(['GET', 'POST'], 'logout', [LoginController::class, 'logout'])->name('logout');
+            });
+        });
+
         Route::group(['middleware' => ['web', 'core', 'account', EnsureAccountIsApproved::class, 'account.not_blocked', LocaleMiddleware::class]], function (): void {
             Route::prefix('account')->name('public.account.')->group(function (): void {
                 Route::get('pending-approval', [PublicAccountController::class, 'getPendingApproval'])->name('pending-approval');
@@ -100,7 +113,6 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 Route::get('settings', [PublicAccountController::class, 'getSettings'])->name('settings');
                 Route::post('settings', [PublicAccountController::class, 'postSettings'])->name('post.settings');
                 Route::put('security', [PublicAccountController::class, 'postSecurity'])->name('post.security');
-                Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
                 Route::post('avatar', [PublicAccountController::class, 'postAvatar'])->name('avatar');
                 Route::get('packages', [PublicAccountController::class, 'getPackages'])->name('packages');

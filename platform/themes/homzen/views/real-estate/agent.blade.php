@@ -11,16 +11,18 @@
         <div class="agent-info">
             <h2 class="agent-name">{{ $account->name }} {!! $account->badge !!}</h2>
             @if($account->company)
-                <p class="agent-company">{!! BaseHelper::clean(__('Company Agent at :company', ['company' => "<strong>$account->company</strong>"])) !!}</p>
+                <p class="agent-company">
+                    {!! BaseHelper::clean(__('Company Agent at :company', ['company' => "<strong>$account->company</strong>"])) !!}
+                </p>
             @endif
             <div class="agent-contact-info">
-                @if($account->phone && ! setting('real_estate_hide_agency_phone', false))
+                @if($account->phone && !setting('real_estate_hide_agency_phone', false))
                     <a href="tel:{{ $account->phone }}" class="agent-info-item">
                         <x-core::icon name="ti ti-phone" />
                         {{ $account->phone }}
                     </a>
                 @endif
-                @if($account->email && ! setting('real_estate_hide_agency_email', false))
+                @if($account->email && !setting('real_estate_hide_agency_email', false))
                     <a href="mailto:{{ $account->email }}" class="agent-info-item">
                         <x-core::icon name="ti ti-mail" />
                         {{ $account->email }}
@@ -43,11 +45,29 @@
         </div>
     @endif
 
-    @if ($properties->isNotEmpty())
-        <div class="agent-properties-section">
-            <h5>{{ __('Properties by this agent') }}</h5>
-            @include(Theme::getThemeNamespace('views.real-estate.properties.index'))
-        </div>
+    @if ($account->isBuilder())
+        @php
+            $projects = \Botble\RealEstate\Models\Project::query()
+                ->where('author_id', $account->id)
+                ->where('author_type', \Botble\RealEstate\Models\Account::class)
+                ->wherePublished()
+                ->latest()
+                ->get();
+        @endphp
+
+        @if ($projects->isNotEmpty())
+            <div class="agent-projects-section">
+                <h5>{{ __('Projects by this developer') }}</h5>
+                @include(Theme::getThemeNamespace('views.real-estate.projects.index'), ['projects' => $projects])
+            </div>
+        @endif
+    @else
+        @if ($properties->isNotEmpty())
+            <div class="agent-properties-section">
+                <h5>{{ __('Properties by this agent') }}</h5>
+                @include(Theme::getThemeNamespace('views.real-estate.properties.index'))
+            </div>
+        @endif
     @endif
 
     {!! apply_filters('real_estate_agent_details', null, $account) !!}

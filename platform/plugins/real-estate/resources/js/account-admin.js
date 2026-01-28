@@ -81,4 +81,24 @@ $(document).ready(() => {
             },
         })
     })
+
+    $(document).on('change', 'select[name=type]', (event) => {
+        let type = $(event.currentTarget).val();
+        let $permalink = $('#sample-permalink .permalink');
+        if ($permalink.length) {
+            let currentUrl = $permalink.prop('href');
+            let newUrl = currentUrl;
+            if (type === 'builder') {
+                newUrl = currentUrl.replace('/agents/', '/builders/');
+            } else {
+                newUrl = currentUrl.replace('/builders/', '/agents/');
+            }
+            $permalink.prop('href', newUrl);
+            $permalink.text(newUrl);
+        }
+    });
+
+    if ($('select[name=type]').length > 0) {
+        $('select[name=type]').trigger('change');
+    }
 })

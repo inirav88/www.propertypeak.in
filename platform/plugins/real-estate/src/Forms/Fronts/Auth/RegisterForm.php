@@ -4,12 +4,14 @@ namespace Botble\RealEstate\Forms\Fronts\Auth;
 
 use Botble\Base\Facades\Html;
 use Botble\Base\Forms\FieldOptions\CheckboxFieldOption;
+use Botble\Base\Forms\Fields\RadioField;
 use Botble\Base\Forms\Fields\EmailField;
 use Botble\Base\Forms\Fields\HtmlField;
 use Botble\Base\Forms\Fields\OnOffCheckboxField;
 use Botble\Base\Forms\Fields\PasswordField;
 use Botble\Base\Forms\Fields\PhoneNumberField;
 use Botble\Base\Forms\Fields\TextField;
+use Botble\Base\Forms\FieldOptions\RadioFieldOption;
 use Botble\RealEstate\Forms\Fronts\Auth\FieldOptions\EmailFieldOption;
 use Botble\RealEstate\Forms\Fronts\Auth\FieldOptions\TextFieldOption;
 use Botble\RealEstate\Http\Requests\Fronts\Auth\RegisterRequest;
@@ -29,7 +31,7 @@ class RegisterForm extends AuthForm
             ->description(__('Your personal data will be used to support your experience throughout this website, to manage access to your account.'))
             ->when(
                 theme_option('register_background'),
-                fn (AuthForm $form, string $background) => $form->banner($background)
+                fn(AuthForm $form, string $background) => $form->banner($background)
             )
             ->add(
                 'first_name',
@@ -49,7 +51,20 @@ class RegisterForm extends AuthForm
                     ->icon('ti ti-user')
                     ->required()
             )
-            ->when(! setting('real_estate_hide_username_in_registration_page', false), function (): void {
+            ->add(
+                'type',
+                RadioField::class,
+                RadioFieldOption::make()
+                    ->label(__('Account Type'))
+                    ->choices([
+                        'member' => __('Individual'),
+                        'agent' => __('Agent'),
+                        'builder' => __('Builder'),
+                    ])
+                    ->selected('agent')
+                    ->required()
+            )
+            ->when(!setting('real_estate_hide_username_in_registration_page', false), function (): void {
                 $this
                     ->add(
                         'username',
@@ -113,7 +128,7 @@ class RegisterForm extends AuthForm
                             $fieldOption->label(__('I agree to the :link', ['link' => Html::link($url, __('Terms and Privacy Policy'), attributes: ['class' => 'text-decoration-underline', 'target' => '_blank'])]));
                         }
                     )
-                    ->when(! $privacyPolicyUrl, function (CheckboxFieldOption $fieldOption): void {
+                    ->when(!$privacyPolicyUrl, function (CheckboxFieldOption $fieldOption): void {
                         $fieldOption->label(__('I agree to the Terms and Privacy Policy'));
                     })
             )
