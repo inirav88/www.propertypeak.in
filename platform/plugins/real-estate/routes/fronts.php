@@ -66,6 +66,9 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 Route::get('builders/{slug}/microsite', 'BuilderMicrositeController@show')->name('public.builder.microsite');
             }
 
+            Route::get('packages', 'PublicController@getPackages')
+                ->name('public.packages');
+
             Route::post('send-consult', 'PublicController@postSendConsult')
                 ->name('public.send.consult');
 

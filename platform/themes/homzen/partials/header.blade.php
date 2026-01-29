@@ -1,7 +1,4 @@
-<header
-    id="header"
-    @class(['main-header', 'fixed-header' => theme_option('sticky_header_enabled', true), Theme::get('headerClass')])
->
+<header id="header" @class(['main-header', 'fixed-header' => theme_option('sticky_header_enabled', true), Theme::get('headerClass')])>
     <div class="header-lower">
         <div class="row">
             <div class="col-lg-12">
@@ -17,16 +14,18 @@
                         <nav class="main-menu show navbar-expand-md">
                             <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
                                 {!! Menu::renderMenuLocation('main-menu', [
-                                    'options' => ['class' => 'navigation clearfix'],
-                                    'view' => 'main-menu',
-                                ]) !!}
+    'options' => ['class' => 'navigation clearfix'],
+    'view' => 'main-menu',
+]) !!}
                             </div>
                         </nav>
                     </div>
                     <div class="header-account">
                         @if (is_plugin_active('real-estate') && RealEstateHelper::isLoginEnabled())
-                            <div class="flat-bt-top">
-                                <a class="tf-btn primary" href="{{ route('public.account.properties.index') }}">{{ __('Submit Property') }}</a>
+                            <div class="flat-bt-top d-flex gap-3">
+                                <a class="tf-btn" href="{{ route('public.packages') }}">{{ __('Packages') }}</a>
+                                <a class="tf-btn primary"
+                                    href="{{ route('public.account.properties.index') }}">{{ __('Submit Property') }}</a>
                             </div>
                         @endif
                     </div>
@@ -61,34 +60,25 @@
                         </div>
                     @else
                         <div class="login-box flex align-items-center">
-                            <a
-                                @if (theme_option('use_modal_for_authentication', true))
-                                    href="#modalLogin"
-                                data-bs-toggle="modal"
-                                @else
-                                    href="{{ route('public.account.login') }}"
-                                @endif
-                            >{{ __('Login') }}</a>
+                            <a @if (theme_option('use_modal_for_authentication', true)) href="#modalLogin"
+                            data-bs-toggle="modal" @else href="{{ route('public.account.login') }}"
+                                @endif>{{ __('Login') }}</a>
                             @if (RealEstateHelper::isRegisterEnabled())
                                 <span>/</span>
-                                <a
-                                    @if (theme_option('use_modal_for_authentication', true))
-                                        href="#modalRegister"
-                                    data-bs-toggle="modal"
-                                    @else
-                                        href="{{ route('public.account.register') }}"
-                                    @endif
-                                >{{ __('Register') }}</a>
+                                <a @if (theme_option('use_modal_for_authentication', true)) href="#modalRegister"
+                                data-bs-toggle="modal" @else href="{{ route('public.account.register') }}"
+                                    @endif>{{ __('Register') }}</a>
                             @endif
                         </div>
                     @endauth
                 @endif
 
-                    <div class="menu-outer"></div>
+                <div class="menu-outer"></div>
 
                 @if (is_plugin_active('real-estate') && RealEstateHelper::isLoginEnabled())
                     <div class="button-mobi-sell">
-                        <a class="tf-btn primary" href="{{ route('public.account.properties.index') }}">{{ __('Submit Property') }}</a>
+                        <a class="tf-btn primary"
+                            href="{{ route('public.account.properties.index') }}">{{ __('Submit Property') }}</a>
                     </div>
                 @endif
 

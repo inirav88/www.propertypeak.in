@@ -93,11 +93,38 @@ class Package extends BaseModel
 
     protected function formattedFeatures(): Attribute
     {
-        return Attribute::get(
-            fn() => collect(is_array($this->features) ? $this->features : json_decode($this->features, true))
-                ->map(fn($feature) => collect($feature)->pluck('value', 'key'))
-                ->pluck('text')
-                ->toArray()
-        );
+        return Attribute::get(function () {
+            $features = is_array($this->features) ? $this->features : json_decode($this->features, true);
+
+            return collect($features ?: [])
+                ->map(function ($feature) {
+                    // Scenario 1: Direct string
+                    if (is_string($feature)) {
+                        return $feature;
+                    }
+
+                    // Scenario 2: Array with 'text' key directly
+                    if (isset($feature['text'])) {
+                        return $feature['text'];
+                    }
+
+                    // Scenario 3: Array with 'key' => 'text', 'value' => '...' (Seeder format)
+                    if (isset($feature['key']) && $feature['key'] == 'text' && isset($feature['value'])) {
+                        return $feature['value'];
+                    }
+
+                    // Scenario 4: Nested array (Botble standard)
+                    if (is_array($feature)) {
+                        $attributes = collect($feature)->pluck('value', 'key');
+                        if ($attributes->has('text')) {
+                            return $attributes->get('text');
+                        }
+                    }
+
+                    return null;
+                })
+                ->filter()
+                ->toArray();
+        });
     }
 }

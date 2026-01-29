@@ -16,6 +16,7 @@ use Botble\RealEstate\Models\Account;
 use Botble\RealEstate\Models\Consult;
 use Botble\RealEstate\Models\ConsultCustomField;
 use Botble\RealEstate\Models\Currency;
+use Botble\RealEstate\Models\Package;
 use Botble\RealEstate\Models\Project;
 use Botble\RealEstate\Models\Property;
 use Botble\SeoHelper\Facades\SeoHelper;
@@ -437,5 +438,29 @@ class PublicController extends BaseController
         Theme::breadcrumb()->add($account->name, route('public.agent', $account->username));
 
         return Theme::scope('real-estate.agent', compact('account'), 'plugins/real-estate::themes.agent')->render();
+    }
+
+    public function getPackages()
+    {
+        SeoHelper::setTitle(__('Packages & Pricing'));
+
+        Theme::addBodyAttributes(['id' => 'page-packages']);
+
+        $packages = Package::query()
+            ->where('status', 'published')
+            ->orderBy('order')
+            ->get();
+
+        $builderPackages = $packages->where('package_type', 'builder');
+        $agentPackages = $packages->where('package_type', 'agent');
+        $ownerPackages = $packages->where('package_type', 'owner');
+        $addonPackages = $packages->where('package_type', 'addon');
+
+        return Theme::scope('real-estate.packages', compact(
+            'builderPackages',
+            'agentPackages',
+            'ownerPackages',
+            'addonPackages'
+        ), 'plugins/real-estate::themes.packages')->render();
     }
 }
