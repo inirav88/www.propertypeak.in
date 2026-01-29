@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Botble\RealEstate\Models\Package;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class NewPackagesSeeder extends Seeder
 {
@@ -14,9 +15,12 @@ class NewPackagesSeeder extends Seeder
         DB::table('re_account_packages')->delete();
         DB::table('re_packages')->delete();
 
-        $currency_id = DB::table('currencies')->where('is_default', 1)->value('id')
-            ?? DB::table('re_currencies')->where('is_default', 1)->value('id')
-            ?? 1;
+        $currency_id = 1;
+        if (Schema::hasTable('currencies')) {
+            $currency_id = DB::table('currencies')->where('is_default', 1)->value('id') ?? 1;
+        } elseif (Schema::hasTable('re_currencies')) {
+            $currency_id = DB::table('re_currencies')->where('is_default', 1)->value('id') ?? 1;
+        }
 
         $packages = [
             // ============================================
