@@ -3,6 +3,7 @@
 use Botble\Base\Http\Middleware\RequiresJsonRequestMiddleware;
 use Botble\RealEstate\Facades\RealEstateHelper;
 use Botble\RealEstate\Http\Controllers\CustomFieldController;
+use Botble\RealEstate\Http\Controllers\Fronts\AccountProjectController;
 use Botble\RealEstate\Http\Controllers\Fronts\AccountPropertyController;
 use Botble\RealEstate\Http\Controllers\Fronts\AccountReviewController;
 use Botble\RealEstate\Http\Controllers\Fronts\ConsultController;
@@ -162,6 +163,10 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 Route::prefix('properties')->name('properties.')->group(function (): void {
                     Route::resource('', AccountPropertyController::class)->parameters(['' => 'property']);
                     Route::post('renew/{id}', [AccountPropertyController::class, 'renew'])->name('renew')->wherePrimaryKey();
+                });
+
+                Route::prefix('projects')->name('projects.')->group(function (): void {
+                    Route::resource('', AccountProjectController::class)->parameters(['' => 'project']);
                 });
 
                 Route::prefix('invoices')

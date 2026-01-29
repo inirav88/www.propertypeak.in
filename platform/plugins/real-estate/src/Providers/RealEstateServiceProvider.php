@@ -471,25 +471,17 @@ class RealEstateServiceProvider extends ServiceProvider
                         'id' => 'cms-account-projects',
                         'priority' => 2,
                         'name' => 'plugins/real-estate::project.name',
-                        'url' => fn() => route('public.account.properties.index'), // Builders manage projects
+                        'url' => fn() => route('public.account.projects.index'),
                         'icon' => 'ti ti-buildings',
                     ]);
                 })
-                ->when(function () {
-                    try {
-                        return auth('account')->check() && auth('account')->user() && auth('account')->user()->type != 'builder';
-                    } catch (\Throwable $e) {
-                        return false;
-                    }
-                }, function (DashboardMenuSupport $dashboardMenu): void {
-                    $dashboardMenu->registerItem([
-                        'id' => 'cms-account-properties',
-                        'priority' => 2,
-                        'name' => 'plugins/real-estate::property.name',
-                        'url' => fn() => route('public.account.properties.index'),
-                        'icon' => 'ti ti-home',
-                    ]);
-                })
+                ->registerItem([
+                    'id' => 'cms-account-properties',
+                    'priority' => 2,
+                    'name' => 'plugins/real-estate::property.name',
+                    'url' => fn() => route('public.account.properties.index'),
+                    'icon' => 'ti ti-home',
+                ])
                 ->when(function () {
                     try {
                         return RealEstateHelper::isEnabledCreditsSystem();
