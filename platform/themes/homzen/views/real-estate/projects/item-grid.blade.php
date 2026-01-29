@@ -1,5 +1,6 @@
-<div @class(['homeya-box', $class ?? null]) @if ($project->latitude && $project->longitude) data-lat="{{ $project->latitude }}" data-lng="{{ $project->longitude }}" @endif>
-    <div class="archive-top">
+<div @class(['homeya-box h-100 d-flex flex-column', $class ?? null]) @if ($project->latitude && $project->longitude)
+data-lat="{{ $project->latitude }}" data-lng="{{ $project->longitude }}" @endif>
+    <div class="archive-top flex-grow-1">
         <a href="{{ $project->url }}" class="images-group">
             <div class="images-style">
                 {{ RvMedia::image($project->image, $project->name, 'medium-rectangle') }}
@@ -11,13 +12,10 @@
                     @endif
                 </div>
                 @if (RealEstateHelper::isEnabledWishlist())
-                    <button type="button" class="box-icon w-32"
-                            data-type="project"
-                            data-bb-toggle="add-to-wishlist"
-                            data-id="{{ $project->getKey() }}"
-                            data-add-message="{{ __('Added ":name" to wishlist successfully!', ['name' => $project->name]) }}"
-                            data-remove-message="{{ __('Removed ":name" from wishlist successfully!', ['name' => $project->name]) }}"
-                    >
+                    <button type="button" class="box-icon w-32" data-type="project" data-bb-toggle="add-to-wishlist"
+                        data-id="{{ $project->getKey() }}"
+                        data-add-message="{{ __('Added ":name" to wishlist successfully!', ['name' => $project->name]) }}"
+                        data-remove-message="{{ __('Removed ":name" from wishlist successfully!', ['name' => $project->name]) }}">
                         <x-core::icon name="ti ti-heart" />
                     </button>
                 @endif
@@ -30,7 +28,8 @@
         </a>
         <div class="content">
             <div class="text-capitalize h7 fw-7">
-                <a href="{{ $project->url }}" class="link line-clamp-1" title="{{ $project->name }}">{!! BaseHelper::clean($project->name) !!}</a>
+                <a href="{{ $project->url }}" class="link line-clamp-1"
+                    title="{{ $project->name }}">{!! BaseHelper::clean($project->name) !!}</a>
             </div>
             @if($project->short_address)
                 <div class="desc">
@@ -61,7 +60,7 @@
             </ul>
         </div>
     </div>
-    <div class="archive-bottom d-flex justify-content-between align-items-center">
+    <div class="archive-bottom d-flex justify-content-between align-items-center mt-auto">
         @if (!setting('real_estate_hide_price', false))
             <div class="d-flex align-items-center">
                 <h6>{{ $project->formatted_price }}</h6>

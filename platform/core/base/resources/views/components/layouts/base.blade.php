@@ -1,45 +1,26 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-    >
-    <meta
-        http-equiv="X-UA-Compatible"
-        content="ie=edge"
-    >
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ PageTitle::getTitle() }}</title>
     @if ($csrfToken = csrf_token())
-        <meta
-            name="csrf-token"
-            content="{{ $csrfToken }}"
-        >
+        <meta name="csrf-token" content="{{ $csrfToken }}">
     @endif
 
     @php
         $faviconUrl = AdminHelper::getAdminFaviconUrl();
         $faviconType = setting('admin_favicon_type', 'image/x-icon');
     @endphp
-    <link
-        href="{{ $faviconUrl }}"
-        rel="icon shortcut"
-        type="{{ $faviconType }}"
-    >
-    <meta
-        property="og:image"
-        content="{{ $faviconUrl }}"
-    >
+    <link href="{{ $faviconUrl }}" rel="icon shortcut" type="{{ $faviconType }}">
+    <meta property="og:image" content="{{ $faviconUrl }}">
 
-    <meta
-        name="description"
-        content="{{ $copyright = strip_tags(trans('core/base::layouts.copyright', ['year' => Carbon\Carbon::now()->year, 'company' => setting('admin_title', config('core.base.general.base_name')), 'version' => get_cms_version()])) }}"
-    >
-    <meta
-        property="og:description"
-        content="{{ $copyright }}"
-    >
+    <meta name="description"
+        content="{{ $copyright = strip_tags(trans('core/base::layouts.copyright', ['year' => Carbon\Carbon::now()->year, 'company' => setting('admin_title', config('core.base.general.base_name')), 'version' => get_cms_version()])) }}">
+    <meta property="og:description" content="{{ $copyright }}">
 
     @include('core/base::components.layouts.header')
 
@@ -69,13 +50,8 @@
 
 <body
     class="@yield('body-class', $bodyClass ?? 'page-sidebar-closed-hide-logo page-content-white page-container-bg-solid') {{ session()->get('sidebar-menu-toggle') ? 'page-sidebar-closed' : '' }}"
-    style="@yield('body-style', $bodyStyle ?? null)"
-    @if (BaseHelper::adminLanguageDirection() === 'rtl') dir="rtl" @endif
-    {!! Html::attributes($bodyAttributes ?? []) !!}
-    @if(AdminHelper::themeMode() === 'dark')
-        data-bs-theme="dark"
-    @endif
->
+    style="@yield('body-style', $bodyStyle ?? null)" @if (BaseHelper::adminLanguageDirection() === 'rtl') dir="rtl" @endif
+    {!! Html::attributes($bodyAttributes ?? []) !!} @if(AdminHelper::themeMode() === 'dark') data-bs-theme="dark" @endif>
     {!! AdminAppearance::getCustomJs('body') !!}
 
     {{ $headerLayout ?? null }}
@@ -100,6 +76,31 @@
     {!! AdminAppearance::getCustomJs('footer') !!}
 
     {!! apply_filters(BASE_FILTER_FOOTER_LAYOUT_TEMPLATE, null) !!}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DEBUG: Script loaded');
+            document.body.addEventListener('click', function (e) {
+                var target = e.target.closest('a');
+                if (target && (target.closest('#sidebar-menu') || target.closest('.navbar-nav'))) {
+                    console.log('DEBUG: Click detected on sidebar link', target);
+                    console.log('DEBUG: Default Prevented:', e.defaultPrevented);
+                    console.log('DEBUG: Href:', target.getAttribute('href'));
+
+                    // Check intersection (overlay)
+                    var rect = target.getBoundingClientRect();
+                    var x = rect.left + (rect.width / 2);
+                    var y = rect.top + (rect.height / 2);
+                    var topElement = document.elementFromPoint(x, y);
+                    console.log('DEBUG: Top Element at Center:', topElement);
+
+                    if (topElement !== target && !target.contains(topElement)) {
+                        console.warn('DEBUG: OVERLAY DETECTED! Element covering link:', topElement);
+                    }
+                }
+            }, true); // Capture phase to detect before stopPropagation
+        });
+    </script>
 </body>
 
 </html>

@@ -9,12 +9,15 @@ use Illuminate\Support\HtmlString;
 /**
  * @method static PropertyTypeEnum SALE()
  * @method static PropertyTypeEnum RENT()
+ * @method static PropertyTypeEnum PG()
  */
 class PropertyTypeEnum extends Enum
 {
     public const SALE = 'sale';
 
     public const RENT = 'rent';
+
+    public const PG = 'pg';
 
     public static $langPath = 'plugins/real-estate::property.types';
 
@@ -23,6 +26,7 @@ class PropertyTypeEnum extends Enum
         $color = match ($this->value) {
             self::SALE => 'success',
             self::RENT => 'info',
+            self::PG => 'warning',
             default => 'primary',
         };
 

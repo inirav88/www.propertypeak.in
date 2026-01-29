@@ -57,25 +57,31 @@ class Menu
 
     public function recursiveSaveMenu(array $menuNodes, int|string $menuId, int|string $parentId): array
     {
+        // DEBUG LOGGING
+        if ($parentId == 0)
+            \Illuminate\Support\Facades\Log::info('RecursiveSaveMenu Start', ['count' => count($menuNodes)]);
+
         try {
             foreach ($menuNodes as &$row) {
                 $child = Arr::get($row, 'children', []);
+
 
                 foreach ($child as $index => $item) {
                     $child[$index]['menuItem']['position'] = $index;
                 }
 
-                $hasChild = ! empty($child);
+                $hasChild = !empty($child);
 
                 $row['menuItem'] = $this->saveMenuNode($row['menuItem'], $menuId, $parentId, $hasChild);
 
-                if (! empty($child) && is_array($child)) {
+                if (!empty($child) && is_array($child)) {
                     $this->recursiveSaveMenu($child, $menuId, $row['menuItem']['id']);
                 }
             }
 
             return $menuNodes;
-        } catch (Exception) {
+        } catch (Exception $e) {
+            \Illuminate\Support\Facades\Log::error('RecursiveSaveMenu Error: ' . $e->getMessage());
             return [];
         }
     }
@@ -91,21 +97,24 @@ class Menu
          */
 
         $node = MenuNode::query()->findOrNew(Arr::get($menuItem, 'id'));
+        \Illuminate\Support\Facades\Log::info('SaveMenuNode: Processing ' . ($node->exists ? 'Update' : 'Create'), [
+            'id' => $node->getKey(),
+            'title' => Arr::get($menuItem, 'title')
+        ]);
 
-        MenuNodeForm::createFromModel($node)
-            ->saving(function (MenuNodeForm $form) use ($hasChild, $parentId, $menuId, $menuItem): void {
-                /**
-                 * @var MenuNode $node
-                 */
-                $node = $form->getModel();
-                $node->fill($menuItem);
-                $node->menu_id = $menuId;
-                $node->parent_id = $parentId;
-                $node->has_child = $hasChild;
+        // Fill the node with menu item data
+        $node->fill($menuItem);
+        $node->menu_id = $menuId;
+        $node->parent_id = $parentId;
+        $node->has_child = $hasChild;
 
-                $node = $this->getReferenceMenuNode($menuItem, $node);
-                $node->save();
-            });
+        // Get reference data (for pages, etc.)
+        $node = $this->getReferenceMenuNode($menuItem, $node);
+
+        // Actually save the node to the database
+        $node->save();
+
+        \Illuminate\Support\Facades\Log::info('SaveMenuNode: Saved successfully', ['id' => $node->getKey()]);
 
         $menuItem['id'] = $node->getKey();
 
@@ -175,7 +184,7 @@ class Menu
         $html = '';
 
         foreach ($this->data as $menu) {
-            if (! in_array($location, $menu->locations->pluck('location')->all())) {
+            if (!in_array($location, $menu->locations->pluck('location')->all())) {
                 continue;
             }
 
@@ -201,7 +210,7 @@ class Menu
 
     public function load(bool $force = false): void
     {
-        if (! $this->loaded || $force) {
+        if (!$this->loaded || $force) {
             $this->data = $this->read();
             $this->loaded = true;
         }
@@ -261,21 +270,21 @@ class Menu
             $data = $this->cache->get($cacheKey);
         }
 
-        if (! $data) {
+        if (!$data) {
             $menu = Arr::get($args, 'menu');
 
             $slug = Arr::get($args, 'slug');
-            if (! $menu && ! $slug) {
+            if (!$menu && !$slug) {
                 return null;
             }
 
             $parentId = Arr::get($args, 'parent_id', 0);
 
-            if (! $menu) {
+            if (!$menu) {
                 $menu = $this->data->where('slug', $slug)->first();
             }
 
-            if (! $menu) {
+            if (!$menu) {
                 $menu = RepositoryHelper::applyBeforeExecuteQuery(
                     MenuModel::query()->where('slug', $slug),
                     new MenuModel(),
@@ -283,11 +292,11 @@ class Menu
                 )->first();
             }
 
-            if (! $menu) {
+            if (!$menu) {
                 return null;
             }
 
-            if (! Arr::has($args, 'menu_nodes')) {
+            if (!Arr::has($args, 'menu_nodes')) {
                 $menuNodes = $menu->menuNodes->where('parent_id', $parentId);
             } else {
                 $menuNodes = Arr::get($args, 'menu_nodes', []);
@@ -348,7 +357,7 @@ class Menu
 
         $options = Html::attributes(Arr::get($args, 'options', []));
 
-        if (! Arr::has($args, 'items')) {
+        if (!Arr::has($args, 'items')) {
             if (method_exists($model, 'children')) {
                 $items = $model
                     ->where('parent_id', Arr::get($args, 'parent_id', 0))
@@ -399,10 +408,11 @@ class Menu
             $nodes = MenuNode::query()->get();
 
             foreach ($nodes as $node) {
-                if (! $node->reference_type ||
-                    ! class_exists($node->reference_type) ||
-                    ! $node->reference_id ||
-                    ! $node->reference
+                if (
+                    !$node->reference_type ||
+                    !class_exists($node->reference_type) ||
+                    !$node->reference_id ||
+                    !$node->reference
                 ) {
                     continue;
                 }
@@ -500,7 +510,7 @@ class Menu
                 }
             }
 
-            if (! empty($node['children'])) {
+            if (!empty($node['children'])) {
                 $this->saveMenuNodeImages($node['children'], $model);
             }
         }
@@ -573,7 +583,7 @@ class Menu
                 }
             }
 
-            if (! empty($node['children'])) {
+            if (!empty($node['children'])) {
                 $this->saveMenuNodeBadges($node['children'], $model);
             }
         }

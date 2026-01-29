@@ -19,6 +19,13 @@
                     {{ __('Video') }}
                 </a>
             </li>
+            @if($model->is_pg_property)
+                <li>
+                    <a class="cate-single-item" href="#pg-details">
+                        {{ __('PG Details') }}
+                    </a>
+                </li>
+            @endif
             <li>
                 <a class="cate-single-item" href="#amentities">
                     {{ __('Amenities') }}
@@ -74,6 +81,11 @@
                 <div class="wrapper-onepage" id="video">
                     @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.video'), ['class' => 'widget-box-single', 'model' => $model])
                 </div>
+                @if($model->is_pg_property)
+                    <div class="wrapper-onepage" id="pg-details">
+                        @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.pg-details'), ['class' => 'widget-box-single', 'model' => $model])
+                    </div>
+                @endif
                 <div class="wrapper-onepage" id="amentities">
                     @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.features'), ['class' => 'widget-box-single', 'model' => $model])
                 </div>

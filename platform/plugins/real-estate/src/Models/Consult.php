@@ -26,6 +26,11 @@ class Consult extends BaseModel
         'ip_address',
         'status',
         'custom_fields',
+        'notes',
+        'assigned_to',
+        'score',
+        'follow_up_date',
+        'contacted_at',
     ];
 
     protected $casts = [
@@ -33,6 +38,8 @@ class Consult extends BaseModel
         'name' => SafeContent::class,
         'content' => SafeContent::class,
         'custom_fields' => 'array',
+        'follow_up_date' => 'datetime',
+        'contacted_at' => 'datetime',
     ];
 
     public function newEloquentBuilder($query): ConsultBuilder

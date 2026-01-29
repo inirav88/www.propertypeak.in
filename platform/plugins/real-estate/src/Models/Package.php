@@ -20,11 +20,16 @@ class Package extends BaseModel
         'currency_id',
         'percent_save',
         'number_of_listings',
+        'number_of_projects',
         'account_limit',
         'order',
         'features',
         'is_default',
         'status',
+        'package_type',
+        'duration_days',
+        'is_recurring',
+        'microsite_enabled',
     ];
 
     protected $casts = [
@@ -32,6 +37,7 @@ class Package extends BaseModel
         'name' => SafeContent::class,
         'description' => SafeContent::class,
         'features' => 'json',
+        'microsite_enabled' => 'boolean',
     ];
 
     public function currency(): BelongsTo
@@ -88,8 +94,8 @@ class Package extends BaseModel
     protected function formattedFeatures(): Attribute
     {
         return Attribute::get(
-            fn () => collect(is_array($this->features) ? $this->features : json_decode($this->features, true))
-                ->map(fn ($feature) => collect($feature)->pluck('value', 'key'))
+            fn() => collect(is_array($this->features) ? $this->features : json_decode($this->features, true))
+                ->map(fn($feature) => collect($feature)->pluck('value', 'key'))
                 ->pluck('text')
                 ->toArray()
         );

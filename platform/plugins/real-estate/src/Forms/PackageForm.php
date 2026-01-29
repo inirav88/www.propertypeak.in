@@ -84,6 +84,19 @@ class PackageForm extends FormAbstract
                     'class' => 'form-control input-mask-number',
                 ],
             ])
+            ->add('number_of_projects', 'text', [
+                'label' => __('Number of Projects'),
+                'wrapper' => [
+                    'class' => 'form-group mb-3 col-md-4',
+                ],
+                'attr' => [
+                    'placeholder' => __('Number of projects (for builders)'),
+                    'class' => 'form-control input-mask-number',
+                ],
+                'help_block' => [
+                    'text' => __('Leave empty for unlimited or if not applicable'),
+                ],
+            ])
             ->add('account_limit', 'text', [
                 'label' => trans('plugins/real-estate::package.account_limit'),
                 'wrapper' => [
@@ -98,9 +111,61 @@ class PackageForm extends FormAbstract
             ->add('rowClose2', 'html', [
                 'html' => '</div>',
             ])
+            ->add('rowOpen3', 'html', [
+                'html' => '<div class="row">',
+            ])
+            ->add('package_type', 'customSelect', [
+                'label' => __('Package Type'),
+                'wrapper' => [
+                    'class' => 'form-group mb-3 col-md-4',
+                ],
+                'attr' => [
+                    'class' => 'form-control select-full',
+                ],
+                'choices' => [
+                    'agent' => __('Agent/Broker'),
+                    'builder' => __('Builder/Developer'),
+                    'owner' => __('Property Owner'),
+                    'addon' => __('Add-on Service'),
+                ],
+                'default_value' => 'agent',
+            ])
+            ->add('duration_days', 'text', [
+                'label' => __('Duration (Days)'),
+                'wrapper' => [
+                    'class' => 'form-group mb-3 col-md-4',
+                ],
+                'attr' => [
+                    'placeholder' => __('E.g., 30, 90, 180'),
+                    'class' => 'form-control input-mask-number',
+                ],
+                'help_block' => [
+                    'text' => __('For one-time packages only. Leave empty for recurring packages.'),
+                ],
+            ])
+            ->add('is_recurring', OnOffField::class, [
+                'label' => __('Recurring Subscription'),
+                'wrapper' => [
+                    'class' => 'form-group mb-3 col-md-4',
+                ],
+                'default_value' => true,
+                'help_block' => [
+                    'text' => __('Turn off for one-time packages'),
+                ],
+            ])
+            ->add('rowClose3', 'html', [
+                'html' => '</div>',
+            ])
             ->add('is_default', OnOffField::class, [
                 'label' => trans('core/base::forms.is_default'),
                 'default_value' => false,
+            ])
+            ->add('microsite_enabled', OnOffField::class, [
+                'label' => __('Enable Microsite Feature'),
+                'default_value' => true,
+                'help_block' => [
+                    'text' => __('If enabled, users with this package can create their own builder microsite.'),
+                ],
             ])
             ->add('features', RepeaterField::class, [
                 'label' => __('Features'),

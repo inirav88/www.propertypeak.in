@@ -1,0 +1,1 @@
+<x-core::tab.item id="microsite-tab" :label="__('Microsite Settings')" />

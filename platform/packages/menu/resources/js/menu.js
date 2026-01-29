@@ -132,8 +132,12 @@ class MenuNestable {
             let dd_item = $this.parents('.item-details').parent()
 
             let $elm = $('.form-save-menu input[name="deleted_nodes"]')
+            let deletedId = dd_item.data('menu-item').id
+            console.log('DEBUG: Removing Item ID:', deletedId)
+            console.log('DEBUG: Deleted Nodes Before:', $elm.val())
             // Add id of deleted nodes to delete in controller
-            $elm.val($elm.val() + ' ' + dd_item.data('menu-item').id)
+            $elm.val($elm.val() + ' ' + deletedId)
+            console.log('DEBUG: Deleted Nodes After:', $elm.val())
             let children = dd_item.find('> .dd-list').html()
             if (children !== '' && children != null) {
                 dd_item.before(children.replace('<script>', '').replace('<\\/script>', ''))
@@ -162,7 +166,9 @@ class MenuNestable {
             } else {
                 let nestable_obj_returned = that.$nestable.nestable('serialize')
                 let the_obj = that.updatePositionForSerializedObj(nestable_obj_returned)
-                $('#nestable-output').val(JSON.stringify(the_obj))
+                let jsonStr = JSON.stringify(the_obj)
+                console.log('DEBUG: Submitting Menu JSON:', jsonStr)
+                $('#nestable-output').val(jsonStr)
             }
         })
 

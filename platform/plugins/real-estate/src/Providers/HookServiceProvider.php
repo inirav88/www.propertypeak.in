@@ -94,7 +94,7 @@ class HookServiceProvider extends ServiceProvider
             }
 
             add_filter('cms_twig_compiler', function (TwigCompiler $twigCompiler) {
-                if (! array_key_exists(TwigExtension::class, $twigCompiler->getExtensions())) {
+                if (!array_key_exists(TwigExtension::class, $twigCompiler->getExtensions())) {
                     $twigCompiler->addExtension(new TwigExtension());
                 }
 
@@ -109,7 +109,7 @@ class HookServiceProvider extends ServiceProvider
 
             if (defined('PAYMENT_FILTER_PAYMENT_PARAMETERS')) {
                 add_filter(PAYMENT_FILTER_PAYMENT_PARAMETERS, function ($html) {
-                    if (! auth('account')->check()) {
+                    if (!auth('account')->check()) {
                         return $html;
                     }
 
@@ -117,6 +117,21 @@ class HookServiceProvider extends ServiceProvider
                         Form::hidden('customer_type', Account::class)->toHtml();
                 }, 123);
             }
+
+            // Add Microsite Settings Tab
+            add_filter('account_settings_register_content_tabs', function ($html) {
+                if (auth('account')->check() && auth('account')->user()->hasPackageFeature('microsite')) {
+                    $html .= view('plugins/real-estate::themes.dashboard.settings.microsite-tab')->render();
+                }
+                return $html;
+            });
+
+            add_filter('account_settings_register_content_tab_inside', function ($html) {
+                if (auth('account')->check() && auth('account')->user()->hasPackageFeature('microsite')) {
+                    $html .= view('plugins/real-estate::themes.dashboard.settings.microsite-content')->render();
+                }
+                return $html;
+            });
 
             if (defined('PAYMENT_ACTION_PAYMENT_PROCESSED')) {
                 add_action(PAYMENT_ACTION_PAYMENT_PROCESSED, function ($data): void {
@@ -142,7 +157,7 @@ class HookServiceProvider extends ServiceProvider
 
                             $package = Package::query()->find($subscribedPackageId);
 
-                            if (! $package) {
+                            if (!$package) {
                                 return null;
                             }
 
@@ -156,7 +171,7 @@ class HookServiceProvider extends ServiceProvider
                 add_filter(PAYMENT_FILTER_REDIRECT_URL, function ($checkoutToken) {
                     $checkoutToken = $checkoutToken ?: session('subscribed_packaged_id');
 
-                    if (! $checkoutToken) {
+                    if (!$checkoutToken) {
                         return route('public.index');
                     }
 
@@ -172,7 +187,7 @@ class HookServiceProvider extends ServiceProvider
                 add_filter(PAYMENT_FILTER_CANCEL_URL, function ($checkoutToken) {
                     $checkoutToken = $checkoutToken ?: session('subscribed_packaged_id');
 
-                    if (! $checkoutToken) {
+                    if (!$checkoutToken) {
                         return route('public.index');
                     }
 
@@ -190,18 +205,19 @@ class HookServiceProvider extends ServiceProvider
                         PaymentCompleted::dispatch($payment);
                     }
 
-                    if (in_array($payment->payment_channel, [PaymentMethodEnum::COD, PaymentMethodEnum::BANK_TRANSFER])
+                    if (
+                        in_array($payment->payment_channel, [PaymentMethodEnum::COD, PaymentMethodEnum::BANK_TRANSFER])
                         && $request->input('status') == PaymentStatusEnum::COMPLETED
                     ) {
                         $subscribedPackageId = MetaBox::getMetaData($payment, 'subscribed_packaged_id', true);
 
-                        if (! $subscribedPackageId) {
+                        if (!$subscribedPackageId) {
                             return;
                         }
 
                         $package = Package::query()->find($subscribedPackageId);
 
-                        if (! $package) {
+                        if (!$package) {
                             return;
                         }
 
@@ -210,7 +226,7 @@ class HookServiceProvider extends ServiceProvider
                          */
                         $account = Account::query()->find($payment->customer_id);
 
-                        if (! $account) {
+                        if (!$account) {
                             return;
                         }
 
@@ -237,7 +253,7 @@ class HookServiceProvider extends ServiceProvider
 
                     $package = Package::query()->whereIn('id', $orderIds)->first();
 
-                    if (! $package) {
+                    if (!$package) {
                         return $data;
                     }
 
@@ -310,12 +326,14 @@ class HookServiceProvider extends ServiceProvider
 
             add_filter(DASHBOARD_FILTER_ADMIN_LIST, function ($widgets) {
                 foreach ($widgets as $key => $widget) {
-                    if (in_array($key, [
-                        'widget_total_themes',
-                        'widget_total_users',
-                        'widget_total_plugins',
-                        'widget_total_pages',
-                    ]) && $widget['type'] == 'stats') {
+                    if (
+                        in_array($key, [
+                            'widget_total_themes',
+                            'widget_total_users',
+                            'widget_total_plugins',
+                            'widget_total_pages',
+                        ]) && $widget['type'] == 'stats'
+                    ) {
                         Arr::forget($widgets, $key);
                     }
                 }
@@ -452,7 +470,7 @@ class HookServiceProvider extends ServiceProvider
             }, 49, 3);
 
             add_filter('social_login_before_creating_account', function ($data) {
-                if (! RealEstateHelper::isRegisterEnabled()) {
+                if (!RealEstateHelper::isRegisterEnabled()) {
                     return (new BaseHttpResponse())
                         ->setError()
                         ->setMessage(trans('auth.failed'));
@@ -463,7 +481,8 @@ class HookServiceProvider extends ServiceProvider
 
             if (is_plugin_active('language') && is_plugin_active('language-advanced')) {
                 add_filter(BASE_FILTER_BEFORE_RENDER_FORM, function ($form, $data) {
-                    if (is_in_admin() &&
+                    if (
+                        is_in_admin() &&
                         request()->segment(1) === 'account' &&
                         Auth::guard('account')->check() &&
                         Language::getCurrentAdminLocaleCode() != Language::getDefaultLocaleCode() &&
@@ -514,7 +533,7 @@ class HookServiceProvider extends ServiceProvider
                             break;
                     }
 
-                    if (! $subTitle) {
+                    if (!$subTitle) {
                         return $name;
                     }
 
@@ -530,7 +549,7 @@ class HookServiceProvider extends ServiceProvider
             }
 
             add_filter('core_request_rules', function (array $rules, Request $request): array {
-                if (! $request instanceof UpdateOptionsRequest) {
+                if (!$request instanceof UpdateOptionsRequest) {
                     return $rules;
                 }
 
@@ -558,14 +577,14 @@ class HookServiceProvider extends ServiceProvider
                         }
                     );
 
-                $rules = $fields->mapWithKeys(fn ($value, $key) => [$key => ['nullable', 'string']])->all();
+                $rules = $fields->mapWithKeys(fn($value, $key) => [$key => ['nullable', 'string']])->all();
 
                 foreach ($fields as $key => $value) {
                     $rules[$key][] = function ($attribute, $value, $fail) use ($locale, $fields, $key, $themeOptions): void {
                         if (
-                            collect($fields)->reject(fn ($v, $k) => $k === $key)->contains($value)
+                            collect($fields)->reject(fn($v, $k) => $k === $key)->contains($value)
                             || $themeOptions
-                                ->reject(fn ($value, $k) => $k === ThemeOption::getOptionKey($key, $locale))
+                                ->reject(fn($value, $k) => $k === ThemeOption::getOptionKey($key, $locale))
                                 ->contains($value)
                         ) {
                             $fail(trans('plugins/real-estate::real-estate.theme_options.page_slug_already_exists', [
@@ -603,7 +622,7 @@ class HookServiceProvider extends ServiceProvider
                             }
 
                             $html .= Html::tag('script', json_encode($organizationSchema), ['type' => 'application/ld+json'])
-                                    ->toHtml();
+                                ->toHtml();
                         }
 
                         // Add RealEstateListing schema for properties
@@ -614,7 +633,7 @@ class HookServiceProvider extends ServiceProvider
                                 'name' => $model->name,
                                 'url' => $model->url,
                                 'description' => BaseHelper::clean($model->content),
-                                'image' => collect($model->images)->map(fn ($image) => RvMedia::getImageUrl($image))->toArray(),
+                                'image' => collect($model->images)->map(fn($image) => RvMedia::getImageUrl($image))->toArray(),
                                 'address' => [
                                     '@type' => 'PostalAddress',
                                     'streetAddress' => $model->location,
@@ -655,7 +674,7 @@ class HookServiceProvider extends ServiceProvider
                             }
 
                             $html .= Html::tag('script', json_encode($schema), ['type' => 'application/ld+json'])
-                                    ->toHtml();
+                                ->toHtml();
                         }
 
                         // Add Project schema
@@ -666,7 +685,7 @@ class HookServiceProvider extends ServiceProvider
                                 'name' => $model->name,
                                 'url' => $model->url,
                                 'description' => BaseHelper::clean($model->content),
-                                'image' => collect($model->images)->map(fn ($image) => RvMedia::getImageUrl($image))->toArray(),
+                                'image' => collect($model->images)->map(fn($image) => RvMedia::getImageUrl($image))->toArray(),
                                 'address' => [
                                     '@type' => 'PostalAddress',
                                     'streetAddress' => $model->location,
@@ -708,7 +727,7 @@ class HookServiceProvider extends ServiceProvider
                             }
 
                             $html .= Html::tag('script', json_encode($schema), ['type' => 'application/ld+json'])
-                                    ->toHtml();
+                                ->toHtml();
                         }
 
                         return $html;
@@ -774,7 +793,7 @@ class HookServiceProvider extends ServiceProvider
                             ->icon('ti ti-link')
                             ->fields(
                                 collect(RealEstateHelper::getDefaultPageSlug())
-                                    ->map(fn ($value, $key) => [
+                                    ->map(fn($value, $key) => [
                                         'id' => sprintf('real_estate_%s_page_slug', $key),
                                         'type' => 'text',
                                         'label' => trans(
@@ -826,7 +845,7 @@ class HookServiceProvider extends ServiceProvider
 
                         $view = Theme::getThemeNamespace() . '::views.real-estate.projects';
 
-                        if (! view()->exists($view)) {
+                        if (!view()->exists($view)) {
                             $view = 'plugins/real-estate::themes.projects';
                         }
 
@@ -838,7 +857,7 @@ class HookServiceProvider extends ServiceProvider
 
                         $view = Theme::getThemeNamespace() . '::views.real-estate.properties';
 
-                        if (! view()->exists($view)) {
+                        if (!view()->exists($view)) {
                             $view = 'plugins/real-estate::themes.properties';
                         }
 
@@ -852,11 +871,11 @@ class HookServiceProvider extends ServiceProvider
             add_action(
                 BASE_ACTION_TOP_FORM_CONTENT_NOTIFICATION,
                 function (Request $request, Model|string|null $data = null): void {
-                    if (! setting('verify_account_email', false)) {
+                    if (!setting('verify_account_email', false)) {
                         return;
                     }
 
-                    if (! $data instanceof Account || Route::currentRouteName() !== 'account.edit') {
+                    if (!$data instanceof Account || Route::currentRouteName() !== 'account.edit') {
                         return;
                     }
 
@@ -909,11 +928,11 @@ class HookServiceProvider extends ServiceProvider
                 return view('core/base::partials.navbar.badge-count', ['class' => 'unread-consults'])->render();
             case 'cms-plugins-real-estate-unverified-accounts':
             case 'cms-plugins-real-estate-accounts':
-                if (! Auth::user()->hasPermission('unverified-accounts.index')) {
+                if (!Auth::user()->hasPermission('unverified-accounts.index')) {
                     return $number;
                 }
 
-                if (! setting('real_estate_enable_account_verification', false)) {
+                if (!setting('real_estate_enable_account_verification', false)) {
                     return $number;
                 }
 
@@ -980,22 +999,22 @@ class HookServiceProvider extends ServiceProvider
         ];
 
         $currentRoute = Route::currentRouteName();
-        if (! isset($routeMap[$currentRoute])) {
+        if (!isset($routeMap[$currentRoute])) {
             return $url;
         }
 
         $locationSlug = collect(request()->segments())
-            ->reject(fn ($segment) => isset(Language::getSupportedLocales()[$segment]))
+            ->reject(fn($segment) => isset(Language::getSupportedLocales()[$segment]))
             ->last();
 
-        if (! $locationSlug) {
+        if (!$locationSlug) {
             return $url;
         }
 
         $pageType = $routeMap[$currentRoute];
         $targetSlug = $this->getLocalizedPageSlug($pageType, $languageCode);
 
-        if (! $targetSlug) {
+        if (!$targetSlug) {
             return $url;
         }
 

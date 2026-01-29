@@ -123,6 +123,69 @@ class PublicAccountController extends BaseController
             ->setMessage(trans('plugins/real-estate::account.update_profile_success'));
     }
 
+    public function getMicrositeSettings()
+    {
+        $account = auth('account')->user();
+
+        if (!$account->hasPackageFeature('microsite')) {
+            abort(404);
+        }
+
+        return view('plugins/real-estate::account.settings.microsite', compact('account'));
+    }
+
+    public function postMicrositeSettings(Request $request)
+    {
+        $account = auth('account')->user();
+
+        // Check if user has microsite feature
+        if (!$account->hasPackageFeature('microsite')) {
+            return $this
+                ->httpResponse()
+                ->setError()
+                ->setMessage(__('Microsite feature is not available in your package.'));
+        }
+
+        $data = $request->validate([
+            'microsite_enabled' => 'nullable|boolean',
+            'microsite_slug' => 'nullable|string|max:255|unique:re_accounts,microsite_slug,' . $account->id,
+            'microsite_primary_color' => 'nullable|string|max:7',
+            'microsite_secondary_color' => 'nullable|string|max:7',
+            'microsite_about' => 'nullable|string',
+            'social_links' => 'nullable|array',
+        ]);
+
+        // Handle file uploads
+        if ($request->hasFile('microsite_logo')) {
+            $result = RvMedia::handleUpload($request->file('microsite_logo'), 0, $account->upload_folder);
+            if (!$result['error']) {
+                $data['microsite_logo'] = $result['data']->url;
+            }
+        }
+
+        if ($request->hasFile('microsite_banner')) {
+            $result = RvMedia::handleUpload($request->file('microsite_banner'), 0, $account->upload_folder);
+            if (!$result['error']) {
+                $data['microsite_banner'] = $result['data']->url;
+            }
+        }
+
+        // Handle social links
+        if (isset($data['social_links'])) {
+            $data['microsite_social_links'] = $data['social_links'];
+            unset($data['social_links']);
+        }
+
+        $account->update($data);
+
+        AccountActivityLog::query()->create(['action' => 'update_microsite_settings']);
+
+        return $this
+            ->httpResponse()
+            ->setNextUrl(route('public.account.settings.microsite'))
+            ->setMessage(__('Microsite settings updated successfully!'));
+    }
+
     public function getPackages()
     {
         abort_unless(RealEstateHelper::isEnabledCreditsSystem(), 404);
@@ -194,7 +257,7 @@ class PublicAccountController extends BaseController
         $account = Account::query()->findOrFail(auth('account')->id());
 
         abort_if($package->account_limit
-        && $account->packages()->where('package_id', $package->getKey())->count() >= $package->account_limit, 403);
+            && $account->packages()->where('package_id', $package->getKey())->count() >= $package->account_limit, 403);
 
         session(['subscribed_packaged_id' => $package->id]);
 
@@ -220,7 +283,7 @@ class PublicAccountController extends BaseController
             ->where('charge_id', $chargeId)
             ->first();
 
-        if (! $payment && ! $force) {
+        if (!$payment && !$force) {
             return false;
         }
 
@@ -250,7 +313,7 @@ class PublicAccountController extends BaseController
                     'package_price_per_credit' => $package->price ? $package->price / ($package->number_of_listings ?: 1) : 0,
                 ]);
 
-            if (! $package->price) {
+            if (!$package->price) {
                 $emailHandler->sendUsingTemplate('free-credit-claimed');
             } else {
                 $emailHandler->sendUsingTemplate('payment-received');
@@ -336,7 +399,7 @@ class PublicAccountController extends BaseController
 
         $this->savePayment($package, $request->input('charge_id'));
 
-        if (! $request->has('success') || $request->input('success')) {
+        if (!$request->has('success') || $request->input('success')) {
             return $this
                 ->httpResponse()
                 ->setNextUrl(route('public.account.packages'))
@@ -461,7 +524,7 @@ class PublicAccountController extends BaseController
             if ($save->isFinished()) {
                 $result = RvMedia::handleUpload($save->getFile(), 0, auth('account')->user()->upload_folder);
 
-                if (! $result['error']) {
+                if (!$result['error']) {
                     return $this
                         ->httpResponse()
                         ->setData($result['data']);

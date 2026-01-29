@@ -87,7 +87,7 @@ class MenuController extends BaseController
         MenuLocation::query()
             ->where('menu_id', $menu->getKey())
             ->whereNotIn('location', $locations)
-            ->each(fn (MenuLocation $location) => $location->delete());
+            ->each(fn(MenuLocation $location) => $location->delete());
 
         foreach ($locations as $location) {
             $menuLocation = MenuLocation::query()->firstOrCreate([
@@ -123,6 +123,15 @@ class MenuController extends BaseController
 
     public function update(MenuModel $menu, MenuRequest $request)
     {
+        file_put_contents(storage_path('logs/debug_menu.log'), 'MenuController Update: ' . date('Y-m-d H:i:s') . PHP_EOL, FILE_APPEND);
+
+        // JSON STRUCTURE LOGGING
+        $menuNodes = json_decode($request->input('menu_nodes'), true);
+        \Illuminate\Support\Facades\Log::info('Menu JSON Debug:', [
+            'count' => is_array($menuNodes) ? count($menuNodes) : 'invalid',
+            'ids' => is_array($menuNodes) ? array_column(array_column($menuNodes, 'menuItem'), 'id') : [],
+        ]);
+
         MenuForm::createFromModel($menu)
             ->saving(function (MenuForm $form) use ($request): void {
                 $form
@@ -135,10 +144,22 @@ class MenuController extends BaseController
                  */
                 $menu = $form->getModel();
 
+                // DEBUG LOGGING
+                \Illuminate\Support\Facades\Log::info('Menu Saving Debug:', [
+                    'max_input_vars' => ini_get('max_input_vars'),
+                    'menu_nodes_raw' => substr($request->input('menu_nodes'), 0, 500) . '...',
+                    'menu_nodes_length' => strlen($request->input('menu_nodes')),
+                    'post_count' => count($request->all()),
+                ]);
+
                 $this->saveMenuLocations($menu, $request);
             });
 
         $deletedNodes = ltrim((string) $request->input('deleted_nodes', ''));
+        \Illuminate\Support\Facades\Log::info('Menu Deleted Nodes Debug:', [
+            'raw_input' => $request->input('deleted_nodes'),
+            'processed' => $deletedNodes,
+        ]);
         if ($deletedNodes && $deletedNodes = array_filter(explode(' ', $deletedNodes))) {
             $menu->menuNodes()->whereIn('id', $deletedNodes)->delete();
         }

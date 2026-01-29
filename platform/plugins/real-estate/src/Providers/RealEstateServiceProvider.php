@@ -195,6 +195,7 @@ class RealEstateServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+
         add_filter(IS_IN_ADMIN_FILTER, [$this, 'setInAdmin'], 128);
 
         $this->setNamespace('plugins/real-estate')
@@ -435,6 +436,7 @@ class RealEstateServiceProvider extends ServiceProvider
                 });
         });
 
+
         DashboardMenu::for('account')->beforeRetrieving(function (DashboardMenuSupport $dashboardMenu): void {
             $dashboardMenu
                 ->registerItem([
@@ -444,7 +446,27 @@ class RealEstateServiceProvider extends ServiceProvider
                     'url' => fn() => route('public.account.dashboard'),
                     'icon' => 'ti ti-home',
                 ])
-                ->when(auth('account')->user()->type == 'builder', function (DashboardMenuSupport $dashboardMenu): void {
+                ->registerItem([
+                    'id' => 'cms-account-leads',
+                    'priority' => 1,
+                    'name' => 'Leads',
+                    'url' => fn() => route('public.account.leads.index'),
+                    'icon' => 'ti ti-users',
+                ])
+                ->registerItem([
+                    'id' => 'cms-account-microsite',
+                    'priority' => 10,
+                    'name' => 'Microsite Settings',
+                    'url' => fn() => route('public.account.settings.microsite'),
+                    'icon' => 'ti ti-layout-dashboard',
+                ])
+                ->when(function () {
+                    try {
+                        return auth('account')->check() && auth('account')->user() && auth('account')->user()->type == 'builder';
+                    } catch (\Throwable $e) {
+                        return false;
+                    }
+                }, function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu->registerItem([
                         'id' => 'cms-account-projects',
                         'priority' => 2,
@@ -453,7 +475,13 @@ class RealEstateServiceProvider extends ServiceProvider
                         'icon' => 'ti ti-buildings',
                     ]);
                 })
-                ->when(auth('account')->user()->type != 'builder', function (DashboardMenuSupport $dashboardMenu): void {
+                ->when(function () {
+                    try {
+                        return auth('account')->check() && auth('account')->user() && auth('account')->user()->type != 'builder';
+                    } catch (\Throwable $e) {
+                        return false;
+                    }
+                }, function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu->registerItem([
                         'id' => 'cms-account-properties',
                         'priority' => 2,
@@ -462,7 +490,13 @@ class RealEstateServiceProvider extends ServiceProvider
                         'icon' => 'ti ti-home',
                     ]);
                 })
-                ->when(RealEstateHelper::isEnabledCreditsSystem(), function (DashboardMenuSupport $dashboardMenu): void {
+                ->when(function () {
+                    try {
+                        return RealEstateHelper::isEnabledCreditsSystem();
+                    } catch (\Throwable $e) {
+                        return false;
+                    }
+                }, function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu
                         ->registerItem([
                             'id' => 'cms-account-buy-credits',
@@ -479,7 +513,13 @@ class RealEstateServiceProvider extends ServiceProvider
                     'url' => fn() => route('public.account.consults.index'),
                     'icon' => 'ti ti-home-question',
                 ])
-                ->when(RealEstateHelper::isEnabledReview(), function (DashboardMenuSupport $dashboardMenu): void {
+                ->when(function () {
+                    try {
+                        return RealEstateHelper::isEnabledReview();
+                    } catch (\Throwable $e) {
+                        return false;
+                    }
+                }, function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu
                         ->registerItem([
                             'id' => 'cms-account-reviews',
@@ -489,7 +529,13 @@ class RealEstateServiceProvider extends ServiceProvider
                             'icon' => 'ti ti-star',
                         ]);
                 })
-                ->when(RealEstateHelper::isEnabledCreditsSystem(), function (DashboardMenuSupport $dashboardMenu): void {
+                ->when(function () {
+                    try {
+                        return RealEstateHelper::isEnabledCreditsSystem();
+                    } catch (\Throwable $e) {
+                        return false;
+                    }
+                }, function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu
                         ->registerItem([
                             'id' => 'cms-account-invoices',
@@ -512,8 +558,8 @@ class RealEstateServiceProvider extends ServiceProvider
                     'name' => 'plugins/real-estate::dashboard.header_logout_link',
                     'icon' => 'ti ti-logout',
                     'url' => fn() => route('public.account.logout'),
-                    'permissions' => [],
                 ]);
+
         });
 
         DashboardMenu::default();

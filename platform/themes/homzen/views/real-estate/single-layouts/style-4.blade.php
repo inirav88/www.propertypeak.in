@@ -10,6 +10,8 @@
 
         @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.description'), ['class' => 'single-property-element', 'model' => $model])
 
+        @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.pg-details'), ['class' => 'single-property-element', 'model' => $model])
+
         @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.video'), ['class' => 'single-property-element', 'model' => $model])
 
         @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.features'), ['class' => 'single-property-element', 'model' => $model])

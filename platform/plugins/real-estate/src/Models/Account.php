@@ -69,6 +69,16 @@ class Account extends BaseModel implements
         'verified_at',
         'verified_by',
         'verification_note',
+        'microsite_enabled',
+        'microsite_slug',
+        'microsite_logo',
+        'microsite_banner',
+        'microsite_primary_color',
+        'microsite_secondary_color',
+        'microsite_about',
+        'microsite_social_links',
+        'microsite_website',
+        'microsite_address',
     ];
 
     protected $hidden = [
@@ -95,6 +105,8 @@ class Account extends BaseModel implements
         'blocked_reason' => SafeContent::class,
         'verified_at' => 'datetime',
         'verification_note' => SafeContent::class,
+        'microsite_enabled' => 'boolean',
+        'microsite_social_links' => 'array',
     ];
 
     public function activityLogs(): HasMany
@@ -156,11 +168,15 @@ class Account extends BaseModel implements
     {
         return Attribute::make(
             get: function () {
-                if (!$this->is_verified) {
+                if (!$this->shouldShowVerifiedBadge()) {
                     return '';
                 }
 
-                return view('plugins/real-estate::partials.verified-badge', ['size' => 'sm'])->render();
+                $badgeType = $this->getBadgeType();
+
+                return view('plugins/real-estate::partials.verified-badge', [
+                    'badgeType' => $badgeType
+                ])->render();
             }
         );
     }
@@ -304,9 +320,76 @@ class Account extends BaseModel implements
     public function getUrlAttribute(): string
     {
         if ($this->type === 'builder') {
-            return route('public.developer', $this->slug);
+            return route('public.developer', $this->username);
         }
 
-        return route('public.agent', $this->slug);
+        return route('public.agent', $this->username);
+    }
+
+    /**
+     * Check if account has a specific feature in their package
+     */
+    public function hasPackageFeature(string $featureText): bool
+    {
+        $package = $this->packages->first();
+
+        if (!$package) {
+            return false;
+        }
+
+        // Check for specific columns first
+        if ($featureText === 'microsite' && $package->microsite_enabled) {
+            return true;
+        }
+
+        $features = $package->features ?? [];
+
+        if (is_string($features)) {
+            $features = json_decode($features, true) ?? [];
+        }
+
+        foreach ($features as $feature) {
+            if (isset($feature['value']) && str_contains(strtolower($feature['value']), strtolower($featureText))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if account should display verified badge
+     */
+    public function shouldShowVerifiedBadge(): bool
+    {
+        // Check if manually verified by admin
+        if ($this->is_verified) {
+            return true;
+        }
+
+        // Check if package includes verified badge feature
+        return $this->hasPackageFeature('verified badge') ||
+            $this->hasPackageFeature('verified + premium badge') ||
+            $this->hasPackageFeature('verified + professional badge');
+    }
+
+    /**
+     * Get the badge type based on package
+     */
+    public function getBadgeType(): ?string
+    {
+        if (!$this->shouldShowVerifiedBadge()) {
+            return null;
+        }
+
+        if ($this->hasPackageFeature('verified + premium badge')) {
+            return 'premium';
+        }
+
+        if ($this->hasPackageFeature('verified + professional badge')) {
+            return 'professional';
+        }
+
+        return 'verified';
     }
 }

@@ -38,6 +38,11 @@ class PackageTable extends TableAbstract
             ->select([
                 'id',
                 'name',
+                'package_type',
+                'price',
+                'number_of_listings',
+                'number_of_projects',
+                'is_recurring',
                 'created_at',
                 'status',
             ]);
@@ -50,6 +55,37 @@ class PackageTable extends TableAbstract
         return [
             IdColumn::make(),
             NameColumn::make()->route('package.edit'),
+            'package_type' => [
+                'title' => __('Type'),
+                'class' => 'text-center',
+                'width' => '100px',
+                'orderable' => true,
+                'searchable' => true,
+            ],
+            'price' => [
+                'title' => __('Price'),
+                'class' => 'text-end',
+                'width' => '100px',
+                'orderable' => true,
+            ],
+            'number_of_listings' => [
+                'title' => __('Listings'),
+                'class' => 'text-center',
+                'width' => '80px',
+                'orderable' => true,
+            ],
+            'number_of_projects' => [
+                'title' => __('Projects'),
+                'class' => 'text-center',
+                'width' => '80px',
+                'orderable' => true,
+            ],
+            'is_recurring' => [
+                'title' => __('Type'),
+                'class' => 'text-center',
+                'width' => '100px',
+                'orderable' => true,
+            ],
             CreatedAtColumn::make(),
             StatusColumn::make(),
         ];

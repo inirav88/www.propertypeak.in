@@ -60,6 +60,9 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 // Custom routes for singular view
                 Route::get('developers/{slug}', 'PublicController@getAgent')->name('public.developer');
                 Route::get('agents/{slug}', 'PublicController@getAgent')->name('public.agent');
+
+                // Builder Microsite Route
+                Route::get('builders/{slug}/microsite', 'BuilderMicrositeController@show')->name('public.builder.microsite');
             }
 
             Route::post('send-consult', 'PublicController@postSendConsult')
@@ -114,6 +117,10 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 Route::post('settings', [PublicAccountController::class, 'postSettings'])->name('post.settings');
                 Route::put('security', [PublicAccountController::class, 'postSecurity'])->name('post.security');
 
+                // Microsite Settings Routes
+                Route::get('settings/microsite', [PublicAccountController::class, 'getMicrositeSettings'])->name('settings.microsite');
+                Route::post('settings/microsite', [PublicAccountController::class, 'postMicrositeSettings']);
+
                 Route::post('avatar', [PublicAccountController::class, 'postAvatar'])->name('avatar');
                 Route::get('packages', [PublicAccountController::class, 'getPackages'])->name('packages');
                 Route::get('transactions', [PublicAccountController::class, 'getTransactions'])->name('transactions');
@@ -124,6 +131,15 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 });
                 Route::match(['GET', 'POST'], 'consults', [ConsultController::class, 'index'])->name('consults.index');
                 Route::get('consults/{id}', [ConsultController::class, 'show'])->name('consults.show')->wherePrimaryKey();
+
+                // Lead Management Routes
+                Route::prefix('leads')->name('leads.')->group(function (): void {
+                    Route::get('/', 'LeadController@index')->name('index');
+                    Route::get('/{id}', 'LeadController@show')->name('show')->wherePrimaryKey();
+                    Route::post('/{id}/status', 'LeadController@updateStatus')->name('update-status')->wherePrimaryKey();
+                    Route::post('/{id}/note', 'LeadController@addNote')->name('add-note')->wherePrimaryKey();
+                    Route::get('/export/csv', 'LeadController@export')->name('export');
+                });
 
                 Route::match(['GET', 'POST'], 'reviews', [AccountReviewController::class, 'index'])->name('reviews.index');
 
