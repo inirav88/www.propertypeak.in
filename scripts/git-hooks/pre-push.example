@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Pre-Push Hook Example (Advisory Only)
+# This hook is NOT automatically installed
+# It provides a warning if you attempt to push to protected branches
+
+# INSTALLATION (OPTIONAL):
+# cp scripts/git-hooks/pre-push.example .git/hooks/pre-push
+# chmod +x .git/hooks/pre-push
+
+# NOTE: This hook is advisory only and does NOT block pushes
+# GitHub branch protection will enforce the actual rules
+
+# Get the current branch name
+current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+# Check if current branch is a protected branch
+if [ "$current_branch" = "staging" ] || [ "$current_branch" = "main" ]; then
+    echo ""
+    echo "⚠️  WARNING: Direct pushes to '$current_branch' are not allowed."
+    echo ""
+    echo "   Required workflow:"
+    echo "   1. Create a feature branch: git checkout -b feature/your-feature"
+    echo "   2. Commit your changes to the feature branch"
+    echo "   3. Push the feature branch: git push -u origin feature/your-feature"
+    echo "   4. Open a Pull Request on GitHub"
+    echo ""
+    echo "   GitHub will reject this push due to branch protection rules."
+    echo ""
+    echo "   See docs/BRANCHING_GUIDE.md for details."
+    echo ""
+fi
+
+# Exit with status 0 (do NOT block the push)
+# Let GitHub enforce the actual protection
+exit 0
