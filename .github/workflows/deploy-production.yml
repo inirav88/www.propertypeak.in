@@ -1,0 +1,82 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: |
+            ${{ secrets.PROD_SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        run: ssh-keyscan -H propertypeak.in >> ~/.ssh/known_hosts
+
+      - name: Pre-deployment safety checks
+        run: |
+          ssh -o StrictHostKeyChecking=yes propertypeak@propertypeak.in << 'EOF'
+            set -e
+            
+            echo "=== Running Pre-Deployment Safety Checks ==="
+            
+            # Check 1: Ensure branch is exactly "main"
+            echo "✓ Checking branch name..."
+            cd ~/htdocs/www.propertypeak.in
+            CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            if [ "$CURRENT_BRANCH" != "main" ]; then
+              echo "ERROR: Current branch is '$CURRENT_BRANCH', expected 'main'"
+              exit 1
+            fi
+            echo "  Branch is 'main' ✓"
+            
+            # Check 2: Ensure deployment directory exists
+            echo "✓ Checking deployment directory..."
+            if [ ! -d ~/htdocs/www.propertypeak.in ]; then
+              echo "ERROR: Deployment directory ~/htdocs/www.propertypeak.in does not exist"
+              exit 1
+            fi
+            echo "  Deployment directory exists ✓"
+            
+            # Check 3: Ensure disk space is at least 500MB free
+            echo "✓ Checking disk space..."
+            AVAILABLE_MB=$(df -m ~/htdocs/www.propertypeak.in | tail -1 | awk '{print $4}')
+            if [ "$AVAILABLE_MB" -lt 500 ]; then
+              echo "ERROR: Insufficient disk space. Available: ${AVAILABLE_MB}MB, Required: 500MB"
+              exit 1
+            fi
+            echo "  Disk space available: ${AVAILABLE_MB}MB ✓"
+            
+            # Check 4: Ensure "php artisan" command is available
+            echo "✓ Checking PHP artisan availability..."
+            cd ~/htdocs/www.propertypeak.in
+            if ! php artisan --version > /dev/null 2>&1; then
+              echo "ERROR: 'php artisan' command is not available"
+              exit 1
+            fi
+            echo "  PHP artisan is available ✓"
+            
+            echo "=== All Safety Checks Passed ==="
+          EOF
+
+      - name: Deploy to production server
+        run: |
+          ssh -o StrictHostKeyChecking=yes propertypeak@propertypeak.in << 'EOF'
+            set -e
+            cd ~/htdocs/www.propertypeak.in
+
+            git fetch origin
+            git reset --hard origin/main
+
+            php artisan optimize:clear
+            php artisan optimize
+          EOF
