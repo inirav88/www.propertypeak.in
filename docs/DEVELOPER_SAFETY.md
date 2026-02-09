@@ -189,6 +189,72 @@ git push origin feature/your-branch
 
 ---
 
+## 🚀 Production Deployment Safety
+
+### Manual Approval Required
+
+**Production deployments require manual approval.** This is a critical safety checkpoint.
+
+When code is merged to `main`, the deployment workflow will:
+1. ✅ Verify staging is healthy
+2. ✅ Run pre-deployment safety checks
+3. ⏸️ **PAUSE and wait for manual approval**
+4. ✅ Deploy only after approval
+
+### How to Approve Production Deployments
+
+1. Go to **GitHub → Actions tab**
+2. Find the "Deploy to Production" workflow run
+3. Click on the workflow run
+4. Click **"Review deployments"** button
+5. Select **"production"** environment
+6. Click **"Approve and deploy"**
+
+### Who Can Approve?
+
+Only authorized team members configured in the `production` environment can approve deployments.
+
+### Production Deployment Workflow
+
+**Option 1: Direct Merge (Standard)**
+```bash
+# After testing on staging
+git checkout main
+git pull origin main
+git merge staging
+git push origin main
+
+# GitHub Actions will:
+# 1. Verify staging health
+# 2. Run safety checks
+# 3. Pause for approval ⏸️
+# 4. Deploy after approval ✅
+```
+
+**Option 2: Promotion Workflow (Recommended)**
+```
+1. Go to GitHub → Actions
+2. Select "Promote Staging to Production"
+3. Click "Run workflow"
+4. Type "PROMOTE" to confirm
+5. Workflow will merge staging → main
+6. Approve the production deployment
+```
+
+### Emergency Rollback
+
+If production deployment fails or causes issues:
+
+```bash
+ssh propertypeak@propertypeak.in
+cd ~/htdocs/www.propertypeak.in
+bash scripts/rollback-production.sh
+```
+
+See [Production Deployment Guide](PRODUCTION_DEPLOYMENT.md) for detailed instructions.
+
+---
+
 ## 🎯 Summary
 
 1. **Never force push** to `main` or `staging`
@@ -196,6 +262,7 @@ git push origin feature/your-branch
 3. **Always use feature branches** for development
 4. **Always open PRs** for code review
 5. **Wait for CI and approval** before merging
+6. **Production requires manual approval** before deployment
 
 Following these rules keeps the repository safe and the team productive.
 
@@ -204,5 +271,6 @@ Following these rules keeps the repository safe and the team productive.
 ## Need Help?
 
 - Review `docs/BRANCHING_GUIDE.md` for workflow details
+- Review `docs/PRODUCTION_DEPLOYMENT.md` for deployment process
 - Check the PR template for checklist items
 - Ask team leads if you're unsure about a git operation

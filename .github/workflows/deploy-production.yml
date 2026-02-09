@@ -6,8 +6,55 @@ on:
       - main
 
 jobs:
-  deploy:
+  verify-staging:
+    name: Verify Staging Health
     runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check staging deployment status
+        run: |
+          echo "=== Verifying Staging Environment ==="
+          
+          # Get the latest commit on staging branch
+          STAGING_COMMIT=$(git rev-parse origin/staging)
+          echo "Latest staging commit: $STAGING_COMMIT"
+          
+          # Check if staging has recent activity (deployed in last 7 days)
+          STAGING_DATE=$(git log -1 --format=%cd --date=unix origin/staging)
+          CURRENT_DATE=$(date +%s)
+          DAYS_OLD=$(( ($CURRENT_DATE - $STAGING_DATE) / 86400 ))
+          
+          echo "Staging last updated: $DAYS_OLD days ago"
+          
+          if [ $DAYS_OLD -gt 7 ]; then
+            echo "⚠️  WARNING: Staging branch hasn't been updated in $DAYS_OLD days"
+            echo "Consider testing on staging before production deployment"
+          else
+            echo "✓ Staging is recently active"
+          fi
+      
+      - name: Staging health check
+        run: |
+          echo "=== Checking Staging Server Health ==="
+          
+          # Ping staging server
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://staging.propertypeak.in || echo "000")
+          
+          if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "302" ]; then
+            echo "✓ Staging server is responding (HTTP $HTTP_CODE)"
+          else
+            echo "⚠️  WARNING: Staging server returned HTTP $HTTP_CODE"
+            echo "Verify staging is healthy before proceeding with production deployment"
+          fi
+
+  deploy:
+    name: Deploy to Production
+    needs: verify-staging
+    runs-on: ubuntu-latest
+    environment: production  # 🔒 MANUAL APPROVAL REQUIRED
 
     steps:
       - name: Checkout code
@@ -23,6 +70,7 @@ jobs:
         run: ssh-keyscan -H propertypeak.in >> ~/.ssh/known_hosts
 
       - name: Pre-deployment safety checks
+        id: safety_checks
         run: |
           ssh -o StrictHostKeyChecking=yes propertypeak@propertypeak.in << 'EOF'
             set -e
@@ -65,18 +113,79 @@ jobs:
             fi
             echo "  PHP artisan is available ✓"
             
+            # Check 5: Get current commit for rollback reference
+            echo "✓ Recording current commit for rollback..."
+            CURRENT_COMMIT=$(git rev-parse HEAD)
+            echo "  Current production commit: $CURRENT_COMMIT"
+            echo "  Rollback command: cd ~/htdocs/www.propertypeak.in && git reset --hard $CURRENT_COMMIT"
+            
             echo "=== All Safety Checks Passed ==="
           EOF
 
       - name: Deploy to production server
+        id: deploy
         run: |
           ssh -o StrictHostKeyChecking=yes propertypeak@propertypeak.in << 'EOF'
             set -e
             cd ~/htdocs/www.propertypeak.in
 
+            echo "=== Starting Production Deployment ==="
+            
+            # Record pre-deployment state
+            PREVIOUS_COMMIT=$(git rev-parse HEAD)
+            echo "Previous commit: $PREVIOUS_COMMIT"
+
+            # Pull latest changes
             git fetch origin
             git reset --hard origin/main
+            
+            NEW_COMMIT=$(git rev-parse HEAD)
+            echo "New commit: $NEW_COMMIT"
 
+            # Clear and optimize caches
             php artisan optimize:clear
             php artisan optimize
+            
+            echo "=== Deployment Complete ==="
+            echo "Deployed commit: $NEW_COMMIT"
+            echo "Previous commit: $PREVIOUS_COMMIT"
           EOF
+      
+      - name: Deployment summary
+        if: always()
+        run: |
+          echo "=== Production Deployment Summary ==="
+          echo ""
+          if [ "${{ steps.deploy.outcome }}" == "success" ]; then
+            echo "✅ Deployment Status: SUCCESS"
+            echo ""
+            echo "🔗 Production URL: https://propertypeak.in"
+            echo "📝 Commit: ${{ github.sha }}"
+            echo "👤 Deployed by: ${{ github.actor }}"
+            echo ""
+            echo "Next steps:"
+            echo "  1. Verify the application is working correctly"
+            echo "  2. Monitor error logs for any issues"
+            echo "  3. Check critical user flows"
+            echo ""
+            echo "📋 Rollback instructions (if needed):"
+            echo "  ssh propertypeak@propertypeak.in"
+            echo "  cd ~/htdocs/www.propertypeak.in"
+            echo "  bash scripts/rollback-production.sh"
+          else
+            echo "❌ Deployment Status: FAILED"
+            echo ""
+            echo "⚠️  Production deployment failed during execution"
+            echo "The production environment may be in an inconsistent state"
+            echo ""
+            echo "Immediate actions:"
+            echo "  1. Check the error logs above"
+            echo "  2. Verify production site is still accessible"
+            echo "  3. Consider running rollback if site is broken"
+            echo ""
+            echo "📋 Emergency rollback:"
+            echo "  ssh propertypeak@propertypeak.in"
+            echo "  cd ~/htdocs/www.propertypeak.in"
+            echo "  bash scripts/rollback-production.sh"
+          fi
+          echo "==================================="

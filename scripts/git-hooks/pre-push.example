@@ -14,10 +14,10 @@
 # Get the current branch name
 current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
 
-# Check if current branch is a protected branch
-if [ "$current_branch" = "staging" ] || [ "$current_branch" = "main" ]; then
+# Check if current branch is staging
+if [ "$current_branch" = "staging" ]; then
     echo ""
-    echo "⚠️  WARNING: Direct pushes to '$current_branch' are not allowed."
+    echo "⚠️  WARNING: Direct pushes to 'staging' are not allowed."
     echo ""
     echo "   Required workflow:"
     echo "   1. Create a feature branch: git checkout -b feature/your-feature"
@@ -28,6 +28,31 @@ if [ "$current_branch" = "staging" ] || [ "$current_branch" = "main" ]; then
     echo "   GitHub will reject this push due to branch protection rules."
     echo ""
     echo "   See docs/BRANCHING_GUIDE.md for details."
+    echo ""
+fi
+
+# Check if current branch is main
+if [ "$current_branch" = "main" ]; then
+    echo ""
+    echo "🚨 CRITICAL WARNING: Direct pushes to 'main' trigger PRODUCTION deployment!"
+    echo ""
+    echo "   ⚠️  Production deployments require MANUAL APPROVAL"
+    echo ""
+    echo "   What will happen if you push:"
+    echo "   1. GitHub Actions will start production deployment workflow"
+    echo "   2. Workflow will verify staging health"
+    echo "   3. Workflow will PAUSE for manual approval"
+    echo "   4. You must approve in GitHub Actions before deployment"
+    echo ""
+    echo "   📋 Recommended workflow:"
+    echo "   1. Test changes on staging first"
+    echo "   2. Use the promotion workflow:"
+    echo "      GitHub → Actions → 'Promote Staging to Production'"
+    echo "   3. Or manually merge: git merge staging"
+    echo ""
+    echo "   See docs/PRODUCTION_DEPLOYMENT.md for details."
+    echo ""
+    echo "   GitHub will reject this push if branch protection is enabled."
     echo ""
 fi
 

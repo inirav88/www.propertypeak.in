@@ -1,0 +1,160 @@
+name: Promote Staging to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "PROMOTE" to confirm staging → production promotion'
+        required: true
+        type: string
+
+jobs:
+  validate-input:
+    name: Validate Promotion Request
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Validate confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "PROMOTE" ]; then
+            echo "❌ ERROR: Confirmation failed"
+            echo "You must type 'PROMOTE' (all caps) to proceed"
+            exit 1
+          fi
+          echo "✅ Confirmation validated"
+
+  verify-staging:
+    name: Verify Staging is Ready
+    needs: validate-input
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check staging branch exists
+        run: |
+          echo "=== Verifying Staging Branch ==="
+          
+          if ! git rev-parse origin/staging > /dev/null 2>&1; then
+            echo "❌ ERROR: staging branch does not exist"
+            exit 1
+          fi
+          
+          STAGING_COMMIT=$(git rev-parse origin/staging)
+          echo "✓ Staging branch exists"
+          echo "  Latest staging commit: $STAGING_COMMIT"
+      
+      - name: Check staging is ahead of main
+        run: |
+          echo "=== Checking for New Changes ==="
+          
+          MAIN_COMMIT=$(git rev-parse origin/main)
+          STAGING_COMMIT=$(git rev-parse origin/staging)
+          
+          if [ "$MAIN_COMMIT" = "$STAGING_COMMIT" ]; then
+            echo "⚠️  WARNING: Staging and main are at the same commit"
+            echo "No new changes to promote"
+            exit 1
+          fi
+          
+          # Count commits ahead
+          COMMITS_AHEAD=$(git rev-list --count origin/main..origin/staging)
+          echo "✓ Staging is $COMMITS_AHEAD commit(s) ahead of main"
+          
+          # Show commits to be promoted
+          echo ""
+          echo "=== Commits to be Promoted ==="
+          git log --oneline origin/main..origin/staging
+      
+      - name: Staging health check
+        run: |
+          echo "=== Checking Staging Server Health ==="
+          
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://staging.propertypeak.in || echo "000")
+          
+          if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "302" ]; then
+            echo "✓ Staging server is healthy (HTTP $HTTP_CODE)"
+          else
+            echo "❌ ERROR: Staging server is not responding properly (HTTP $HTTP_CODE)"
+            echo "Fix staging before promoting to production"
+            exit 1
+          fi
+
+  promote:
+    name: Merge Staging to Main
+    needs: verify-staging
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Merge staging into main
+        run: |
+          echo "=== Merging staging → main ==="
+          
+          git checkout main
+          git pull origin main
+          
+          git merge origin/staging --no-ff -m "chore: promote staging to production
+
+          Promoted by: ${{ github.actor }}
+          Workflow: ${{ github.workflow }}
+          Run ID: ${{ github.run_id }}"
+          
+          echo "✓ Merge completed successfully"
+      
+      - name: Push to main
+        run: |
+          echo "=== Pushing to main branch ==="
+          git push origin main
+          echo "✓ Changes pushed to main"
+          echo ""
+          echo "🚀 Production deployment workflow will now trigger"
+          echo "   Manual approval will be required before deployment"
+
+  notify:
+    name: Promotion Summary
+    needs: promote
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Summary
+        run: |
+          echo "=== Staging → Production Promotion Summary ==="
+          echo ""
+          if [ "${{ needs.promote.result }}" == "success" ]; then
+            echo "✅ Status: SUCCESS"
+            echo ""
+            echo "📋 What happened:"
+            echo "  1. ✓ Staging branch verified"
+            echo "  2. ✓ Staging health checked"
+            echo "  3. ✓ Staging merged into main"
+            echo "  4. ✓ Changes pushed to main branch"
+            echo ""
+            echo "🔄 Next steps:"
+            echo "  1. Production deployment workflow is now running"
+            echo "  2. Manual approval will be required"
+            echo "  3. Approve the deployment in the Actions tab"
+            echo "  4. Monitor production after deployment"
+            echo ""
+            echo "👤 Promoted by: ${{ github.actor }}"
+          else
+            echo "❌ Status: FAILED"
+            echo ""
+            echo "The promotion process failed. Check the logs above for details."
+            echo "Production has NOT been updated."
+          fi
+          echo "==================================="
