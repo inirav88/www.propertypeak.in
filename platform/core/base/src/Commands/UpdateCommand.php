@@ -62,7 +62,6 @@ class UpdateCommand extends Command
 
         array_map(fn (string $line) => note($line), [
             'Please backup your database and script files before upgrading',
-            'You need to activate your license before doing upgrade.',
             'If you don\'t need this 1-click update, you can disable it in <fg=yellow>.env</>? by adding <fg=yellow>CMS_ENABLE_SYSTEM_UPDATER=false</>',
             'It will override all files in <fg=yellow>./platform/core</>, <fg=yellow>./platform/packages</>, all plugins developed by us in <fg=yellow>./platform/plugins</> and theme developed by us in <fg=yellow>./platform/themes</>.',
         ]);
@@ -79,19 +78,13 @@ class UpdateCommand extends Command
         event(new UpdatingEvent());
 
         $progress = progress(
-            label: 'Verifying license...',
+            label: 'Preparing update...',
             steps: 6,
         );
 
         $progress->start();
 
         try {
-            if (! $this->core->verifyLicense(true)) {
-                $this->components->error('Your license is invalid. Please activate your license first.');
-
-                return self::FAILURE;
-            }
-
             $progress->label('Downloading the latest update...');
             $progress->advance();
 
