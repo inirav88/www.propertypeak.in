@@ -22,11 +22,6 @@
 
     @include('core/base::layouts.' . AdminAppearance::getCurrentLayout() . '.partials.after-content')
 
-    <x-slot:header-layout>
-        @if (\Botble\Base\Supports\Core::make()->isSkippedLicenseReminder())
-            @include('core/base::system.license-invalid', ['hidden' => false])
-        @endif
-    </x-slot:header-layout>
 
     <x-slot:footer>
         @include('core/base::global-search.form')

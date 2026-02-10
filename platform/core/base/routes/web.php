@@ -91,27 +91,10 @@ Route::group(['namespace' => 'Botble\Base\Http\Controllers'], function (): void 
                 'as' => 'membership.authorize',
                 'uses' => 'SystemController@postAuthorize',
             ]);
-
-            Route::get('license/check', [
-                'as' => 'license.check',
-                'uses' => 'SystemController@checkLicense',
-            ]);
-
             Route::get('menu-items-count', [
                 'as' => 'menu-items-count',
                 'uses' => 'SystemController@getMenuItemsCount',
             ]);
-
-            Route::get('unlicensed', [
-                'as' => 'unlicensed',
-                'uses' => 'UnlicensedController@index',
-            ]);
-
-            Route::post('unlicensed', [
-                'as' => 'unlicensed.skip',
-                'uses' => 'UnlicensedController@postSkip',
-            ]);
-
             Route::group(
                 ['prefix' => 'notifications', 'as' => 'notifications.', 'controller' => NotificationController::class],
                 function (): void {
