@@ -1,0 +1,10 @@
+{
+    "id": "botble/agent-broker",
+    "name": "Agent Broker",
+    "namespace": "Botble\\AgentBroker\\",
+    "provider": "Botble\\AgentBroker\\Providers\\AgentBrokerServiceProvider",
+    "author": "PropertyPeak",
+    "url": "https://propertypeak.in",
+    "version": "1.0.0",
+    "description": "Agent/Broker profile, lead, and approval workflows for PropertyPeak"
+}
