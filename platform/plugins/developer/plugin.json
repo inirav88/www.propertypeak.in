@@ -1,0 +1,10 @@
+{
+    "id": "botble/developer",
+    "name": "Developer",
+    "namespace": "Botble\\Developer\\",
+    "provider": "Botble\\Developer\\Providers\\DeveloperServiceProvider",
+    "author": "PropertyPeak",
+    "url": "https://propertypeak.in",
+    "version": "1.0.0",
+    "description": "Developer profile, project, lead, and approval workflows for PropertyPeak"
+}

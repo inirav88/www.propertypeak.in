@@ -1,0 +1,10 @@
+{
+    "id": "botble/crm",
+    "name": "CRM",
+    "namespace": "Botble\\Crm\\",
+    "provider": "Botble\\Crm\\Providers\\CrmServiceProvider",
+    "author": "PropertyPeak",
+    "url": "https://propertypeak.in",
+    "version": "1.0.0",
+    "description": "Lightweight CRM pipeline foundation for unified lead management"
+}
