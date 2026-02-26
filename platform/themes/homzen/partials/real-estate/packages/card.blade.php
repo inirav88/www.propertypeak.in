@@ -1,54 +1,58 @@
-<div class="col-lg-4 col-md-6">
-    <div @class(['box-pricing shadow-sm border-0 h-100 d-flex flex-column', 'active' => $package->is_default])>
-        <div class="price d-flex align-items-end mb-3">
-            <h4 class="fw-bold price-text" style="color: var(--primary-color, #1B316F);">
-                {{ $package->price == 0 ? __('Free') : format_price($package->price) }}</h4>
-            <span class="body-2 text-variant-1 ms-1 duration-text">
-                /
+<div class="col-lg-4 col-md-6 mb-4">
+    <div @class(['package-card', 'active' => $package->is_default])>
+        @if($package->is_default)
+            <div class="popular-badge">{{ __('Most Popular') }}</div>
+        @endif
+        
+        <div class="package-header">
+            <h5 class="package-name">{!! BaseHelper::clean($package->name) !!}</h5>
+            @if ($package->description)
+                <p class="package-desc">{{ $package->description }}</p>
+            @endif
+        </div>
+
+        <div class="package-price">
+            <span class="price-amount">{{ $package->price == 0 ? __('Free') : format_price($package->price) }}</span>
+            <span class="price-duration">
                 @if ($package->is_recurring)
-                    {{ __('month') }}
+                    / {{ __('month') }}
                 @else
-                    {{ __(':days days', ['days' => $package->duration_days]) }}
+                    / {{ __(':days days', ['days' => $package->duration_days]) }}
                 @endif
             </span>
         </div>
 
-        <div class="box-title-price mb-4">
-            <h5 class="title fw-bold card-title">{!! BaseHelper::clean($package->name) !!}</h5>
-            @if ($package->description)
-                <p class="desc small text-variant-1 card-desc">{{ $package->description }}</p>
-            @endif
-        </div>
-
-        <div class="package-limits mb-3">
+        <div class="package-limits">
             @if($package->number_of_listings)
-                <div class="small fw-semibold mb-1 limit-item" style="color: var(--primary-color, #1B316F);">
-                    <i class="ti ti-list me-1"></i>
-                    {{ __('Limits: :number Listings', ['number' => $package->number_of_listings >= 999999 ? __('Unlimited') : number_format($package->number_of_listings)]) }}
+                <div class="limit-item">
+                    <i class="ti ti-list"></i>
+                    <span>{{ __('Listings: :number', ['number' => $package->number_of_listings >= 999999 ? __('Unlimited') : number_format($package->number_of_listings)]) }}</span>
                 </div>
             @endif
             @if($package->number_of_projects)
-                <div class="small fw-semibold limit-item" style="color: var(--primary-color, #1B316F);">
-                    <i class="ti ti-layout-grid me-1"></i>
-                    {{ __('Projects: :number', ['number' => $package->number_of_projects >= 999999 ? __('Unlimited') : number_format($package->number_of_projects)]) }}
+                <div class="limit-item">
+                    <i class="ti ti-layout-grid"></i>
+                    <span>{{ __('Projects: :number', ['number' => $package->number_of_projects >= 999999 ? __('Unlimited') : number_format($package->number_of_projects)]) }}</span>
                 </div>
             @endif
         </div>
 
         @if ($package->formatted_features)
-            <div class="small fw-bold text-dark mb-2 feature-header">{{ __('Key Features:') }}</div>
-            <ul class="list-price flex-grow-1 mb-4">
-                @foreach ($package->formatted_features as $feature)
-                    <li class="item d-flex align-items-start mb-2">
-                        <span class="check-icon icon-tick text-success me-2 mt-1 feature-icon" style="font-size: 14px;"></span>
-                        <span class="small text-variant-1 feature-text">{!! BaseHelper::clean($feature) !!}</span>
-                    </li>
-                @endforeach
-            </ul>
+            <div class="package-features">
+                <div class="features-title">{{ __('Key Features') }}</div>
+                <ul class="features-list">
+                    @foreach ($package->formatted_features as $feature)
+                        <li>
+                            <i class="ti ti-check"></i>
+                            <span>{!! BaseHelper::clean($feature) !!}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
 
-        <div class="mt-auto">
-            <a href="{{ route('public.account.packages') }}" class="tf-btn w-100 rounded-pill py-2 subscribe-btn">
+        <div class="package-action">
+            <a href="{{ route('public.account.packages') }}" class="btn-choose">
                 {{ __('Choose This Plan') }}
             </a>
         </div>
@@ -56,51 +60,195 @@
 </div>
 
 <style>
-    .box-pricing {
-        padding: 30px;
+    .package-card {
         background: #fff;
         border-radius: 20px;
-        transition: all 0.3s ease;
+        padding: 32px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
     }
 
-    .box-pricing.active {
-        border: 2px solid var(--primary-color, #1B316F) !important;
-        /* Force background for active items if they are intended to be highlighted, but ensure text contrast */
-        /* If we want active items to just have a border, keep it simple. But if theme sets background, we must override text color. */
+    .package-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border-color: var(--primary-color, #3b82f6);
     }
 
-    /* Ensure text colors are correct on hover */
-    .box-pricing:hover {
-        background-color: var(--primary-color, #1B316F) !important;
-        transform: translateY(-10px);
-        box-shadow: 0 15px 35px rgba(27, 49, 111, 0.3) !important;
+    .package-card.active {
+        border-color: var(--primary-color, #3b82f6);
+        background: linear-gradient(135deg, #fff 0%, #f0f7ff 100%);
     }
 
-    .box-pricing:hover .price-text,
-    .box-pricing:hover .duration-text,
-    .box-pricing:hover .card-title,
-    .box-pricing:hover .card-desc,
-    .box-pricing:hover .limit-item,
-    .box-pricing:hover .feature-header,
-    .box-pricing:hover .feature-text,
-    .box-pricing:hover .feature-icon,
-    .box-pricing:hover i {
-        color: #fff !important;
-        opacity: 1;
-        /* Safety */
+    .popular-badge {
+        position: absolute;
+        top: 16px;
+        right: -32px;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 6px 40px;
+        transform: rotate(45deg);
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
     }
 
-    /* Button changes on hover */
-    .box-pricing:hover .subscribe-btn {
-        background-color: #fff !important;
-        color: var(--primary-color, #1B316F) !important;
-        border-color: #fff !important;
+    .package-header {
+        margin-bottom: 20px;
     }
 
-    .list-price {
+    .package-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+        line-height: 1.3;
+    }
+
+    .package-desc {
+        font-size: 13px;
+        color: #6b7280;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .package-price {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .price-amount {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--primary-color, #3b82f6);
+        line-height: 1;
+    }
+
+    .price-duration {
+        font-size: 14px;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .package-limits {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+
+    .limit-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: #374151;
+        font-weight: 500;
+        padding: 10px 14px;
+        background: #f8fafc;
+        border-radius: 10px;
+    }
+
+    .limit-item i {
+        color: var(--primary-color, #3b82f6);
+        font-size: 18px;
+    }
+
+    .package-features {
+        flex: 1;
+        margin-bottom: 24px;
+    }
+
+    .features-title {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6b7280;
+        margin-bottom: 12px;
+    }
+
+    .features-list {
         list-style: none;
         padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .features-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        color: #4b5563;
+        line-height: 1.5;
+    }
+
+    .features-list li i {
+        color: #10b981;
+        font-size: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .package-action {
+        margin-top: auto;
+    }
+
+    .btn-choose {
+        display: block;
+        width: 100%;
+        padding: 14px 24px;
+        background: var(--primary-color, #3b82f6);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        border: 2px solid var(--primary-color, #3b82f6);
+    }
+
+    .btn-choose:hover {
+        background: transparent;
+        color: var(--primary-color, #3b82f6);
+    }
+
+    .package-card.active .btn-choose {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        border-color: transparent;
+    }
+
+    .package-card.active .btn-choose:hover {
+        background: transparent;
+        border-color: var(--primary-color, #3b82f6);
+    }
+
+    @media (max-width: 768px) {
+        .package-card {
+            padding: 24px;
+        }
+
+        .price-amount {
+            font-size: 28px;
+        }
+
+        .popular-badge {
+            padding: 5px 35px;
+            font-size: 10px;
+        }
     }
 </style>
