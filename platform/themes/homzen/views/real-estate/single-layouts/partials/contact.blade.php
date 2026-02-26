@@ -9,13 +9,32 @@
 
         <div class="box-avatar">
             <div class="avatar avt-100 round">
-                <a href="{{ $account->url }}" class="d-block">
-                    {{ RvMedia::image($account->avatar?->url ?: $account->avatar_url, $account->name) }}
-                </a>
+                @php
+                    // Safe URL generation - handle both Botble Account and custom models
+                    $profileUrl = null;
+                    if ($account->username ?? false) {
+                        $profileUrl = route('public.' . ($account->isBuilder() ? 'developer' : 'agent'), $account->username);
+                    } elseif ($account->slug ?? false) {
+                        $profileUrl = route(($account->isBuilder() ? 'developers' : 'agents') . '.show', $account->slug);
+                    }
+                @endphp
+                @if($profileUrl)
+                    <a href="{{ $profileUrl }}" class="d-block">
+                        {{ RvMedia::image($account->avatar?->url ?: $account->avatar_url, $account->name) }}
+                    </a>
+                @else
+                    <span class="d-block">
+                        {{ RvMedia::image($account->avatar?->url ?: $account->avatar_url, $account->name) }}
+                    </span>
+                @endif
             </div>
             <div class="info line-clamp-1">
                 <div class="text-1 name">
-                    <a href="{{ $account->url }}">{{ $account->name }} {!! $account->badge !!}</a>
+                    @if($profileUrl)
+                        <a href="{{ $profileUrl }}">{{ $account->name }} {!! $account->badge ?? '' !!}</a>
+                    @else
+                        <span>{{ $account->name }} {!! $account->badge ?? '' !!}</span>
+                    @endif
                 </div>
                 @if ($account->phone && !setting('real_estate_hide_agency_phone', false))
                     <a href="tel:{{ $account->phone }}" class="info-item">{{ $account->phone }}</a>

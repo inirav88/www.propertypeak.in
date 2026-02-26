@@ -79,55 +79,30 @@
         <div class="button-submit" style="margin-top: 15px;">
             <button class="tf-btn primary" type="button" onclick="window.superCalc(this)">{{ __('Calculate') }}</button>
         </div>
+
+        {{-- Amortization Schedule Toggle --}}
+        <div class="amortization-toggle" style="margin-top: 15px; text-align: center;">
+            <button class="tf-btn secondary" type="button" onclick="window.toggleAmortization(this)" style="background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color);">
+                <i class="fa fa-table"></i> {{ __('View Amortization Schedule') }}
+            </button>
+        </div>
+
+        {{-- Amortization Schedule Table --}}
+        <div class="amortization-schedule" style="display: none; margin-top: 20px; max-height: 400px; overflow-y: auto;">
+            <h6 style="margin-bottom: 10px; font-size: 14px; color: var(--primary-color);">{{ __('Amortization Schedule') }}</h6>
+            <table class="table table-bordered table-striped" style="width: 100%; font-size: 12px;">
+                <thead style="background: var(--primary-color); color: white; position: sticky; top: 0;">
+                    <tr>
+                        <th style="padding: 8px;">{{ __('Year') }}</th>
+                        <th style="padding: 8px;">{{ __('Interest') }}</th>
+                        <th style="padding: 8px;">{{ __('Principal') }}</th>
+                        <th style="padding: 8px;">{{ __('Balance') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="amortization-body">
+                    {{-- Schedule rows will be inserted here --}}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-
-<script>
-    window.superCalc = function (btn) {
-        var container = btn.closest('.mc-widget-final');
-        if (!container) return;
-
-        var total = parseFloat(container.querySelector('.mc-total').value) || 0;
-        var down = parseFloat(container.querySelector('.mc-down').value) || 0;
-        var rate = parseFloat(container.querySelector('.mc-rate').value) || 0;
-        var term = parseFloat(container.querySelector('.mc-term').value) || 0;
-        var rent = parseFloat(container.querySelector('.mc-rent').value) || 0;
-
-        var principal = total - down;
-        var monthlyRate = rate / 100 / 12;
-        var numberOfPayments = term * 12;
-        var emi = 0;
-        var totalInterest = 0;
-        var totalPayback = 0;
-
-        if (principal > 0 && monthlyRate > 0 && numberOfPayments > 0) {
-            emi = principal * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
-            var totalPaid = emi * numberOfPayments;
-            totalInterest = totalPaid - principal;
-            totalPayback = totalPaid;
-            if (totalInterest < 0) totalInterest = 0;
-        }
-
-        var yieldVal = (total > 0) ? ((rent * 12) / total) * 100 : 0;
-        var cashFlow = rent - emi;
-
-        if (container.querySelector('.mc-emi')) container.querySelector('.mc-emi').innerText = Math.round(emi).toLocaleString('en-US');
-        if (container.querySelector('.mc-interest')) container.querySelector('.mc-interest').innerText = Math.round(totalInterest).toLocaleString('en-US');
-        if (container.querySelector('.mc-payback')) container.querySelector('.mc-payback').innerText = Math.round(totalPayback).toLocaleString('en-US');
-        if (container.querySelector('.mc-yield')) container.querySelector('.mc-yield').innerText = yieldVal.toFixed(2) + '%';
-
-        var cfEl = container.querySelector('.mc-cashflow');
-        if (cfEl) {
-            cfEl.innerText = Math.round(cashFlow).toLocaleString('en-US');
-            cfEl.style.color = cashFlow >= 0 ? '#25d366' : '#ff5a5f';
-        }
-    };
-
-    // Auto-Run
-    setTimeout(function () {
-        var btns = document.querySelectorAll('.mc-widget-final button');
-        for (var i = 0; i < btns.length; i++) {
-            window.superCalc(btns[i]);
-        }
-    }, 1500);
-</script>

@@ -1,0 +1,179 @@
+/**
+ * Property/Project Detail Page - UI/UX Improvements
+ * Fixes margin issues and enhances overview section styling
+ */
+
+/* Fix margin issues for detail pages */
+.flat-property-detail {
+    padding-top: 30px;
+}
+
+.flat-property-detail .header-property-detail {
+    margin: 0 0 30px 0;
+    padding: 30px;
+    border-radius: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* Improve single property element spacing */
+.single-property-element {
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.single-property-element:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Improve Overview section styling */
+.single-property-overview {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.single-property-overview .title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #1a1a1a;
+}
+
+.single-property-overview .info-box {
+    gap: 20px;
+}
+
+.single-property-overview .info-box .item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.single-property-overview .info-box .item:hover {
+    background: #f0f1f2;
+    transform: translateY(-2px);
+}
+
+.single-property-overview .info-box .box-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 12px;
+    color: #3b82f6;
+    font-size: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.single-property-overview .info-box .content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.single-property-overview .info-box .label {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.single-property-overview .info-box .content span:last-child {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+/* Improve Description section */
+.single-property-desc {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.single-property-desc .title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+}
+
+.single-property-desc .single-detail {
+    line-height: 1.8;
+    color: #4b5563;
+}
+
+/* Gallery section improvements */
+.single-property-gallery {
+    margin-bottom: 30px;
+}
+
+/* Related Properties section */
+.flat-latest-property {
+    padding: 60px 0;
+}
+
+/* Style 2, 3, 4 specific fixes */
+.flat-property-detail-v2 .header-property-detail,
+.flat-property-detail-v3 .header-property-detail,
+.flat-property-detail-v4 .header-property-detail {
+    margin: 0 0 30px 0;
+    padding: 30px;
+}
+
+.widget-box-single {
+    margin-bottom: 30px;
+}
+
+/* Responsive fixes */
+@media (max-width: 991px) {
+    .flat-property-detail {
+        padding-top: 20px;
+    }
+    
+    .flat-property-detail .header-property-detail,
+    .flat-property-detail-v2 .header-property-detail,
+    .flat-property-detail-v3 .header-property-detail,
+    .flat-property-detail-v4 .header-property-detail {
+        margin: 0 0 20px 0;
+        padding: 20px;
+    }
+    
+    .single-property-element {
+        margin-bottom: 30px;
+        padding-bottom: 30px;
+    }
+    
+    .single-property-overview,
+    .single-property-desc {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .single-property-overview .info-box .item {
+        padding: 12px;
+    }
+    
+    .single-property-overview .info-box .box-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+    
+    .single-property-overview .title,
+    .single-property-desc .title {
+        font-size: 18px;
+    }
+}

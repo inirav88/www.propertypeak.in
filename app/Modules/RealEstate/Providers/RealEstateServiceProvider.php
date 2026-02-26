@@ -70,6 +70,12 @@ class RealEstateServiceProvider extends ServiceProvider
                 ->name('agents.index');
             Route::get('agents/{slug}', \App\Modules\RealEstate\Http\Controllers\Frontend\AgentPublicController::class . '@show')
                 ->name('agents.show');
+
+            // Botble compatibility routes (used by Account model)
+            Route::get('developer/{username}', \App\Modules\RealEstate\Http\Controllers\Frontend\DeveloperPublicController::class . '@show')
+                ->name('public.developer');
+            Route::get('agent/{username}', \App\Modules\RealEstate\Http\Controllers\Frontend\AgentPublicController::class . '@show')
+                ->name('public.agent');
         });
     }
 

@@ -9,7 +9,7 @@
                 [
                     're_properties.project_id' => $model->getKey(),
                 ],
-                theme_option('number_of_related_properties', 8),
+                theme_option('number_of_related_properties', 6),
                 \Botble\RealEstate\Facades\RealEstateHelper::getPropertyRelationsQuery(),
             );
     } else {
@@ -17,7 +17,7 @@
         $relatedProperties = app(\Botble\RealEstate\Repositories\Interfaces\PropertyInterface::class)
             ->getRelatedProperties(
                 $model->id,
-                theme_option('number_of_related_properties', 8),
+                theme_option('number_of_related_properties', 6),
                 \Botble\RealEstate\Facades\RealEstateHelper::getPropertyRelationsQuery()
             );
     }
