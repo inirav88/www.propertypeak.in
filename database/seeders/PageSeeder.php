@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Botble\Base\Supports\BaseSeeder;
-use Botble\CookieConsent\Database\Traits\HasCookieConsentSeeder;
+
 use Botble\Location\Models\City;
 use Botble\Location\Models\State;
 use Botble\Page\Database\Traits\HasPageSeeder;
@@ -13,7 +13,6 @@ use Illuminate\Support\Arr;
 class PageSeeder extends BaseSeeder
 {
     use HasPageSeeder;
-    use HasCookieConsentSeeder;
 
     public function run(): void
     {
@@ -1156,8 +1155,8 @@ class PageSeeder extends BaseSeeder
                 'template' => 'no-layout',
             ],
             [
-                'name' => $this->getCookieConsentPageName(),
-                'content' => $this->getCookieConsentPageContent(),
+                'name' => 'Cookie Policy',
+                'content' => '<h2>Cookie Policy</h2><p>This website uses cookies to ensure you get the best experience.</p>',
                 'metadata' => [
                     'breadcrumb' => 'yes',
                 ],

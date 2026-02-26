@@ -11,6 +11,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-zip": "*",
+        "barryvdh/laravel-dompdf": "*",
         "botble/api": "^2.1",
         "botble/data-synchronize": "^1.0",
         "botble/get-started": "*@dev",
@@ -39,6 +40,7 @@
         "barryvdh/laravel-debugbar": "^3.8",
         "botble/dev-tool": "^1.0.2",
         "botble/git-commit-checker": "^2.1",
+        "cweagans/composer-patches": "^2.0",
         "driftingly/rector-laravel": "^2.0",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
@@ -89,6 +91,11 @@
         ]
     },
     "extra": {
+        "patches": {
+            "laravel/framework": {
+                "Fix console command laravel binding issue": "patches/laravel-console-fix.patch"
+            }
+        },
         "laravel": {
             "dont-discover": []
         },
@@ -119,6 +126,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+            "cweagans/composer-patches": true,
             "composer/package-versions-deprecated": true,
             "pestphp/pest-plugin": true,
             "wikimedia/composer-merge-plugin": true
@@ -137,3 +145,4 @@
         }
     ]
 }
+
