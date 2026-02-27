@@ -35,11 +35,19 @@ class GeneratePropertySlugs extends Command
             $this->warn('Running in DRY-RUN mode. No changes will be made.');
         }
 
+        // Get the underlying query to avoid issues with SoftDeletes if column is missing
+        $query = Property::query()->withoutGlobalScopes();
+        
+        // If we have soft deletes but column is missing, manually handle it
+        $tableName = (new Property())->getTable();
+        if (!\Illuminate\Support\Facades\Schema::hasColumn($tableName, 'deleted_at')) {
+            $query = \Illuminate\Support\Facades\DB::table($tableName);
+        }
+
         // Get all properties without slugs
-        $properties = Property::withoutGlobalScope('approved')
-            ->whereNull('slug')
-            ->orWhere('slug', '')
-            ->get();
+        $properties = $query->where(function($q) {
+                $q->whereNull('slug')->orWhere('slug', '');
+            })->get();
 
         $count = $properties->count();
 
@@ -65,26 +73,30 @@ class GeneratePropertySlugs extends Command
 
         foreach ($properties as $property) {
             try {
+                // Handle both Eloquent and DB builder results
+                $id = is_object($property) && isset($property->id) ? $property->id : $property->id;
+                $name = is_object($property) && isset($property->name) ? $property->name : ($property->name ?? $property->title ?? null);
+
                 // Generate slug from property name
-                $baseSlug = Str::slug($property->name ?? $property->title ?? 'property-' . $property->id);
+                $baseSlug = Str::slug($name ?? 'property-' . $id);
                 $slug = $baseSlug;
                 $counter = 1;
 
                 // Ensure unique slug
-                while (Property::withoutGlobalScope('approved')->where('slug', $slug)->where('id', '!=', $property->id)->exists()) {
+                while (\Illuminate\Support\Facades\DB::table($tableName)->where('slug', $slug)->where('id', '!=', $id)->exists()) {
                     $slug = $baseSlug . '-' . $counter;
                     $counter++;
                 }
 
                 if (!$dryRun) {
-                    $property->update(['slug' => $slug]);
+                    \Illuminate\Support\Facades\DB::table($tableName)->where('id', $id)->update(['slug' => $slug]);
                 }
 
                 $updated++;
                 $bar->advance();
             } catch (\Exception $e) {
                 $errors++;
-                $this->error("\nError processing property ID {$property->id}: {$e->getMessage()}");
+                $this->error("\nError processing property ID " . ($property->id ?? 'unknown') . ": {$e->getMessage()}");
             }
         }
 

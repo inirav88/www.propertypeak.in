@@ -35,7 +35,7 @@ return new class extends Migration
         // Slug column for URL-friendly property names
         if (!Schema::hasColumn($tableName, 'slug')) {
             $afterColumn = Schema::hasColumn($tableName, 'name') ? 'name' : (Schema::hasColumn($tableName, 'title') ? 'title' : 'id');
-            $table->string('slug', 255)->unique()->after($afterColumn);
+            $table->string('slug', 255)->nullable()->after($afterColumn);
         }
 
         // User relationship - who created the property
