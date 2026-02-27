@@ -36,6 +36,9 @@ return new class extends Migration
         if (!Schema::hasColumn($tableName, 'slug')) {
             $afterColumn = Schema::hasColumn($tableName, 'name') ? 'name' : (Schema::hasColumn($tableName, 'title') ? 'title' : 'id');
             $table->string('slug', 255)->nullable()->after($afterColumn);
+        } else {
+            // Ensure it is nullable if it exists but was created as NOT NULL previously
+            $table->string('slug', 255)->nullable()->change();
         }
 
         // User relationship - who created the property
@@ -228,12 +231,20 @@ return new class extends Migration
     private function addIndexIfNotExists(Blueprint $table, string $tableName, array|string $columns): void
     {
         $columns = (array) $columns;
-        $indexName = $tableName . '_' . implode('_', $columns) . '_index';
+        $indexName = strtolower($tableName . '_' . implode('_', $columns) . '_index');
         
-        try {
-            $table->index($columns);
-        } catch (\Exception $e) {
-            // Index might already exist, ignore error
+        // Get existing indexes
+        $conn = Schema::getConnection();
+        $dbName = $conn->getDatabaseName();
+        
+        $existingIndexes = $conn->select(
+            "SELECT INDEX_NAME FROM INFORMATION_SCHEMA.STATISTICS 
+             WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND INDEX_NAME = ?",
+            [$dbName, $tableName, $indexName]
+        );
+
+        if (empty($existingIndexes)) {
+            $table->index($columns, $indexName);
         }
     }
 
