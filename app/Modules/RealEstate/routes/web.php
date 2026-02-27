@@ -152,59 +152,6 @@ Route::middleware(['admin.auth'])->prefix('admin')->name('admin.')->group(functi
 */
 
 Route::middleware('web')->group(function (): void {
-    // Area Converter
-    Route::get('area-converter', [AreaConverterController::class, 'index'])->name('area-converter.index');
-    Route::post('area-converter/convert', [AreaConverterController::class, 'convert'])->name('area-converter.convert');
-    
-    // Rent Receipt Generator
-    Route::get('rent-receipt-generator', [RentReceiptController::class, 'index'])->name('rent-receipt.index');
-    Route::post('rent-receipt-generator', [RentReceiptController::class, 'generate'])->name('rent-receipt.generate');
-    
-    // Rent Agreement Generator
-    Route::get('rent-agreement-test', function() {
-        return view('realestate::frontend.rent-agreement.test');
-    });
-    Route::get('rent-agreement-test-preview', function() {
-        // Create test data
-        session(['rent_agreement' => [
-            'landlord_name' => 'John Doe',
-            'landlord_phone' => '9876543210',
-            'landlord_email' => 'john@example.com',
-            'landlord_address' => '123 Main Street',
-            'landlord_city' => 'Mumbai',
-            'landlord_state' => 'maharashtra',
-            'landlord_pincode' => '400001',
-            'tenant_name' => 'Jane Smith',
-            'tenant_phone' => '9876543211',
-            'tenant_email' => 'jane@example.com',
-            'tenant_address' => '456 Park Avenue',
-            'tenant_city' => 'Mumbai',
-            'tenant_state' => 'maharashtra',
-            'tenant_pincode' => '400002',
-            'property_address' => '789 Building, Main Road',
-            'property_city' => 'Mumbai',
-            'property_state' => 'maharashtra',
-            'property_pincode' => '400001',
-            'floor_number' => '3rd',
-            'property_type' => 'residential',
-            'parking' => 'without_parking',
-            'property_description' => '2 BHK Apartment, 1000 sq.ft.',
-            'rent_amount' => 25000,
-            'rent_amount_words' => 'Twenty Five Thousand Only',
-            'security_deposit' => 100000,
-            'security_deposit_words' => 'One Lakh Only',
-            'agreement_duration' => '11_months',
-            'agreement_start_date' => date('Y-m-d'),
-            'rent_due_date' => '5th',
-            'notice_period' => 'One month',
-            'purpose' => 'residential',
-        ]]);
-        return redirect()->route('rent-agreement.preview');
-    });
-    Route::get('rent-agreement', [RentAgreementController::class, 'index'])->name('rent-agreement.index');
-    Route::post('rent-agreement/save', [RentAgreementController::class, 'save'])->name('rent-agreement.save');
-    Route::get('rent-agreement/preview', [RentAgreementController::class, 'preview'])->name('rent-agreement.preview');
-    Route::post('rent-agreement/download', [RentAgreementController::class, 'download'])->name('rent-agreement.download');
     
     // Property detail page
     Route::get('properties/{slug}', [PropertyPublicController::class, 'show'])->name('properties.show');

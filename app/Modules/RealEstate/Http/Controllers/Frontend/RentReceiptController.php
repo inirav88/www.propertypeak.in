@@ -8,14 +8,29 @@ use Illuminate\Http\Request;
 
 class RentReceiptController extends Controller
 {
+    /**
+     * Show rent receipt generator form (Full Page)
+     */
     public function index()
-{
-   Theme::layout('full-width');
-    Theme::set('title', 'Rent Receipt Generator');
+    {
+        Theme::layout('full-width');
+        Theme::set('pageTitle', 'Rent Receipt Generator - Free House Rent Receipt for Income Tax');
+        Theme::set('description', 'Generate free house rent receipts online for income tax HRA claims. Create professional rent receipts with revenue stamp for tax deductions.');
+        
+        return Theme::of('realestate::frontend.rent-receipt.index', ['isShortcode' => false])->render();
+    }
 
-    return Theme::of('realestate::frontend.rent-receipt.index')->render();
-}
+    /**
+     * Get content only for shortcode usage
+     */
+    public function getContent(): string
+    {
+        return view('realestate::frontend.rent-receipt.index', ['isShortcode' => true])->render();
+    }
 
+    /**
+     * Generate rent receipt PDF
+     */
     public function generate(Request $request)
     {
         $validated = $request->validate([
@@ -34,11 +49,13 @@ class RentReceiptController extends Controller
             'include_revenue_stamp' => 'nullable|boolean',
         ]);
 
+        // Format dates
         $fromDate = \Carbon\Carbon::parse($validated['rent_from'])->format('F d, Y');
         $toDate = \Carbon\Carbon::parse($validated['rent_to'])->format('F d, Y');
         $paymentDate = \Carbon\Carbon::parse($validated['payment_date'])->format('F d, Y');
-
-        $needsRevenueStamp = ($validated['rent_amount'] > 5000 && $validated['payment_method'] === 'cash') ||
+        
+        // Determine if revenue stamp is needed (> 5000 and cash payment)
+        $needsRevenueStamp = ($validated['rent_amount'] > 5000 && $validated['payment_method'] === 'cash') || 
                              ($validated['include_revenue_stamp'] ?? false);
 
         $data = [
@@ -57,9 +74,13 @@ class RentReceiptController extends Controller
             'generated_date' => now()->format('F d, Y'),
         ];
 
+        // Return printable view
         return view('realestate::frontend.rent-receipt.print', $data);
     }
 
+    /**
+     * Get payment method label
+     */
     private function getPaymentMethodLabel(string $method): string
     {
         return match($method) {

@@ -1,20 +1,28 @@
-@extends(Theme::getThemeNamespace('layouts.default'))
+@if(empty($isShortcode))
+@php
+    Theme::layout('full-width');
+    Theme::set('pageTitle', __('Rent Receipt Generator - Free House Rent Receipt for Income Tax'));
+    Theme::set('breadcrumbEnabled', 'yes');
+    Theme::set('breadcrumbBackgroundColor', '#f7f7f7');
+@endphp
+@endif
 
-@section('title', 'Rent Receipt Generator - Free House Rent Receipt for Income Tax')
-@section('description', 'Generate free house rent receipts online for income tax HRA claims. Create professional rent receipts with revenue stamp for tax deductions.')
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-@section('content')
 <div class="bg-light py-5">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
+                @if(empty($isShortcode))
                 <div class="text-center mb-5">
                     <h1 class="h2 mb-3">Rent Receipt Generator</h1>
                     <p class="text-muted">Generate professional house rent receipts for income tax HRA claims. Free, easy, and instant!</p>
                 </div>
+                @endif
 
                 <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-primary text-white p-3">
                         <h5 class="mb-0"><i class="fas fa-file-invoice me-2"></i>Generate Rent Receipt</h5>
                     </div>
                     <div class="card-body p-4">
@@ -236,7 +244,6 @@
     </div>
 </div>
 
-@push('scripts')
 <script>
     // Auto-convert rent amount to words (basic version)
     document.getElementById('rent_amount').addEventListener('input', function() {
@@ -262,5 +269,3 @@
         return convertNumberToWords(Math.floor(num / 100000)) + ' Lakh ' + convertNumberToWords(num % 100000);
     }
 </script>
-@endpush
-@endsection

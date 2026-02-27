@@ -99,7 +99,7 @@ class AreaConverterController extends Controller
     ];
 
     /**
-     * Show area converter page
+     * Show area converter page (Full Page)
      */
     public function index()
     {
@@ -109,6 +109,19 @@ class AreaConverterController extends Controller
         return Theme::of('realestate::frontend.area-converter.index', [
             'units' => $this->units,
             'states' => $this->states,
+            'isShortcode' => false,
+        ])->render();
+    }
+
+    /**
+     * Get content only for shortcode usage
+     */
+    public function getContent()
+    {
+        return view('realestate::frontend.area-converter.index', [
+            'units' => $this->units,
+            'states' => $this->states,
+            'isShortcode' => true,
         ])->render();
     }
 
