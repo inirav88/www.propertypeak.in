@@ -75,16 +75,17 @@ class RentAgreementController extends Controller
     /**
      * Show rent agreement form
      */
-    public function index(): View
+    public function index()
     {
-        Theme::layout('full-width');
-        Theme::set('pageTitle', 'Rent Agreement - Create Legal Rent Agreement Online');
+	Theme::layout('full-width');
+    Theme::set('pageTitle', 'Rent Agreement - Create Legal Rent Agreement Online');
 
-        return view('realestate::frontend.rent-agreement.index', [
-            'states' => $this->indianStates,
-            'propertyTypes' => $this->propertyTypes,
-            'agreementTypes' => $this->agreementTypes,
-        ]);
+return Theme::of('realestate::frontend.rent-agreement.index', [
+    'states' => $this->indianStates,
+    'propertyTypes' => $this->propertyTypes,
+    'agreementTypes' => $this->agreementTypes,
+])->render();
+        
     }
 
     /**

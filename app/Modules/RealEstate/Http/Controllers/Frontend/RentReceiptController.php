@@ -5,25 +5,17 @@ namespace App\Modules\RealEstate\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Botble\Theme\Facades\Theme;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-// use Barryvdh\DomPDF\Facade\Pdf; // PDF library not installed yet
 
 class RentReceiptController extends Controller
 {
-    /**
-     * Show rent receipt generator form
-     */
-    public function index(): View
-    {
-        Theme::set('title', 'Rent Receipt Generator - Free House Rent Receipt for Income Tax');
-        Theme::set('description', 'Generate free house rent receipts online for income tax HRA claims. Create professional rent receipts with revenue stamp for tax deductions.');
-        
-        return view('realestate::frontend.rent-receipt.index');
-    }
+    public function index()
+{
+   Theme::layout('full-width');
+    Theme::set('title', 'Rent Receipt Generator');
 
-    /**
-     * Generate rent receipt PDF
-     */
+    return Theme::of('realestate::frontend.rent-receipt.index')->render();
+}
+
     public function generate(Request $request)
     {
         $validated = $request->validate([
@@ -42,13 +34,11 @@ class RentReceiptController extends Controller
             'include_revenue_stamp' => 'nullable|boolean',
         ]);
 
-        // Format dates
         $fromDate = \Carbon\Carbon::parse($validated['rent_from'])->format('F d, Y');
         $toDate = \Carbon\Carbon::parse($validated['rent_to'])->format('F d, Y');
         $paymentDate = \Carbon\Carbon::parse($validated['payment_date'])->format('F d, Y');
-        
-        // Determine if revenue stamp is needed (> 5000 and cash payment)
-        $needsRevenueStamp = ($validated['rent_amount'] > 5000 && $validated['payment_method'] === 'cash') || 
+
+        $needsRevenueStamp = ($validated['rent_amount'] > 5000 && $validated['payment_method'] === 'cash') ||
                              ($validated['include_revenue_stamp'] ?? false);
 
         $data = [
@@ -67,22 +57,9 @@ class RentReceiptController extends Controller
             'generated_date' => now()->format('F d, Y'),
         ];
 
-        // PDF download option (requires barryvdh/laravel-dompdf package)
-        // For now, we'll show the print view which users can save as PDF
-        if ($request->has('download_pdf')) {
-            // Return printable view with download headers
-            return response()->view('realestate::frontend.rent-receipt.print', $data)
-                ->header('Content-Type', 'text/html')
-                ->header('Content-Disposition', 'attachment; filename="rent-receipt-' . $validated['receipt_number'] . '.html"');
-        }
-
-        // Return printable view
         return view('realestate::frontend.rent-receipt.print', $data);
     }
 
-    /**
-     * Get payment method label
-     */
     private function getPaymentMethodLabel(string $method): string
     {
         return match($method) {
