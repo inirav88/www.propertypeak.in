@@ -106,6 +106,10 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="label-form">{{ __('Payment Date') }} <span class="text-danger">*</span></label>
+                                        <input type="date" name="payment_date" class="form-control" value="{{ old('payment_date', date('Y-m-d')) }}" required>
+                                    </div>
                                 </div>
                             </div>
 
