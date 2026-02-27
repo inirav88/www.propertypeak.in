@@ -102,7 +102,7 @@ class RealEstateServiceProvider extends ServiceProvider
             'parent_id'   => 'cms-plugins-real-estate-tools',
             'name'        => 'Area Converter',
             'icon'        => 'fa fa-calculator',
-            'url'         => route('area-converter.index'),
+            'url'         => url('area-converter'),
             'permissions' => [],
         ])
         ->registerItem([
@@ -111,7 +111,7 @@ class RealEstateServiceProvider extends ServiceProvider
             'parent_id'   => 'cms-plugins-real-estate-tools',
             'name'        => 'Rent Agreement',
             'icon'        => 'fa fa-file-contract',
-            'url'         => route('rent-agreement.index'),
+            'url'         => url('rent-agreement'),
             'permissions' => [],
         ])
         ->registerItem([
@@ -120,7 +120,7 @@ class RealEstateServiceProvider extends ServiceProvider
             'parent_id'   => 'cms-plugins-real-estate-tools',
             'name'        => 'Rent Receipt',
             'icon'        => 'fa fa-receipt',
-            'url'         => route('rent-receipt.index'),
+            'url'         => url('rent-receipt-generator'),
             'permissions' => [],
         ]);
     }
