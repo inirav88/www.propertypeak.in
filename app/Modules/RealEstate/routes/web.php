@@ -152,7 +152,18 @@ Route::middleware(['admin.auth'])->prefix('admin')->name('admin.')->group(functi
 */
 
 Route::middleware('web')->group(function (): void {
+    // Tools
+    Route::get('area-converter', [AreaConverterController::class, 'index'])->name('area-converter.index');
+    Route::post('area-converter/convert', [AreaConverterController::class, 'convert'])->name('area-converter.convert');
     
+    Route::get('rent-receipt-generator', [RentReceiptController::class, 'index'])->name('rent-receipt.index');
+    Route::post('rent-receipt-generator', [RentReceiptController::class, 'generate'])->name('rent-receipt.generate');
+    
+    Route::get('rent-agreement', [RentAgreementController::class, 'index'])->name('rent-agreement.index');
+    Route::post('rent-agreement/save', [RentAgreementController::class, 'save'])->name('rent-agreement.save');
+    Route::get('rent-agreement/preview', [RentAgreementController::class, 'preview'])->name('rent-agreement.preview');
+    Route::post('rent-agreement/download', [RentAgreementController::class, 'download'])->name('rent-agreement.download');
+
     // Property detail page
     Route::get('properties/{slug}', [PropertyPublicController::class, 'show'])->name('properties.show');
     

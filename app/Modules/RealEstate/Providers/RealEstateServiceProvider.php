@@ -48,9 +48,6 @@ class RealEstateServiceProvider extends ServiceProvider
             // Override Botble's auth model with our extended User model
             config()->set(['auth.providers.users.model' => \App\Models\User::class]);
 
-            // Register public routes after all providers boot (to override Botble routes)
-            $this->overridePublicRoutes();
-
             // Register Shortcodes
             $this->registerShortcodes();
             
@@ -123,54 +120,6 @@ class RealEstateServiceProvider extends ServiceProvider
             'url'         => url('rent-receipt-generator'),
             'permissions' => [],
         ]);
-    }
-
-    /**
-     * Override Botble's public routes with our implementation
-     */
-    private function overridePublicRoutes(): void
-    {
-        Route::middleware('web')->group(function () {
-            // Area Converter
-            Route::get('area-converter', \App\Modules\RealEstate\Http\Controllers\Frontend\AreaConverterController::class . '@index')
-                ->name('area-converter.index');
-            Route::post('area-converter/convert', \App\Modules\RealEstate\Http\Controllers\Frontend\AreaConverterController::class . '@convert')
-                ->name('area-converter.convert');
-            
-            // Rent Receipt Generator
-            Route::get('rent-receipt-generator', \App\Modules\RealEstate\Http\Controllers\Frontend\RentReceiptController::class . '@index')
-                ->name('rent-receipt.index');
-            Route::post('rent-receipt-generator', \App\Modules\RealEstate\Http\Controllers\Frontend\RentReceiptController::class . '@generate')
-                ->name('rent-receipt.generate');
-            
-            // Rent Agreement Generator
-            Route::get('rent-agreement', \App\Modules\RealEstate\Http\Controllers\Frontend\RentAgreementController::class . '@index')
-                ->name('rent-agreement.index');
-            Route::post('rent-agreement/save', \App\Modules\RealEstate\Http\Controllers\Frontend\RentAgreementController::class . '@save')
-                ->name('rent-agreement.save');
-            Route::get('rent-agreement/preview', \App\Modules\RealEstate\Http\Controllers\Frontend\RentAgreementController::class . '@preview')
-                ->name('rent-agreement.preview');
-            Route::post('rent-agreement/download', \App\Modules\RealEstate\Http\Controllers\Frontend\RentAgreementController::class . '@download')
-                ->name('rent-agreement.download');
-
-            // Override Botble's developer routes
-            Route::get('developers', \App\Modules\RealEstate\Http\Controllers\Frontend\DeveloperPublicController::class . '@index')
-                ->name('developers.index');
-            Route::get('developers/{slug}', \App\Modules\RealEstate\Http\Controllers\Frontend\DeveloperPublicController::class . '@show')
-                ->name('developers.show');
-
-            // Override Botble's agent routes  
-            Route::get('agents', \App\Modules\RealEstate\Http\Controllers\Frontend\AgentPublicController::class . '@index')
-                ->name('agents.index');
-            Route::get('agents/{slug}', \App\Modules\RealEstate\Http\Controllers\Frontend\AgentPublicController::class . '@show')
-                ->name('agents.show');
-
-            // Botble compatibility routes (used by Account model)
-            Route::get('developer/{username}', \App\Modules\RealEstate\Http\Controllers\Frontend\DeveloperPublicController::class . '@show')
-                ->name('public.developer');
-            Route::get('agent/{username}', \App\Modules\RealEstate\Http\Controllers\Frontend\AgentPublicController::class . '@show')
-                ->name('public.agent');
-        });
     }
 
     /**
