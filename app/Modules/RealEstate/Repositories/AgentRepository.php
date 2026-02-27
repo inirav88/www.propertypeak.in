@@ -106,6 +106,7 @@ class AgentRepository implements AgentRepositoryInterface
     public function paginateApproved(int $perPage = 15): LengthAwarePaginator
     {
         return Agent::with(['user'])
+            ->withCount('properties')
             ->whereHas('user', function ($query): void {
                 $query->where('status', User::STATUS_APPROVED);
             })
@@ -119,6 +120,7 @@ class AgentRepository implements AgentRepositoryInterface
     public function findApproved(): Collection
     {
         return Agent::with(['user'])
+            ->withCount('properties')
             ->whereHas('user', function ($query): void {
                 $query->where('status', User::STATUS_APPROVED);
             })
@@ -132,6 +134,7 @@ class AgentRepository implements AgentRepositoryInterface
     public function findFeatured(int $limit = 6): Collection
     {
         return Agent::with(['user'])
+            ->withCount('properties')
             ->whereHas('user', function ($query): void {
                 $query->where('status', User::STATUS_APPROVED);
             })
@@ -146,6 +149,7 @@ class AgentRepository implements AgentRepositoryInterface
     public function search(string $query, int $perPage = 15): LengthAwarePaginator
     {
         return Agent::with(['user'])
+            ->withCount('properties')
             ->where(function ($q) use ($query): void {
                 $q->where('first_name', 'like', '%' . $query . '%')
                     ->orWhere('last_name', 'like', '%' . $query . '%')

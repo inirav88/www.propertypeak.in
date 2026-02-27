@@ -110,6 +110,7 @@ class DeveloperRepository implements DeveloperRepositoryInterface
     public function paginateApproved(int $perPage = 15): LengthAwarePaginator
     {
         return Developer::with(['user'])
+            ->withCount(['projects', 'properties'])
             ->whereHas('user', function ($query): void {
                 $query->where('status', User::STATUS_APPROVED);
             })
@@ -123,6 +124,7 @@ class DeveloperRepository implements DeveloperRepositoryInterface
     public function findApproved(): Collection
     {
         return Developer::with(['user'])
+            ->withCount(['projects', 'properties'])
             ->whereHas('user', function ($query): void {
                 $query->where('status', User::STATUS_APPROVED);
             })
@@ -136,6 +138,7 @@ class DeveloperRepository implements DeveloperRepositoryInterface
     public function findFeatured(int $limit = 6): Collection
     {
         return Developer::with(['user'])
+            ->withCount(['projects', 'properties'])
             ->whereHas('user', function ($query): void {
                 $query->where('status', User::STATUS_APPROVED);
             })
@@ -150,6 +153,7 @@ class DeveloperRepository implements DeveloperRepositoryInterface
     public function search(string $query, int $perPage = 15): LengthAwarePaginator
     {
         return Developer::with(['user'])
+            ->withCount(['projects', 'properties'])
             ->where(function ($q) use ($query): void {
                 $q->where('company_name', 'like', '%' . $query . '%')
                     ->orWhere('description', 'like', '%' . $query . '%')

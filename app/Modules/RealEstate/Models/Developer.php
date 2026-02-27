@@ -208,8 +208,22 @@ class Developer extends Model
     /**
      * Get upcoming projects count.
      */
-    public function getUpcomingProjectsAttribute(): int
+    public function getUpcomingProjectsCountAttribute(): int
     {
+        if (array_key_exists('projects_count', $this->relations)) {
+            return $this->projects_count;
+        }
         return $this->projects()->where('status', 'upcoming')->count();
+    }
+
+    /**
+     * Get approved properties count.
+     */
+    public function getApprovedPropertiesCountAttribute(): int
+    {
+        if (array_key_exists('properties_count', $this->relations)) {
+            return $this->properties_count;
+        }
+        return $this->properties()->where('approval_status', 'approved')->count();
     }
 }
