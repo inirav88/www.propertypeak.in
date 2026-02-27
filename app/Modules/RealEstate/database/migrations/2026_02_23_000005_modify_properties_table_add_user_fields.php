@@ -34,7 +34,8 @@ return new class extends Migration
     {
         // Slug column for URL-friendly property names
         if (!Schema::hasColumn($tableName, 'slug')) {
-            $table->string('slug', 255)->unique()->after('title');
+            $afterColumn = Schema::hasColumn($tableName, 'name') ? 'name' : (Schema::hasColumn($tableName, 'title') ? 'title' : 'id');
+            $table->string('slug', 255)->unique()->after($afterColumn);
         }
 
         // User relationship - who created the property
@@ -120,7 +121,7 @@ return new class extends Migration
         $table->unsignedBigInteger('developer_project_id')->nullable();
 
         // Basic Information
-        $table->string('title');
+        $table->string('name');
         $table->string('slug', 255)->unique();
         $table->text('description')->nullable();
 
