@@ -22,14 +22,6 @@
 
 <section class="section-rent-agreement py-5" style="background: #f7f7f7;">
     <div class="container">
-        @if(empty($isShortcode))
-        <!-- Header -->
-        <div class="text-center mb-5">
-            <h1 class="title">{{ __('Rent Agreement Generator') }}</h1>
-            <p class="text-muted">{{ __('Create a legally valid rent agreement online. Fill in the details below to generate your agreement.') }}</p>
-        </div>
-        @endif
-
         @if(session('error'))
             <div style="background: #f8d7da; color: #721c24; padding: 15px; border: 2px solid #f5c6cb; border-radius: 8px; margin-bottom: 20px;">
                 <strong>Error:</strong> {{ session('error') }}

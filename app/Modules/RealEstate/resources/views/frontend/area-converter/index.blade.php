@@ -9,14 +9,6 @@
 
 <section class="section-converter py-5 bg-surface">
     <div class="container">
-        @if(empty($isShortcode))
-        <!-- Header -->
-        <div class="text-center mb-5">
-            <h1 class="title">{{ __('Land Area Converter') }}</h1>
-            <p class="text-muted">{{ __('Convert land area measurements between 25+ units. Fast, accurate and free!') }}</p>
-        </div>
-        @endif
-
         <!-- Converter Card -->
         <div class="row justify-content-center">
             <div class="col-lg-8">
