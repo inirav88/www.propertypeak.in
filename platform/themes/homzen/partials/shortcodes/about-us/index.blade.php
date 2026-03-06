@@ -1,3 +1,13 @@
+@php
+    use Botble\Theme\Supports\Youtube;
+
+    $videoUrl = $shortcode->video_url;
+
+    if (Youtube::isYoutubeURL($videoUrl)) {
+        $videoUrl = Youtube::getYoutubeVideoEmbedURL($videoUrl);
+    }
+@endphp
+
 <section class="flat-section flat-banner-about">
     <div class="container">
         <div class="row">
@@ -28,10 +38,11 @@
                 {{ RvMedia::image($shortcode->image, $shortcode->title) }}
             @endif
 
-            @if ($shortcode->video_url)
+            @if ($videoUrl)
                 <a
-                    href="{{ $shortcode->video_url }}"
+                    href="{{ $videoUrl }}"
                     data-fancybox="gallery2"
+                    data-type="iframe"
                     class="btn-video"
                 >
                     <span class="icon icon-play"></span>
