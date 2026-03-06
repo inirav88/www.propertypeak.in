@@ -75,6 +75,9 @@
             "Google\\Task\\Composer::cleanup",
             "@php artisan cms:publish:assets"
         ],
+        "post-install-cmd": [
+            "@php artisan cms:publish:assets"
+        ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
