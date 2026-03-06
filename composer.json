@@ -73,7 +73,10 @@
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
             "Aws\\Script\\Composer\\Composer::removeUnusedServices",
             "Google\\Task\\Composer::cleanup",
-            "@php artisan cms:publish:assets"
+            "@php artisan cms:publish:assets --force"
+        ],
+        "post-install-cmd": [
+            "@php artisan cms:publish:assets --force"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
