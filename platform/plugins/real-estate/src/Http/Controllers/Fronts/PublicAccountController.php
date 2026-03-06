@@ -186,6 +186,16 @@ class PublicAccountController extends BaseController
             ->setMessage(__('Microsite settings updated successfully!'));
     }
 
+    protected function getAllowedPackageTypeForAccount(Account $account): string
+    {
+        return match ($account->type) {
+            'builder' => 'builder',
+            'owner', 'member' => 'owner',
+            'agent' => 'agent',
+            default => 'agent',
+        };
+    }
+
     public function getPackages()
     {
         abort_unless(RealEstateHelper::isEnabledCreditsSystem(), 404);
@@ -218,8 +228,15 @@ class PublicAccountController extends BaseController
 
         $account = Account::query()->with(['packages'])->findOrFail(auth('account')->id());
 
+        $allowedPackageType = $this->getAllowedPackageTypeForAccount($account);
+
         $packages = Package::query()
             ->wherePublished()
+            ->where(function ($query) use ($allowedPackageType): void {
+                $query
+                    ->where('package_type', $allowedPackageType)
+                    ->orWhereNull('package_type');
+            })
             ->get();
 
         if (is_plugin_active('language') && is_plugin_active('language-advanced')) {
@@ -255,6 +272,10 @@ class PublicAccountController extends BaseController
          * @var Account $account
          */
         $account = Account::query()->findOrFail(auth('account')->id());
+
+        $allowedPackageType = $this->getAllowedPackageTypeForAccount($account);
+
+        abort_if($package->package_type && $package->package_type !== $allowedPackageType, 403);
 
         abort_if($package->account_limit
             && $account->packages()->where('package_id', $package->getKey())->count() >= $package->account_limit, 403);
@@ -334,6 +355,15 @@ class PublicAccountController extends BaseController
         Assets::addScripts('form-validation');
 
         $package = Package::query()->findOrFail($id);
+
+        /**
+         * @var Account $account
+         */
+        $account = Account::query()->findOrFail(auth('account')->id());
+
+        $allowedPackageType = $this->getAllowedPackageTypeForAccount($account);
+
+        abort_if($package->package_type && $package->package_type !== $allowedPackageType, 403);
 
         Session::put('cart_total', $package->price);
 
