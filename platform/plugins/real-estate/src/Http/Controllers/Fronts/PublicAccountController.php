@@ -72,9 +72,7 @@ class PublicAccountController extends BaseController
         $packages = Package::query()
             ->wherePublished()
             ->where(function ($query) use ($allowedPackageTypes) {
-                $query
-                    ->whereIn('package_type', $allowedPackageTypes)
-                    ->orWhereNull('package_type');
+                $query->whereIn('package_type', $allowedPackageTypes);
             })
             ->get();
 
