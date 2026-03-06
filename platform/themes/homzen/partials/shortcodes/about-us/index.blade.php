@@ -42,6 +42,7 @@
                 <a
                     href="{{ $videoUrl }}"
                     data-fancybox="gallery2"
+                    data-type="iframe"
                     class="btn-video"
                 >
                     <span class="icon icon-play"></span>
