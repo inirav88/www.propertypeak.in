@@ -61,7 +61,6 @@ class PublicAccountController extends BaseController
         return [$primaryPackageType, 'addon'];
     }
 
-
     protected function resolvePackageType(Package $package): ?string
     {
         if (in_array($package->package_type, ['owner', 'agent', 'builder', 'addon'], true)) {
@@ -96,8 +95,15 @@ class PublicAccountController extends BaseController
 
         $account = Account::query()->with(['packages'])->findOrFail(auth('account')->id());
 
+        $allowedPackageTypes = $this->getAllowedPackageTypesForAccount($account);
+
         $packages = Package::query()
             ->wherePublished()
+            ->where(function ($query) use ($allowedPackageTypes) {
+                $query
+                    ->whereIn('package_type', $allowedPackageTypes)
+                    ->orWhereNull('package_type');
+            })
             ->get();
 
         if (is_plugin_active('language') && is_plugin_active('language-advanced')) {
