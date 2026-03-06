@@ -61,21 +61,43 @@ class PublicAccountController extends BaseController
         return [$primaryPackageType, 'addon'];
     }
 
+
+    protected function resolvePackageType(Package $package): ?string
+    {
+        if (in_array($package->package_type, ['owner', 'agent', 'builder', 'addon'], true)) {
+            return $package->package_type;
+        }
+
+        $name = str($package->name)->lower()->toString();
+
+        return match (true) {
+            str_contains($name, 'add-on'), str_contains($name, 'addon'), str_contains($name, 'add on') => 'addon',
+            str_contains($name, 'builder') => 'builder',
+            str_contains($name, 'owner') => 'owner',
+            str_contains($name, 'agent') => 'agent',
+            default => null,
+        };
+    }
+
+    protected function isPackageAllowedForAccount(Package $package, Account $account): bool
+    {
+        $packageType = $this->resolvePackageType($package);
+
+        if (! $packageType) {
+            return false;
+        }
+
+        return in_array($packageType, $this->getAllowedPackageTypesForAccount($account), true);
+    }
+
     public function ajaxGetPackages()
     {
         abort_unless(RealEstateHelper::isEnabledCreditsSystem(), 404);
 
         $account = Account::query()->with(['packages'])->findOrFail(auth('account')->id());
 
-        $allowedPackageTypes = $this->getAllowedPackageTypesForAccount($account);
-
         $packages = Package::query()
             ->wherePublished()
-            ->where(function ($query) use ($allowedPackageTypes) {
-                $query
-                    ->whereIn('package_type', $allowedPackageTypes)
-                    ->orWhereNull('package_type');
-            })
             ->get();
 
         if (is_plugin_active('language') && is_plugin_active('language-advanced')) {
@@ -85,6 +107,10 @@ class PublicAccountController extends BaseController
         }
 
         $packages = $packages->filter(function ($package) use ($account) {
+            if (! $this->isPackageAllowedForAccount($package, $account)) {
+                return false;
+            }
+
             return empty($package->account_limit)
                 || $account->packages->where('id', $package->id)->count() < $package->account_limit;
         });
@@ -102,12 +128,7 @@ class PublicAccountController extends BaseController
         $package = Package::query()->findOrFail($request->input('id'));
         $account = Account::query()->findOrFail(auth('account')->id());
 
-        $allowedPackageTypes = $this->getAllowedPackageTypesForAccount($account);
-
-        abort_if(
-            $package->package_type && !in_array($package->package_type, $allowedPackageTypes, true),
-            403
-        );
+        abort_if(! $this->isPackageAllowedForAccount($package, $account), 403);
 
         abort_if(
             $package->account_limit &&
@@ -138,12 +159,7 @@ class PublicAccountController extends BaseController
         $package = Package::query()->findOrFail($id);
         $account = Account::query()->findOrFail(auth('account')->id());
 
-        $allowedPackageTypes = $this->getAllowedPackageTypesForAccount($account);
-
-        abort_if(
-            $package->package_type && !in_array($package->package_type, $allowedPackageTypes, true),
-            403
-        );
+        abort_if(! $this->isPackageAllowedForAccount($package, $account), 403);
 
         Session::put('cart_total', $package->price);
 

@@ -23,6 +23,7 @@ class DatabaseSeeder extends BaseSeeder
             FacilitySeeder::class,
             FeatureSeeder::class,
             PackageSeeder::class,
+            AssignPackageTypesSeeder::class,
             InvestorSeeder::class,
             UserSeeder::class,
             AccountSeeder::class,
