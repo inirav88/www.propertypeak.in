@@ -23,19 +23,9 @@ class Consult extends BaseModel
         'content',
         'project_id',
         'property_id',
-        'reference_id',
-        'reference_type',
         'ip_address',
         'status',
         'custom_fields',
-        'notes',
-        'assigned_to',
-        'pipeline_stage',
-        'score',
-        'follow_up_date',
-        'follow_up_at',
-        'contacted_at',
-        'internal_notes',
     ];
 
     protected $casts = [
@@ -43,9 +33,6 @@ class Consult extends BaseModel
         'name' => SafeContent::class,
         'content' => SafeContent::class,
         'custom_fields' => 'array',
-        'follow_up_date' => 'datetime',
-        'follow_up_at' => 'datetime',
-        'contacted_at' => 'datetime',
     ];
 
     public function newEloquentBuilder($query): ConsultBuilder

@@ -35,4 +35,11 @@ return [
     'total' => 'الإجمالي',
     'toggle_coupon_form_text' => 'هل لديك رمز كوبون؟',
     'apply_coupon_code' => 'تطبيق',
+    'invalid' => 'هذا الكوبون غير صالح!',
+    'applied_success' => 'تم تطبيق كوبون ":code" بنجاح!',
+    'not_used' => 'لم يتم استخدام هذا الكوبون بعد!',
+    'removed_success' => 'تمت إزالة كوبون :code بنجاح!',
+    'remove' => 'إزالة',
+    'your_order' => 'طلبك',
+    'coupon_code_applied' => 'رمز الكوبون: :code',
 ];

@@ -3,9 +3,11 @@
 use Botble\Base\Forms\FieldOptions\CheckboxFieldOption;
 use Botble\Base\Forms\FieldOptions\RadioFieldOption;
 use Botble\Base\Forms\FieldOptions\SelectFieldOption;
-use Botble\Base\Forms\Fields\CheckboxField;
+use Botble\Base\Forms\FieldOptions\UiSelectorFieldOption;
+use Botble\Base\Forms\Fields\OnOffCheckboxField;
 use Botble\Base\Forms\Fields\RadioField;
 use Botble\Base\Forms\Fields\SelectField;
+use Botble\Base\Forms\Fields\UiSelectorField;
 use Botble\Faq\Models\Faq;
 use Botble\Faq\Models\FaqCategory;
 use Botble\Shortcode\Compilers\Shortcode as ShortcodeCompiler;
@@ -46,11 +48,27 @@ Event::listen(RouteMatched::class, function (): void {
         return Theme::partial('shortcodes.faqs.index', compact('shortcode', 'faqs', 'categories'));
     });
 
-    Shortcode::setPreviewImage('faqs', Theme::asset()->url('images/shortcodes/faqs.png'));
+    Shortcode::setPreviewImage('faqs', Theme::asset()->url('images/shortcodes/faqs/style-1.png'));
 
     Shortcode::setAdminConfig('faqs', function (array $attributes): ShortcodeForm {
         return ShortcodeForm::createFromArray($attributes)
             ->lazyLoading()
+            ->add(
+                'style',
+                UiSelectorField::class,
+                UiSelectorFieldOption::make()
+                    ->choices(
+                        collect(range(1, 3))
+                            ->mapWithKeys(fn ($number) => [
+                                $number => [
+                                    'label' => __('Style :number', ['number' => $number]),
+                                    'image' => Theme::asset()->url("images/shortcodes/faqs/style-$number.png"),
+                                ],
+                            ])
+                            ->all()
+                    )
+                    ->selected(Arr::get($attributes, 'style', 1))
+            )
             ->addSectionHeadingFields()
             ->add(
                 'category_ids',
@@ -80,7 +98,7 @@ Event::listen(RouteMatched::class, function (): void {
             ->addLimitField(defaultValue: 5)
             ->add(
                 'expand_first_time',
-                CheckboxField::class,
+                OnOffCheckboxField::class,
                 CheckboxFieldOption::make()
                     ->label(__('Expand the content of the first FAQ'))
                     ->defaultValue(true)

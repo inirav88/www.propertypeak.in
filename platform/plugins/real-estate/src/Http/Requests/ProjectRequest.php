@@ -2,6 +2,7 @@
 
 namespace Botble\RealEstate\Http\Requests;
 
+use Botble\Base\Facades\BaseHelper;
 use Botble\RealEstate\Enums\ProjectStatusEnum;
 use Botble\Support\Http\Requests\Request;
 use Illuminate\Validation\Rule;
@@ -25,7 +26,7 @@ class ProjectRequest extends Request
                 'nullable',
                 'regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/',
             ],
-            'zip_code' => ['nullable', 'string', 'max:20'],
+            'zip_code' => ['nullable', ...BaseHelper::getZipcodeValidationRule(true)],
             'status' => Rule::in(ProjectStatusEnum::values()),
             'unique_id' => 'nullable|string|max:120|unique:re_projects,unique_id,' . $this->route('project'),
             'date_finish' => ['nullable', 'date'],

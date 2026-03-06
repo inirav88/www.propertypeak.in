@@ -59,6 +59,7 @@ class CurrencySettingForm extends SettingForm
                     ',' => trans('plugins/real-estate::settings.currency.form.separator_comma'),
                     '.' => trans('plugins/real-estate::settings.currency.form.separator_period'),
                     'space' => trans('plugins/real-estate::settings.currency.form.separator_space'),
+                    "'" => trans('plugins/real-estate::settings.currency.form.separator_apostrophe'),
                 ],
                 'selected' => setting('real_estate_thousands_separator', '.'),
                 'help_block' => [

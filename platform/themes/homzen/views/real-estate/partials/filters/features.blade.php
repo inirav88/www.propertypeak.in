@@ -1,9 +1,6 @@
 @if (theme_option('real_estate_enable_filter_by_amenities', 'yes') == 'yes')
     @php
-        $features = \Botble\RealEstate\Models\Feature::query()
-            ->wherePublished()
-            ->get();
-
+        $features = RealEstateHelper::getPublishedFeatures();
         $asGrid ??= true;
     @endphp
 

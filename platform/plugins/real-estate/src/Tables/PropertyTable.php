@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation as EloquentRelation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Validation\Rule;
 
 class PropertyTable extends TableAbstract
 {
@@ -92,11 +93,14 @@ class PropertyTable extends TableAbstract
             ])
             ->addBulkChanges([
                 NameBulkChange::make(),
-                StatusBulkChange::make()->choices(PropertyStatusEnum::labels()),
+                StatusBulkChange::make()
+                    ->choices(PropertyStatusEnum::labels())
+                    ->validate(['required', Rule::in(PropertyStatusEnum::values())]),
                 StatusBulkChange::make()
                     ->name('moderation_status')
                     ->title(trans('plugins/real-estate::property.moderation_status'))
-                    ->choices(ModerationStatusEnum::labels()),
+                    ->choices(ModerationStatusEnum::labels())
+                    ->validate(['required', Rule::in(ModerationStatusEnum::values())]),
                 SelectBulkChange::make()
                     ->name('project_id')
                     ->title(trans('plugins/real-estate::property.form.project'))
@@ -119,6 +123,7 @@ class PropertyTable extends TableAbstract
                         'created_at',
                         'unique_id',
                         'location',
+                        'zip_code',
                     ]);
             })
             ->onAjax(function (self $table) {
@@ -134,6 +139,7 @@ class PropertyTable extends TableAbstract
                                     ->where('name', 'LIKE', $keyword)
                                     ->orWhere('unique_id', 'LIKE', $keyword)
                                     ->orWhere('location', 'LIKE', $keyword)
+                                    ->orWhere('zip_code', 'LIKE', $keyword)
                                     ->orWhereHas('city', function ($query) use ($keyword): void {
                                         $query->where('name', 'LIKE', $keyword);
                                     })

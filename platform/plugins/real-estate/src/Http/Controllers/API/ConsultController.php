@@ -100,7 +100,7 @@ class ConsultController extends BaseController
                         }
 
                         $value = match ($field->type->getValue()) {
-                            ConsultCustomFieldTypeEnum::CHECKBOX => $item ? __('Yes') : __('No'),
+                            ConsultCustomFieldTypeEnum::CHECKBOX => $item ? trans('plugins/real-estate::real-estate.yes') : trans('plugins/real-estate::real-estate.no'),
                             ConsultCustomFieldTypeEnum::RADIO, ConsultCustomFieldTypeEnum::DROPDOWN => $option?->label,
                             default => $item,
                         };

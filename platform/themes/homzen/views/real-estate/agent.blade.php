@@ -9,20 +9,18 @@
             {{ RvMedia::image($account->avatar_url, $account->name, 'medium-square') }}
         </div>
         <div class="agent-info">
-            <h2 class="agent-name">{{ $account->name }} {!! $account->badge !!}</h2>
+            <h1 class="h2 agent-name">{{ $account->name }} {!! $account->badge !!}</h1>
             @if($account->company)
-                <p class="agent-company">
-                    {!! BaseHelper::clean(__('Company Agent at :company', ['company' => "<strong>$account->company</strong>"])) !!}
-                </p>
+                <p class="agent-company">{!! BaseHelper::clean(__('Company Agent at :company', ['company' => "<strong>$account->company</strong>"])) !!}</p>
             @endif
             <div class="agent-contact-info">
-                @if($account->phone && !setting('real_estate_hide_agency_phone', false))
+                @if($account->phone && ! setting('real_estate_hide_agency_phone', false) && ! $account->hide_phone)
                     <a href="tel:{{ $account->phone }}" class="agent-info-item">
                         <x-core::icon name="ti ti-phone" />
                         {{ $account->phone }}
                     </a>
                 @endif
-                @if($account->email && !setting('real_estate_hide_agency_email', false))
+                @if($account->email && ! setting('real_estate_hide_agency_email', false) && ! $account->hide_email)
                     <a href="mailto:{{ $account->email }}" class="agent-info-item">
                         <x-core::icon name="ti ti-mail" />
                         {{ $account->email }}
@@ -35,6 +33,15 @@
             </div>
 
             {!! Theme::partial('shortcodes.agents.partials.social-links', compact('account')) !!}
+
+            @if($account->whatsapp)
+                <div class="agent-whatsapp-section mt-3">
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $account->whatsapp) }}" target="_blank" class="contact-whatsapp-btn justify-content-center">
+                        <x-core::icon name="ti ti-brand-whatsapp" />
+                        {{ __('Chat on WhatsApp') }}
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -45,29 +52,11 @@
         </div>
     @endif
 
-    @if ($account->isBuilder())
-        @php
-            $projects = \Botble\RealEstate\Models\Project::query()
-                ->where('author_id', $account->id)
-                ->where('author_type', \Botble\RealEstate\Models\Account::class)
-                ->wherePublished()
-                ->latest()
-                ->get();
-        @endphp
-
-        @if ($projects->isNotEmpty())
-            <div class="agent-projects-section">
-                <h5>{{ __('Projects by this developer') }}</h5>
-                @include(Theme::getThemeNamespace('views.real-estate.projects.index'), ['projects' => $projects])
-            </div>
-        @endif
-    @else
-        @if ($properties->isNotEmpty())
-            <div class="agent-properties-section">
-                <h5>{{ __('Properties by this agent') }}</h5>
-                @include(Theme::getThemeNamespace('views.real-estate.properties.index'))
-            </div>
-        @endif
+    @if ($properties->isNotEmpty())
+        <div class="agent-properties-section">
+            <h5>{{ __('Properties by this agent') }}</h5>
+            @include(Theme::getThemeNamespace('views.real-estate.properties.index'))
+        </div>
     @endif
 
     {!! apply_filters('real_estate_agent_details', null, $account) !!}

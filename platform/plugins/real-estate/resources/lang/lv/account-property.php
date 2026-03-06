@@ -1,10 +1,13 @@
 <?php
 
 return [
-    'draft_properties' => 'Īpašumu projekts',
-    'pending_properties' => 'Gaidāmie īpašumi',
+    'draft_properties' => 'Īpašumu melnraksti',
+    'pending_properties' => 'Gaidošie īpašumi',
     'published_properties' => 'Publicētie īpašumi',
-    'properties' => 'Properties',
-    'write_property' => 'Uzrakstiet īpašumu',
-    'images' => 'Attēli (maksimālais __ph0__ attēli)',
+    'properties' => 'Īpašumi',
+    'write_property' => 'Rakstīt īpašumu',
+    'images' => 'Attēli (maksimums :max attēli)',
+    'renew' => 'Atjaunot',
+    'not_enough_credit_renew' => 'Jums nav pietiekami daudz kredītu, lai atjaunotu šo īpašumu!',
+    'renew_success' => 'Īpašums veiksmīgi atjaunots',
 ];

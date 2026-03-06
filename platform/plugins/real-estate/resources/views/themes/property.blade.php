@@ -44,7 +44,7 @@
                 <span
                     class="d-inline-block"
                     style="margin-right: 10px"
-                ><i class="fa fa-eye"></i> {{ number_format($property->views) }} {{ __('views') }}</span>
+                ><i class="fa fa-eye"></i> {{ number_format($property->views) }} {{ trans('plugins/real-estate::property.views') }}</span>
             @endif
             <span class="d-inline-block"><i class="fa fa-calendar-alt"></i>
                 {{ $property->created_at->translatedFormat('M d, Y') }}</span>
@@ -59,13 +59,13 @@
 
                 <div class="row pt-3">
                     <div class="col-sm-12">
-                        <h5 class="headifhouse">{{ __('Overview') }}</h5>
+                        <h5 class="headifhouse">{{ trans('plugins/real-estate::property.overview') }}</h5>
                         <div class="row py-2">
                             <div class="col-sm-12">
                                 <table class="table table-striped table-bordered">
                                     @if ($lastUpdated = $property->getMetaData('last_updated', true))
                                         <tr>
-                                            <td>{{ __('Last Updated') }}</td>
+                                            <td>{{ trans('plugins/real-estate::property.last_updated') }}</td>
                                             <td>
                                                 <strong>
                                                     {{ rescue(fn () => Carbon\Carbon::parse($lastUpdated)->translatedFormat('M d, Y')) }}
@@ -76,7 +76,7 @@
 
                                     @if ($property->unique_id)
                                         <tr>
-                                            <td>{{ __('Property ID') }}</td>
+                                            <td>{{ trans('plugins/real-estate::property.property_id') }}</td>
                                             <td>
                                                 <strong>
                                                     {{ $property->unique_id }}
@@ -86,7 +86,7 @@
                                     @endif
                                     @if ($property->categories->isNotEmpty())
                                         <tr>
-                                            <td>{{ __('Category') }}</td>
+                                            <td>{{ trans('plugins/real-estate::property.category') }}</td>
                                             <td>
                                                 <strong>
                                                     @foreach ($property->categories as $category)
@@ -101,30 +101,30 @@
                                     @endif
                                     @if ($property->square)
                                         <tr>
-                                            <td>{{ __('Square') }}</td>
+                                            <td>{{ trans('plugins/real-estate::property.square') }}</td>
                                             <td><strong>{{ $property->square_text }}</strong></td>
                                         </tr>
                                     @endif
                                     @if ($property->number_bedroom)
                                         <tr>
-                                            <td>{{ __('Number of bedrooms') }}</td>
+                                            <td>{{ trans('plugins/real-estate::property.number_of_bedrooms') }}</td>
                                             <td><strong>{{ number_format($property->number_bedroom) }}</strong></td>
                                         </tr>
                                     @endif
                                     @if ($property->number_bathroom)
                                         <tr>
-                                            <td>{{ __('Number of bathrooms') }}</td>
+                                            <td>{{ trans('plugins/real-estate::property.number_of_bathrooms') }}</td>
                                             <td><strong>{{ number_format($property->number_bathroom) }}</strong></td>
                                         </tr>
                                     @endif
                                     @if ($property->number_floor)
                                         <tr>
-                                            <td>{{ __('Number of floors') }}</td>
+                                            <td>{{ trans('plugins/real-estate::property.number_of_floors') }}</td>
                                             <td><strong>{{ number_format($property->number_floor) }}</strong></td>
                                         </tr>
                                     @endif
                                     <tr>
-                                        <td>{{ __('Price') }}</td>
+                                        <td>{{ trans('plugins/real-estate::property.price') }}</td>
                                         <td><strong>{{ $property->price_html }}</strong></td>
                                     </tr>
                                     @foreach ($property->customFields as $customField)
@@ -142,7 +142,7 @@
                 @if ($property->content)
                     <div class="row">
                         <div class="col-sm-12">
-                            <h5 class="headifhouse">{{ __('Description') }}</h5>
+                            <h5 class="headifhouse">{{ trans('plugins/real-estate::property.description') }}</h5>
                             <div class="ck-content">
                                 {!! BaseHelper::clean($property->content) !!}
                             </div>
@@ -153,7 +153,7 @@
                     <br>
                     <div class="row">
                         <div class="col-sm-12">
-                            <h5 class="headifhouse">{{ __('Features') }}</h5>
+                            <h5 class="headifhouse">{{ trans('plugins/real-estate::property.features') }}</h5>
                             <div class="row">
                                 @php $property->features->loadMissing('metadata'); @endphp
                                 @foreach ($property->features as $feature)
@@ -181,7 +181,7 @@
                 @if ($property->facilities->isNotEmpty())
                     <div class="row">
                         <div class="col-sm-12">
-                            <h5 class="headifhouse">{{ __('Distance key between facilities') }}</h5>
+                            <h5 class="headifhouse">{{ trans('plugins/real-estate::property.distance_key_between_facilities') }}</h5>
                             <div class="row">
                                 @php $property->facilities->loadMissing('metadata'); @endphp
                                 @foreach ($property->facilities as $facility)
@@ -209,7 +209,7 @@
                 @if (RealEstateHelper::isEnabledProjects() && $property->project_id && ($project = $property->project))
                     <div class="row pb-3">
                         <div class="col-sm-12">
-                            <h5 class="headifhouse">{{ __("Project's information") }}</h5>
+                            <h5 class="headifhouse">{{ trans('plugins/real-estate::property.projects_information') }}</h5>
                         </div>
                         <div class="col-sm-12">
                             <div class="row item">
@@ -231,7 +231,7 @@
                                             href="{{ $project->url }}"
                                         >{!! BaseHelper::clean($project->name) !!}</a></h5>
                                     <div>{{ Str::limit($project->description, 120) }}</div>
-                                    <p><a href="{{ $project->url }}">{{ __('Read more') }}</a></p>
+                                    <p><a href="{{ $project->url }}">{{ trans('plugins/real-estate::property.read_more') }}</a></p>
                                 </div>
                             </div>
                         </div>
@@ -263,13 +263,13 @@
                 @endif
                 <br>
                 @if ($property->video_url)
-                    @include('plugins/real-estate::themes.partials.elements.video', ['object' => $property, 'title' => __('Property video')])
+                    @include('plugins/real-estate::themes.partials.elements.video', ['object' => $property, 'title' => trans('plugins/real-estate::property.property_video')])
                 @endif
 
                 {!! apply_filters('after_single_content_detail', null, $property) !!}
 
                 <br>
-{{--                {!! Theme::partial('share', ['title' => __('Share this property'), 'description' => $property->description]) !!}--}}
+{{--                {!! Theme::partial('share', ['title' => trans('plugins/real-estate::property.share_this_property'), 'description' => $property->description]) !!}--}}
                 <div class="clearfix"></div>
                 {!! apply_filters(
                     BASE_FILTER_PUBLIC_COMMENT_AREA,
@@ -291,7 +291,7 @@
                 @if (!RealEstateHelper::hideAgentInfoInPropertyDetailPage() && ($account = $property->author))
                     <div class="boxright p-3">
                         <div class="head">
-                            {{ __('Contact agency') }}
+                            {{ trans('plugins/real-estate::property.contact_agency') }}
                         </div>
 
                         <div class="row rowm10 itemagent">
@@ -360,7 +360,7 @@
                                     @if ($account->url)
                                         <p><span class="fas fa-arrow-circle-right me-1"></span> <a
                                                 href="{{ $account->url }}"
-                                            >{{ __('More properties by this agent') }}</a></p>
+                                            >{{ trans('plugins/real-estate::property.more_properties_by_this_agent') }}</a></p>
                                     @endif
                                 </div>
                             </div>
@@ -384,7 +384,7 @@
             @endphp
 
             @if ($relatedProperties->isNotEmpty())
-                <h3 class="headifhouse">{{ __('Related properties') }}</h3>
+                <h3 class="headifhouse">{{ trans('plugins/real-estate::property.related_properties') }}</h3>
                 <div class="row rowm10">
                     @foreach ($relatedProperties as $relatedProperty)
                         <div class="col-sm-6 col-lg-4 col-xl-3 colm10">

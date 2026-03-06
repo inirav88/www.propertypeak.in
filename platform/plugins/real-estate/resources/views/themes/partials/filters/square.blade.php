@@ -6,7 +6,7 @@
             'label' => '__value__ ' . $unit
         ],
     ];
-    $labelAll = __('All squares');
+    $labelAll = trans('plugins/real-estate::filters.all_squares');
     $squares = [
         '0-100'     => "&lt; 100 $unit",
         '100-200'   => "100 $unit - 200 $unit",
@@ -19,19 +19,19 @@
 <div class="form-group min-max-input" data-calc="{{ json_encode($calc, true) }}" data-all="{{ $labelAll }}">
     <div class="row">
         <div class="col-5 pr-1">
-            <label for="min_square" class="control-label">{{ __('Square from') }}</label>
+            <label for="min_square" class="control-label">{{ trans('plugins/real-estate::filters.square_from') }}</label>
             <input type="number" name="min_square" class="form-control min-input" id="min_square"
-                value="{{ request()->input('min_square') }}" placeholder="{{ __('From') }}" step="10" min="0">
+                value="{{ request()->input('min_square') }}" placeholder="{{ trans('plugins/real-estate::filters.from') }}" step="10" min="0">
             <span class="position-absolute min-label d-none"></span>
         </div>
         <div class="col-5 px-1">
-            <label for="max_square" class="control-label">{{ __('Square to') }}</label>
+            <label for="max_square" class="control-label">{{ trans('plugins/real-estate::filters.square_to') }}</label>
             <input type="number" name="max_square" class="form-control max-input" id="max_square"
-                value="{{ request()->input('max_square') }}" placeholder="{{ __('To') }}" step="10" min="0">
+                value="{{ request()->input('max_square') }}" placeholder="{{ trans('plugins/real-estate::filters.to') }}" step="10" min="0">
                 <span class="position-absolute max-label d-none"></span>
         </div>
         <div class="col-2 px-0" style="align-self: flex-end">
-            <span class="btn btn-primary">{{ __('OK') }}</span>
+            <span class="btn btn-primary">{{ trans('plugins/real-estate::filters.ok') }}</span>
         </div>
     </div>
 </div>

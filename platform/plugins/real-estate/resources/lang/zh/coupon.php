@@ -35,4 +35,11 @@ return [
     'total' => '全部的',
     'toggle_coupon_form_text' => '您有優惠券代碼嗎？',
     'apply_coupon_code' => '申請',
+    'invalid' => '此優惠券無效！',
+    'applied_success' => '成功應用優惠券":code"！',
+    'not_used' => '此優惠券尚未使用！',
+    'removed_success' => '成功刪除優惠券:code！',
+    'remove' => '删除',
+    'your_order' => '您的订单',
+    'coupon_code_applied' => '优惠券代码：:code',
 ];

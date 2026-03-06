@@ -1,4 +1,4 @@
-<h1>{{ __('Agents') }}</h1>
+<h1>{{ trans('plugins/real-estate::agent.agents') }}</h1>
 {!! Theme::breadcrumb()->render() !!}
 
 <div class="row">

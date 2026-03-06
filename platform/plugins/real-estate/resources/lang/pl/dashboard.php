@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Bezpłatne posty :posts',
     'total_package_price' => ':total Razem (Zaoszczędź :percent%)',
     'dashboard' => 'Dashboard',
+    'character_remain' => 'Pozostało znaków',
+    'password_update_success' => 'Hasło zostało pomyślnie zaktualizowane!',
+    'language' => 'Język',
+    'buy_credits' => 'Kup kredyty',
+    'currencies' => 'Waluty',
+    'go_to_homepage' => 'Przejdź do strony głównej',
+    'hello' => 'Cześć',
 ];

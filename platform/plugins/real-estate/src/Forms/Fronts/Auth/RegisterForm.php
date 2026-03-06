@@ -4,14 +4,12 @@ namespace Botble\RealEstate\Forms\Fronts\Auth;
 
 use Botble\Base\Facades\Html;
 use Botble\Base\Forms\FieldOptions\CheckboxFieldOption;
-use Botble\Base\Forms\Fields\RadioField;
 use Botble\Base\Forms\Fields\EmailField;
 use Botble\Base\Forms\Fields\HtmlField;
 use Botble\Base\Forms\Fields\OnOffCheckboxField;
 use Botble\Base\Forms\Fields\PasswordField;
 use Botble\Base\Forms\Fields\PhoneNumberField;
 use Botble\Base\Forms\Fields\TextField;
-use Botble\Base\Forms\FieldOptions\RadioFieldOption;
 use Botble\RealEstate\Forms\Fronts\Auth\FieldOptions\EmailFieldOption;
 use Botble\RealEstate\Forms\Fronts\Auth\FieldOptions\TextFieldOption;
 use Botble\RealEstate\Http\Requests\Fronts\Auth\RegisterRequest;
@@ -27,18 +25,18 @@ class RegisterForm extends AuthForm
             ->setUrl(route('public.account.register.post'))
             ->setValidatorClass(RegisterRequest::class)
             ->icon('ti ti-user-plus')
-            ->heading(__('Register an account'))
-            ->description(__('Your personal data will be used to support your experience throughout this website, to manage access to your account.'))
+            ->heading(trans('plugins/real-estate::account.register_heading'))
+            ->description(trans('plugins/real-estate::account.register_description'))
             ->when(
                 theme_option('register_background'),
-                fn(AuthForm $form, string $background) => $form->banner($background)
+                fn (AuthForm $form, string $background) => $form->banner($background)
             )
             ->add(
                 'first_name',
                 TextField::class,
                 TextFieldOption::make()
-                    ->label(__('First name'))
-                    ->placeholder(__('First name'))
+                    ->label(trans('plugins/real-estate::account.first_name'))
+                    ->placeholder(trans('plugins/real-estate::account.first_name'))
                     ->icon('ti ti-user')
                     ->required()
             )
@@ -46,32 +44,19 @@ class RegisterForm extends AuthForm
                 'last_name',
                 TextField::class,
                 TextFieldOption::make()
-                    ->label(__('Last name'))
-                    ->placeholder(__('Last name'))
+                    ->label(trans('plugins/real-estate::account.last_name'))
+                    ->placeholder(trans('plugins/real-estate::account.last_name'))
                     ->icon('ti ti-user')
                     ->required()
             )
-            ->add(
-                'type',
-                RadioField::class,
-                RadioFieldOption::make()
-                    ->label(__('Account Type'))
-                    ->choices([
-                        'member' => __('Individual'),
-                        'agent' => __('Agent'),
-                        'builder' => __('Builder'),
-                    ])
-                    ->selected('agent')
-                    ->required()
-            )
-            ->when(!setting('real_estate_hide_username_in_registration_page', false), function (): void {
+            ->when(! setting('real_estate_hide_username_in_registration_page', false), function (): void {
                 $this
                     ->add(
                         'username',
                         TextField::class,
                         TextFieldOption::make()
-                            ->label(__('Username'))
-                            ->placeholder(__('Username'))
+                            ->label(trans('plugins/real-estate::account.username'))
+                            ->placeholder(trans('plugins/real-estate::account.username'))
                             ->icon('ti ti-user')
                             ->required()
                     );
@@ -80,8 +65,8 @@ class RegisterForm extends AuthForm
                 'email',
                 EmailField::class,
                 EmailFieldOption::make()
-                    ->label(__('Email'))
-                    ->placeholder(__('Email address'))
+                    ->label(trans('plugins/real-estate::account.email'))
+                    ->placeholder(trans('plugins/real-estate::account.email_placeholder'))
                     ->icon('ti ti-mail')
                     ->required()
             )
@@ -89,13 +74,13 @@ class RegisterForm extends AuthForm
                 'phone',
                 PhoneNumberField::class,
                 TextFieldOption::make()
-                    ->label(__('Phone (optional)'))
+                    ->label(trans('plugins/real-estate::account.phone_optional'))
                     ->when((bool) setting('real_estate_make_account_phone_number_required', false), function (TextFieldOption $fieldOption): void {
                         $fieldOption
                             ->required()
-                            ->label(__('Phone'));
+                            ->label(trans('plugins/real-estate::account.phone'));
                     })
-                    ->placeholder(__('Phone number'))
+                    ->placeholder(trans('plugins/real-estate::account.phone_placeholder'))
                     ->icon('ti ti-phone')
                     ->addAttribute('autocomplete', 'tel')
                     ->toArray()
@@ -104,8 +89,8 @@ class RegisterForm extends AuthForm
                 'password',
                 PasswordField::class,
                 TextFieldOption::make()
-                    ->label(__('Password'))
-                    ->placeholder(__('Password'))
+                    ->label(trans('plugins/real-estate::account.form.password'))
+                    ->placeholder(trans('plugins/real-estate::account.form.password'))
                     ->icon('ti ti-lock')
                     ->required()
             )
@@ -113,8 +98,8 @@ class RegisterForm extends AuthForm
                 'password_confirmation',
                 PasswordField::class,
                 TextFieldOption::make()
-                    ->label(__('Password confirmation'))
-                    ->placeholder(__('Password confirmation'))
+                    ->label(trans('plugins/real-estate::account.form.password_confirmation'))
+                    ->placeholder(trans('plugins/real-estate::account.form.password_confirmation'))
                     ->icon('ti ti-lock')
                     ->required()
             )
@@ -125,20 +110,20 @@ class RegisterForm extends AuthForm
                     ->when(
                         $privacyPolicyUrl = theme_option('term_and_privacy_policy_url'),
                         function (CheckboxFieldOption $fieldOption, string $url): void {
-                            $fieldOption->label(__('I agree to the :link', ['link' => Html::link($url, __('Terms and Privacy Policy'), attributes: ['class' => 'text-decoration-underline', 'target' => '_blank'])]));
+                            $fieldOption->label(trans('plugins/real-estate::account.agree_to_link', ['link' => Html::link($url, trans('plugins/real-estate::account.terms_privacy_policy'), attributes: ['class' => 'text-decoration-underline', 'target' => '_blank'])]));
                         }
                     )
-                    ->when(!$privacyPolicyUrl, function (CheckboxFieldOption $fieldOption): void {
-                        $fieldOption->label(__('I agree to the Terms and Privacy Policy'));
+                    ->when(! $privacyPolicyUrl, function (CheckboxFieldOption $fieldOption): void {
+                        $fieldOption->label(trans('plugins/real-estate::account.agree_to_terms'));
                     })
             )
-            ->submitButton(__('Register'), 'ti ti-arrow-narrow-right')
+            ->submitButton(trans('plugins/real-estate::account.register'), 'ti ti-arrow-narrow-right')
             ->add('login', HtmlField::class, [
                 'html' => sprintf(
                     '<div class="mt-3 text-center">%s <a href="%s" class="text-decoration-underline">%s</a></div>',
-                    __('Already have an account?'),
+                    trans('plugins/real-estate::account.already_have_account'),
                     route('public.account.login'),
-                    __('Login')
+                    trans('plugins/real-estate::account.login')
                 ),
             ])
             ->add('filters', HtmlField::class, [

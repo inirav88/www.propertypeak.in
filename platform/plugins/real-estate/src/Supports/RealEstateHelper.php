@@ -11,15 +11,18 @@ use Botble\RealEstate\Enums\ProjectStatusEnum;
 use Botble\RealEstate\Enums\PropertyStatusEnum;
 use Botble\RealEstate\Enums\PropertyTypeEnum;
 use Botble\RealEstate\Enums\ReviewStatusEnum;
+use Botble\RealEstate\Models\Feature;
 use Botble\RealEstate\Models\Project;
 use Botble\RealEstate\Models\Property;
 use Botble\RealEstate\Repositories\Interfaces\ProjectInterface;
 use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
 use Botble\Slug\Facades\SlugHelper;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Throwable;
 
 class RealEstateHelper
@@ -45,20 +48,36 @@ class RealEstateHelper
 
     public function propertyExpiredDays(): int
     {
-        $days = (int) setting('property_expired_after_days');
+        $setting = setting('property_expired_after_days');
 
-        if ($days > 0) {
-            return $days;
+        if ($setting !== null && $setting !== '') {
+            return (int) $setting;
         }
 
         return 45;
+    }
+
+    public function calculatePropertyExpireDate(?Carbon $baseDate = null): ?Carbon
+    {
+        $days = $this->propertyExpiredDays();
+
+        if ($days === 0) {
+            return null;
+        }
+
+        return ($baseDate ?? Carbon::now())->addDays($days);
+    }
+
+    public function isPropertyExpirationEnabled(): bool
+    {
+        return $this->propertyExpiredDays() > 0;
     }
 
     public function getPropertyRelationsQuery(): array
     {
         $relations = [
             'slugable:id,key,prefix,reference_id',
-            'currency:id,is_default,exchange_rate,symbol,title,is_prefix_symbol,decimals',
+            'currency:id,is_default,exchange_rate,symbol,title,is_prefix_symbol,decimals,space_between_price_and_currency,number_format_style',
             'categories' => function (BelongsToMany|BaseQueryBuilder $query) {
                 return $query
                     ->wherePublished()->latest()->latest('is_default')->latest('order')
@@ -82,7 +101,7 @@ class RealEstateHelper
     {
         $relations = [
             'slugable:id,key,prefix,reference_id',
-            'currency:id,is_default,exchange_rate,symbol,title,is_prefix_symbol,decimals',
+            'currency:id,is_default,exchange_rate,symbol,title,is_prefix_symbol,decimals,space_between_price_and_currency,number_format_style',
             'categories' => function (BelongsToMany|BaseQueryBuilder $query) {
                 return $query
                     ->wherePublished()->latest()->latest('is_default')->latest('order')
@@ -235,9 +254,9 @@ class RealEstateHelper
                 'state' => 'nullable|string',
                 'state_id' => 'nullable|numeric',
                 'type' => 'nullable|string',
-                'bedroom' => 'nullable|numeric',
-                'bathroom' => 'nullable|numeric',
-                'floor' => 'nullable|numeric',
+                'bedroom' => 'nullable',
+                'bathroom' => 'nullable',
+                'floor' => 'nullable',
                 'min_price' => 'nullable|numeric',
                 'max_price' => 'nullable|numeric',
                 'min_square' => 'nullable|numeric',
@@ -284,7 +303,7 @@ class RealEstateHelper
                 'state_id' => 'nullable|numeric',
                 'category_id' => 'nullable|numeric',
                 'sort_by' => 'nullable|string',
-                'blocks' => 'nullable|numeric',
+                'blocks' => 'nullable',
                 'min_price' => 'nullable|numeric',
                 'max_price' => 'nullable|numeric',
                 'min_floor' => 'nullable|numeric',
@@ -342,12 +361,12 @@ class RealEstateHelper
     public function getSortByList(): array
     {
         return [
-            'date_asc' => __('Oldest'),
-            'date_desc' => __('Newest'),
-            'price_asc' => __('Price (low to high)'),
-            'price_desc' => __('Price (high to low)'),
-            'name_asc' => __('Name (A-Z)'),
-            'name_desc' => __('Name (Z-A)'),
+            'date_asc' => trans('plugins/real-estate::real-estate.sort_date_asc'),
+            'date_desc' => trans('plugins/real-estate::real-estate.sort_date_desc'),
+            'price_asc' => trans('plugins/real-estate::real-estate.sort_price_asc'),
+            'price_desc' => trans('plugins/real-estate::real-estate.sort_price_desc'),
+            'name_asc' => trans('plugins/real-estate::real-estate.sort_name_asc'),
+            'name_desc' => trans('plugins/real-estate::real-estate.sort_name_desc'),
         ];
     }
 
@@ -413,9 +432,9 @@ class RealEstateHelper
     public function getSquareUnits(): array
     {
         return [
-            'm²' => __('m²'),
-            'ft2' => __('ft2'),
-            'yd2' => __('yd2'),
+            'm²' => trans('plugins/real-estate::real-estate.area_unit_m2'),
+            'ft2' => trans('plugins/real-estate::real-estate.area_unit_ft2'),
+            'yd2' => trans('plugins/real-estate::real-estate.area_unit_yd2'),
         ];
     }
 
@@ -543,5 +562,50 @@ class RealEstateHelper
     public function getPageSlug(string $key): ?string
     {
         return theme_option(sprintf('real_estate_%s_page_slug', $key)) ?: $this->getDefaultPageSlug($key);
+    }
+
+    public function getMinSquare(): int
+    {
+        return Cache::remember('real_estate_min_square', 3600, function () {
+            $square = Property::query()->min('square');
+
+            return $square ? (int) ceil($square) : 0;
+        });
+    }
+
+    public function getMaxSquare(): int
+    {
+        return Cache::remember('real_estate_max_square', 3600, function () {
+            $square = Property::query()->max('square');
+
+            return $square ? (int) ceil($square) : 0;
+        });
+    }
+
+    public function getMinFlat(): int
+    {
+        return Cache::remember('real_estate_min_flat', 3600, function () {
+            $flat = Project::query()->min('number_flat');
+
+            return $flat ? (int) ceil($flat) : 0;
+        });
+    }
+
+    public function getMaxFlat(): int
+    {
+        return Cache::remember('real_estate_max_flat', 3600, function () {
+            $flat = Project::query()->max('number_flat');
+
+            return $flat ? (int) ceil($flat) : 0;
+        });
+    }
+
+    public function getPublishedFeatures(): Collection
+    {
+        return Cache::remember('real_estate_published_features', 3600, function () {
+            return Feature::query()
+                ->wherePublished()
+                ->get();
+        });
     }
 }

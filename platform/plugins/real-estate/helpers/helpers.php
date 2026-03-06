@@ -111,9 +111,8 @@ if (! function_exists('get_property_categories_for_select')) {
             return $cache->get($cacheKey);
         }
 
-        $query = Category::query()
-            ->toBase()
-            ->where('status', BaseStatusEnum::PUBLISHED)
+        $categories = Category::query()
+            ->wherePublished()
             ->select([
                 're_categories.id',
                 're_categories.name',
@@ -121,11 +120,13 @@ if (! function_exists('get_property_categories_for_select')) {
             ])
             ->oldest('order')
             ->latest('is_default')
-            ->latest('created_at');
+            ->latest('created_at')
+            ->get()
+            ->each(function ($item): void {
+                $item->name = (string) $item->name;
+            });
 
-        $categories = $query->get();
-
-        $groupedCategories = collect($categories)->groupBy('parent_id');
+        $groupedCategories = $categories->groupBy('parent_id');
 
         $result = [];
 

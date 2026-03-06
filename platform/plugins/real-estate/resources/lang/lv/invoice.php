@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'invoices' => 'Rēķini',
+    'manage_invoices' => 'Pārvaldīt rēķinus',
+    'invoice_detail' => 'Rēķina informācija',
     'name' => 'Invoices',
     'amount' => 'Amount',
     'code' => 'Code',
@@ -36,5 +39,14 @@ return [
         'setting_content' => 'Content',
         'preview' => 'Preview',
         'preview_heading' => 'Priekšskatīt rēķina veidni',
+    ],
+    'detail' => [
+        'tax_amount' => 'Nodokļu summa',
+    ],
+    'template_variables' => [
+        'account_name' => 'Konta nosaukums',
+        'account_email' => 'Konta e-pasts',
+        'account_phone' => 'Konta tālrunis',
+        'account_address' => 'Konta adrese',
     ],
 ];

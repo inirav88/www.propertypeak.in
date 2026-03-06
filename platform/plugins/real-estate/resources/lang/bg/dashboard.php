@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Безплатно :posts публикация(и)',
     'total_package_price' => ':total Общо (Икономия :percent%)',
     'dashboard' => 'Табло',
+    'character_remain' => 'Оставащи символи',
+    'password_update_success' => 'Паролата е актуализирана успешно!',
+    'language' => 'Език',
+    'buy_credits' => 'Закупуване на кредити',
+    'currencies' => 'Валути',
+    'go_to_homepage' => 'Към началната страница',
+    'hello' => 'Здравейте',
 ];

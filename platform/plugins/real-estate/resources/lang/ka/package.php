@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'ანგარიშს შეუძლია შეიძინოს x ჯერ',
     'subscribe_package' => 'გამოიწერეთ პაკეტი',
     'add_credit_alert' => 'გთხოვთ, დაამატოთ თქვენი კრედიტი საკუთარი შეტყობინებების შესაქმნელად.',
+    'price_per_post' => ':price / თითო პოსტი',
+    'free_posts' => 'უფასო :number პოსტი',
+    'price_with_sale' => ':price სულ :percentage_sale',
+    'save_percentage' => 'დაზოგეთ :percentage %',
+    'features' => 'მახასიათებლები',
+    'title' => 'სათაური',
+    'feature_example' => 'მაგ.: 60-დღიანი სამუშაო განცხადებები',
 ];

@@ -2,7 +2,7 @@
 <p>{{ $category->description }}</p>
 {!! Theme::breadcrumb()->render() !!}
 
-<h3>{{ __('Properties in :name', ['name' => $category->name]) }}</h3>
+<h3>{{ trans('plugins/real-estate::property.properties_in_name', ['name' => $category->name]) }}</h3>
 
 <div class="row">
     @foreach ($properties as $property)

@@ -7,7 +7,7 @@
                 <div class="box col-lg-{{ max(round(12 / $packages->count()), 3) }} col-md-6 g-4">
                     <div @class(['box-pricing', 'active' => $package->is_default])>
                         <div class="price d-flex align-items-end">
-                            <h4>{{ $package->price == 0 ? __('Free') : format_price($package->price) }}</h4>
+                            <span class="h4">{{ $package->price == 0 ? __('Free') : format_price($package->price) }}</span>
                             <span class="body-2 text-variant-1">
                                 /
                                 @if ($package->number_of_listings === 1)

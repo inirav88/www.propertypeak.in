@@ -10,9 +10,9 @@
 
                 {!! apply_filters('before_single_content_detail', null, $model) !!}
 
-                @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.description'), ['class' => 'single-property-element', 'model' => $model])
+                {!! dynamic_sidebar('top_property_detail_sidebar') !!}
 
-                @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.pg-details'), ['class' => 'single-property-element', 'model' => $model])
+                @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.description'), ['class' => 'single-property-element', 'model' => $model])
 
                 @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.video'), ['class' => 'single-property-element', 'model' => $model])
 
@@ -35,10 +35,12 @@
                 </div>
 
                 {!! apply_filters(
-    BASE_FILTER_PUBLIC_COMMENT_AREA,
-    null,
-    $model
-) !!}
+                    BASE_FILTER_PUBLIC_COMMENT_AREA,
+                    null,
+                    $model
+                ) !!}
+
+                {!! dynamic_sidebar('bottom_property_detail_sidebar') !!}
 
                 @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.reviews'), ['model' => $model, 'class' => 'single-property-element'])
             </div>
@@ -48,7 +50,7 @@
 
                     @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.contact'), ['class' => 'bg-surface', 'model' => $model])
 
-                    @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.mortgage-calculator'), ['model' => $model])
+                    {!! dynamic_sidebar('property_detail_sidebar') !!}
 
                     {!! apply_filters('ads_render', null, 'detail_page_sidebar_after') !!}
                 </div>
@@ -60,5 +62,3 @@
 </section>
 
 @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.related-properties'), ['model' => $model])
-
-@include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.mobile-sticky-footer'), ['model' => $model])

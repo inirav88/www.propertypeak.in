@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 /**
@@ -49,8 +50,6 @@ class Property extends BaseModel
         'status',
         'is_featured',
         'featured_priority',
-        'featured_until',
-        'priority_score',
         'currency_id',
         'city_id',
         'state_id',
@@ -67,37 +66,6 @@ class Property extends BaseModel
         'private_notes',
         'floor_plans',
         'reject_reason',
-        // PG-specific fields
-        'pg_category',
-        'pg_occupancy_type',
-        'total_beds',
-        'available_beds',
-        'pricing_model',
-        'price_per_bed',
-        'price_per_room',
-        'security_deposit',
-        'maintenance_charges',
-        'notice_period_days',
-        'food_included',
-        'food_type',
-        'meals_provided',
-        'ac_available',
-        'wifi_included',
-        'laundry_included',
-        'parking_available',
-        'gender_preference',
-        'preferred_tenants',
-        'gate_closing_time',
-        'visitors_allowed',
-        'smoking_allowed',
-        'drinking_allowed',
-        'house_rules',
-        'nearby_landmarks',
-        'furnishing_details',
-        'virtual_tour_url',
-        'instant_booking',
-        'verified_pg',
-        'owner_stays',
     ];
 
     protected $casts = [
@@ -113,40 +81,11 @@ class Property extends BaseModel
         'images' => 'json',
         'price' => 'float',
         'square' => 'float',
-        'number_bedroom' => 'int',
-        'number_bathroom' => 'int',
+        'number_bedroom' => 'float',
+        'number_bathroom' => 'float',
         'number_floor' => 'int',
         'featured_priority' => 'int',
-        'is_featured' => 'boolean',
-        'featured_until' => 'datetime',
-        'priority_score' => 'int',
         'floor_plans' => 'array',
-        // PG-specific casts
-        'total_beds' => 'int',
-        'available_beds' => 'int',
-        'price_per_bed' => 'float',
-        'price_per_room' => 'float',
-        'security_deposit' => 'float',
-        'maintenance_charges' => 'float',
-        'notice_period_days' => 'int',
-        'food_included' => 'boolean',
-        'pg_occupancy_type' => 'array',
-        'food_type' => 'array',
-        'meals_provided' => 'array',
-        'ac_available' => 'boolean',
-        'wifi_included' => 'boolean',
-        'laundry_included' => 'boolean',
-        'parking_available' => 'boolean',
-        'preferred_tenants' => 'array',
-        'visitors_allowed' => 'boolean',
-        'smoking_allowed' => 'boolean',
-        'drinking_allowed' => 'boolean',
-        'house_rules' => SafeContent::class,
-        'nearby_landmarks' => SafeContent::class,
-        'furnishing_details' => 'array',
-        'instant_booking' => 'boolean',
-        'verified_pg' => 'boolean',
-        'owner_stays' => 'boolean',
     ];
 
     protected static function booted(): void
@@ -178,7 +117,7 @@ class Property extends BaseModel
 
     protected function image(): Attribute
     {
-        return Attribute::get(fn() => Arr::first($this->images) ?? null);
+        return Attribute::get(fn () => Arr::first($this->images) ?? null);
     }
 
     protected function squareText(): Attribute
@@ -190,18 +129,18 @@ class Property extends BaseModel
 
             $squareFormatted = fmod($square, 1) == 0 ? number_format($square) : number_format($square, 2);
 
-            return apply_filters('real_estate_property_square_text', sprintf('%s %s', $squareFormatted, __($unit)), $square);
+            return apply_filters('real_estate_property_square_text', sprintf('%s %s', $squareFormatted, trans($unit)), $square);
         });
     }
 
     protected function address(): Attribute
     {
-        return Attribute::get(fn() => $this->location);
+        return Attribute::get(fn () => $this->location);
     }
 
     protected function category(): Attribute
     {
-        return Attribute::get(fn() => $this->categories->first() ?: new Category());
+        return Attribute::get(fn () => $this->categories->first() ?: new Category());
     }
 
     public function currency(): BelongsTo
@@ -237,7 +176,7 @@ class Property extends BaseModel
     protected function cityName(): Attribute
     {
         return Attribute::get(function () {
-            if (!is_plugin_active('location')) {
+            if (! is_plugin_active('location')) {
                 return $this->location;
             }
 
@@ -247,27 +186,27 @@ class Property extends BaseModel
 
     protected function typeHtml(): Attribute
     {
-        return Attribute::get(fn() => $this->type->label());
+        return Attribute::get(fn () => $this->type->label());
     }
 
     protected function statusHtml(): Attribute
     {
-        return Attribute::get(fn() => $this->status->toHtml());
+        return Attribute::get(fn () => $this->status->toHtml());
     }
 
     protected function categoryName(): Attribute
     {
-        return Attribute::get(fn() => $this->category->name);
+        return Attribute::get(fn () => $this->category->name);
     }
 
     protected function imageThumb(): Attribute
     {
-        return Attribute::get(fn() => $this->image ? RvMedia::getImageUrl($this->image, 'thumb', false, RvMedia::getDefaultImage()) : null);
+        return Attribute::get(fn () => $this->image ? RvMedia::getImageUrl($this->image, 'thumb', false, RvMedia::getDefaultImage()) : null);
     }
 
     protected function imageSmall(): Attribute
     {
-        return Attribute::get(fn() => $this->image ? RvMedia::getImageUrl($this->image, 'small', false, RvMedia::getDefaultImage()) : null);
+        return Attribute::get(fn () => $this->image ? RvMedia::getImageUrl($this->image, 'small', false, RvMedia::getDefaultImage()) : null);
     }
 
     protected function priceHtml(): Attribute
@@ -277,13 +216,8 @@ class Property extends BaseModel
                 return '';
             }
 
-            // Handle PG pricing
-            if ($this->type == PropertyTypeEnum::PG) {
-                return $this->pg_price_display ?: __('Contact');
-            }
-
-            if (!$this->price) {
-                return __('Contact');
+            if (! $this->price) {
+                return trans('plugins/real-estate::real-estate.contact_for_price');
             }
 
             $price = $this->price_format;
@@ -303,8 +237,8 @@ class Property extends BaseModel
                 return '';
             }
 
-            if (!$this->price) {
-                return __('Contact');
+            if (! $this->price) {
+                return trans('plugins/real-estate::real-estate.contact_for_price');
             }
 
             if ($this->price_formatted) {
@@ -313,7 +247,7 @@ class Property extends BaseModel
 
             $currency = $this->currency;
 
-            if (!$currency || !$currency->getKey()) {
+            if (! $currency || ! $currency->getKey()) {
                 $currency = get_application_currency();
             }
 
@@ -323,7 +257,7 @@ class Property extends BaseModel
 
     protected function mapIcon(): Attribute
     {
-        return Attribute::get(fn() => $this->type_html . ': ' . $this->price_format);
+        return Attribute::get(fn () => $this->type_html . ': ' . $this->price_format);
     }
 
     public function customFields(): MorphMany
@@ -333,7 +267,7 @@ class Property extends BaseModel
 
     protected function customFieldsArray(): Attribute
     {
-        return Attribute::get(fn() => CustomFieldValue::getCustomFieldValuesArray($this));
+        return Attribute::get(fn () => CustomFieldValue::getCustomFieldValuesArray($this));
     }
 
     public function reviews(): MorphMany
@@ -349,7 +283,7 @@ class Property extends BaseModel
     protected function shortAddress(): Attribute
     {
         return Attribute::get(function () {
-            if (!is_plugin_active('location')) {
+            if (! is_plugin_active('location')) {
                 return $this->location;
             }
 
@@ -362,12 +296,12 @@ class Property extends BaseModel
         return Attribute::get(function () {
             $floorPlan = $this->floor_plans;
 
-            if (!is_array($floorPlan)) {
+            if (! is_array($floorPlan)) {
                 $floorPlan = json_decode($floorPlan, true);
             }
 
             return collect($floorPlan)
-                ->filter(fn($floorPlan) => is_array($floorPlan))
+                ->filter(fn ($floorPlan) => is_array($floorPlan))
                 ->map(function ($floorPlan) {
                     $floorPlan = collect($floorPlan)->pluck('value', 'key')->toArray();
                     $bedrooms = (int) Arr::get($floorPlan, 'bedrooms', 0);
@@ -377,8 +311,8 @@ class Property extends BaseModel
                         'name' => Arr::get($floorPlan, 'name'),
                         'description' => Arr::get($floorPlan, 'description'),
                         'image' => Arr::get($floorPlan, 'image'),
-                        'bedrooms' => $bedrooms === 1 ? __('1 bedroom') : __(':count bedrooms', ['count' => $bedrooms]),
-                        'bathrooms' => $bathrooms === 1 ? __('1 bathroom') : __(':count bathrooms', ['count' => $bathrooms]),
+                        'bedrooms' => $bedrooms === 1 ? trans('plugins/real-estate::property.1_bedroom') : trans('plugins/real-estate::property.bedrooms', ['count' => $bedrooms]),
+                        'bathrooms' => $bathrooms === 1 ? trans('plugins/real-estate::property.1_bathroom') : trans('plugins/real-estate::property.bathrooms', ['count' => $bathrooms]),
                     ];
                 });
         });
@@ -387,11 +321,11 @@ class Property extends BaseModel
     protected function isPendingModeration(): Attribute
     {
         return Attribute::get(function () {
-            if (!$this->exists) {
+            if (! $this->exists) {
                 return false;
             }
 
-            return !in_array($this->moderation_status, [ModerationStatusEnum::APPROVED, ModerationStatusEnum::REJECTED]);
+            return ! in_array($this->moderation_status, [ModerationStatusEnum::APPROVED, ModerationStatusEnum::REJECTED]);
         });
     }
 
@@ -402,7 +336,7 @@ class Property extends BaseModel
                 return Html::tag('span', trans('plugins/real-estate::property.never_expired_label'), ['class' => 'text-info'])->toHtml();
             }
 
-            if (!$this->expire_date) {
+            if (! $this->expire_date) {
                 return '&mdash;';
             }
 
@@ -418,54 +352,105 @@ class Property extends BaseModel
         });
     }
 
-    protected function isPgProperty(): Attribute
+    protected function canSeePrivateNotes(): Attribute
     {
         return Attribute::get(function () {
-            if ($this->type instanceof PropertyTypeEnum) {
-                return $this->type->getValue() === PropertyTypeEnum::PG;
+            if (Auth::check()) {
+                return true;
             }
 
-            return $this->type === PropertyTypeEnum::PG;
+            if (! Auth::guard('account')->check()) {
+                return false;
+            }
+
+            return $this->author_id == Auth::guard('account')->id() && $this->author_type == Account::class;
         });
     }
 
-    protected function pgPriceDisplay(): Attribute
+    public function toWebhookData(): array
     {
-        return Attribute::get(function () {
-            if (!$this->is_pg_property) {
-                return null;
-            }
+        $this->loadMissing(['categories', 'features', 'author', 'city', 'state', 'country', 'currency']);
 
-            if (setting('real_estate_hide_price', false)) {
-                return '';
-            }
+        $images = $this->images ?? [];
+        $imageUrls = array_map(fn ($image) => RvMedia::getImageUrl($image), $images);
 
-            $parts = [];
+        $data = [
+            'id' => $this->getKey(),
+            'unique_id' => $this->unique_id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'content' => $this->content,
+            'type' => [
+                'value' => $this->type?->getValue(),
+                'text' => $this->type?->label(),
+            ],
+            'status' => [
+                'value' => $this->status?->getValue(),
+                'text' => $this->status?->label(),
+            ],
+            'moderation_status' => [
+                'value' => $this->moderation_status?->getValue(),
+                'text' => $this->moderation_status?->label(),
+            ],
+            'price' => $this->price,
+            'price_formatted' => $this->price_format,
+            'currency' => $this->currency ? [
+                'id' => $this->currency->id,
+                'title' => $this->currency->title,
+                'symbol' => $this->currency->symbol,
+            ] : null,
+            'period' => $this->type == PropertyTypeEnum::RENT ? [
+                'value' => $this->period?->getValue(),
+                'text' => $this->period?->label(),
+            ] : null,
+            'images' => $images,
+            'image_urls' => $imageUrls,
+            'primary_image' => $this->image,
+            'primary_image_url' => $this->image ? RvMedia::getImageUrl($this->image) : null,
+            'location' => [
+                'address' => $this->location,
+                'city' => $this->city?->name,
+                'state' => $this->state?->name,
+                'country' => $this->country?->name,
+                'zip_code' => $this->zip_code,
+                'latitude' => $this->latitude,
+                'longitude' => $this->longitude,
+                'full_address' => implode(', ', array_filter([
+                    $this->location,
+                    $this->city?->name,
+                    $this->state?->name,
+                    $this->country?->name,
+                    $this->zip_code,
+                ])),
+            ],
+            'specifications' => [
+                'square' => $this->square,
+                'square_text' => $this->square_text,
+                'number_bedroom' => $this->number_bedroom,
+                'number_bathroom' => $this->number_bathroom,
+                'number_floor' => $this->number_floor,
+            ],
+            'categories' => $this->categories->map(fn ($category) => [
+                'id' => $category->id,
+                'name' => $category->name,
+            ])->toArray(),
+            'features' => $this->features->map(fn ($feature) => [
+                'id' => $feature->id,
+                'name' => $feature->name,
+            ])->toArray(),
+            'author' => $this->author ? [
+                'id' => $this->author->id,
+                'name' => $this->author->name ?? $this->author->first_name . ' ' . $this->author->last_name,
+                'email' => $this->author->email,
+                'phone' => $this->author->phone ?? null,
+            ] : null,
+            'is_featured' => (bool) $this->is_featured,
+            'url' => $this->url,
+            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
+            'expire_date' => $this->expire_date?->toIso8601String(),
+        ];
 
-            if ($this->price_per_bed && in_array($this->pricing_model, ['per_bed', 'both'])) {
-                $parts[] = format_price($this->price_per_bed, $this->currency) . ' / ' . __('bed');
-            }
-
-            if ($this->price_per_room && in_array($this->pricing_model, ['per_room', 'both'])) {
-                $parts[] = format_price($this->price_per_room, $this->currency) . ' / ' . __('room');
-            }
-
-            return implode(' | ', $parts);
-        });
-    }
-
-    protected function availabilityStatus(): Attribute
-    {
-        return Attribute::get(function () {
-            if (!$this->is_pg_property) {
-                return null;
-            }
-
-            if ($this->available_beds && $this->available_beds > 0) {
-                return __('plugins/real-estate::property.pg.available_now') . ' (' . $this->available_beds . ' ' . __('beds') . ')';
-            }
-
-            return __('plugins/real-estate::property.pg.fully_occupied');
-        });
+        return apply_filters('real_estate_property_webhook_data', $data, $this);
     }
 }

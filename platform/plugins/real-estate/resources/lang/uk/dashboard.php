@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Безкоштовно :posts пост(ів)',
     'total_package_price' => ':total Всього (Економія :percent%)',
     'dashboard' => 'Панель управління',
+    'character_remain' => 'Залишилось символів',
+    'password_update_success' => 'Пароль успішно оновлено!',
+    'language' => 'Мова',
+    'buy_credits' => 'Купити кредити',
+    'currencies' => 'Валюти',
+    'go_to_homepage' => 'На головну сторінку',
+    'hello' => 'Вітаємо',
 ];

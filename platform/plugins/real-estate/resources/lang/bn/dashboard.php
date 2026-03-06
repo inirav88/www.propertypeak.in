@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'বিনামূল্যে :posts পোস্ট(গুলি)',
     'total_package_price' => ':total মোট (সাশ্রয় :percent%)',
     'dashboard' => 'ড্যাশবোর্ড',
+    'language' => 'ভাষা',
+    'character_remain' => 'অবশিষ্ট অক্ষর',
+    'password_update_success' => 'পাসওয়ার্ড সফলভাবে আপডেট হয়েছে!',
+    'buy_credits' => 'ক্রেডিট কিনুন',
+    'currencies' => 'মুদ্রা',
+    'go_to_homepage' => 'হোমপেজে যান',
+    'hello' => 'হ্যালো',
 ];

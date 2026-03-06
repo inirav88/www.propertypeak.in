@@ -40,7 +40,7 @@ class BlogSeeder extends BaseSeeder
             return [
                 'name' => $post,
                 'content' => $content,
-                'image' => $this->filePath(sprintf('posts/%s.jpg', $this->faker->numberBetween(1, 10))),
+                'image' => $this->filePath(sprintf('posts/%s.jpg', rand(1, 10))),
             ];
         }, [
             'Top 10 Tips for First-time Home Buyers',

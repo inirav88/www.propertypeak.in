@@ -68,4 +68,12 @@ return [
             ],
         ],
     ],
+    'form_content' => 'Conținut',
+    'form_message' => 'Mesaj',
+    'name_placeholder' => 'Ion Popescu',
+    'phone_placeholder' => 'Ex: 0721234567',
+    'email_placeholder' => 'email@exemplu.com',
+    'message_placeholder' => 'Introduceți mesajul dvs...',
+    'send_consult' => 'Trimiteți mesajul',
+    'dropdown_show_label' => 'Afișați notificări consultări',
 ];

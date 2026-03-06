@@ -6,6 +6,8 @@
     }
 @endphp
 
+<h1 class="d-none">{{ __('Agents') }}</h1>
+
 <section class="flat-section flat-agents">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
@@ -29,6 +31,6 @@
             @endforeach
         </div>
 
-        {{ $accounts->links(Theme::getThemeNamespace('partials.pagination')) }}
+        {{ $accounts->onEachSide(1)->links(Theme::getThemeNamespace('partials.pagination')) }}
     </div>
 </section>

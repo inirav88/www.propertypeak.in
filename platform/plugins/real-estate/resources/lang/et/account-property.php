@@ -7,4 +7,7 @@ return [
     'properties' => 'Kinnisvara',
     'write_property' => 'Kirjuta kinnisvara',
     'images' => 'Pildid (maksimaalselt :max pilti)',
+    'renew' => 'Uuenda',
+    'not_enough_credit_renew' => 'Teil ei ole piisavalt krediiti selle kinnisvara uuendamiseks!',
+    'renew_success' => 'Kinnisvara edukalt uuendatud',
 ];

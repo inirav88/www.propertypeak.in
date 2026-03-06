@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @method static \Botble\RealEstate\QueryBuilders\ProjectBuilder<static> query()
@@ -304,6 +305,14 @@ class Project extends BaseModel
     protected function priceHtml(): Attribute
     {
         return Attribute::get(function () {
+            if (setting('real_estate_hide_price', false)) {
+                return '';
+            }
+
+            if (! $this->price) {
+                return trans('plugins/real-estate::real-estate.contact_for_price');
+            }
+
             return $this->formatted_price;
         });
     }
@@ -346,10 +355,25 @@ class Project extends BaseModel
                         'name' => Arr::get($floorPlan, 'name'),
                         'description' => Arr::get($floorPlan, 'description'),
                         'image' => Arr::get($floorPlan, 'image'),
-                        'bedrooms' => $bedrooms === 1 ? __('1 bedroom') : __(':count bedrooms', ['count' => $bedrooms]),
-                        'bathrooms' => $bathrooms === 1 ? __('1 bathroom') : __(':count bathrooms', ['count' => $bathrooms]),
+                        'bedrooms' => $bedrooms === 1 ? trans('plugins/real-estate::property.1_bedroom') : trans('plugins/real-estate::property.bedrooms', ['count' => $bedrooms]),
+                        'bathrooms' => $bathrooms === 1 ? trans('plugins/real-estate::property.1_bathroom') : trans('plugins/real-estate::property.bathrooms', ['count' => $bathrooms]),
                     ];
                 });
+        });
+    }
+
+    protected function canSeePrivateNotes(): Attribute
+    {
+        return Attribute::get(function () {
+            if (Auth::check()) {
+                return true;
+            }
+
+            if (! Auth::guard('account')->check()) {
+                return false;
+            }
+
+            return $this->author_id == Auth::guard('account')->id() && $this->author_type == Account::class;
         });
     }
 }

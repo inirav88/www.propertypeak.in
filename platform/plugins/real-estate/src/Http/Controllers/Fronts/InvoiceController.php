@@ -22,13 +22,13 @@ class InvoiceController extends BaseController
 
     public function index(AccountInvoiceTable $accountInvoiceTable)
     {
-        $this->pageTitle(__('Invoices'));
+        $this->pageTitle(trans('plugins/real-estate::invoice.invoices'));
 
         Theme::breadcrumb()
-            ->add(__('My Profile'), route('public.account.dashboard'))
-            ->add(__('Manage Invoices'));
+            ->add(trans('plugins/real-estate::dashboard.header_profile_link'), route('public.account.dashboard'))
+            ->add(trans('plugins/real-estate::invoice.manage_invoices'));
 
-        SeoHelper::setTitle(__('Invoices'));
+        SeoHelper::setTitle(trans('plugins/real-estate::invoice.invoices'));
 
         return $accountInvoiceTable->render('plugins/real-estate::account.table.base');
     }
@@ -42,7 +42,7 @@ class InvoiceController extends BaseController
 
         abort_unless($this->canViewInvoice($invoice), 404);
 
-        $title = __('Invoice detail :code', ['code' => $invoice->code]);
+        $title = trans('plugins/real-estate::invoice.invoice_detail', ['code' => $invoice->code]);
 
         $this->pageTitle($title);
 

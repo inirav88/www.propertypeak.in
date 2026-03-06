@@ -11,4 +11,13 @@ return [
         'approved' => 'Approved',
         'rejected' => 'Rejected',
     ],
+    'write_review' => 'Rakstīt atsauksmi',
+    'your_review' => 'Jūsu atsauksme',
+    'submit_review' => 'Iesniegt atsauksmi',
+    'review_success' => 'Atsauksme veiksmīgi iesniegta!',
+    'review_pending' => 'Jūsu atsauksme gaida apstiprinājumu.',
+    'rating' => 'Vērtējums',
+    'reviews' => 'Atsauksmes',
+    'no_reviews' => 'Pagaidām nav atsauksmju',
+    'average_rating' => 'Vidējais vērtējums',
 ];

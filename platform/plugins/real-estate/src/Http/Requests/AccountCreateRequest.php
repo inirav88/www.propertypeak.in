@@ -18,8 +18,6 @@ class AccountCreateRequest extends Request
             'is_blocked' => ['nullable', 'boolean'],
             'blocked_reason' => ['nullable', 'string', 'max:500', 'required_if:is_blocked,1'],
         ];
-
-        return $rules;
     }
 
     public function messages(): array

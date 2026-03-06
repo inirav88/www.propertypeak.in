@@ -26,7 +26,7 @@ class CurrencySettingRequest extends Request
             'real_estate_convert_money_to_text_enabled' => $onOffRule = new OnOffRule(),
             'real_estate_enable_auto_detect_visitor_currency' => $onOffRule,
             'real_estate_add_space_between_price_and_currency' => $onOffRule,
-            'real_estate_thousands_separator' => $separatorRule =  ['required', 'string', Rule::in([',', '.', 'space'])],
+            'real_estate_thousands_separator' => $separatorRule = ['required', 'string', Rule::in([',', '.', 'space', "'"])],
             'real_estate_decimal_separator' => $separatorRule,
         ];
     }

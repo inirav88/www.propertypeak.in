@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Gratis __Ph0__ POST (er)',
     'total_package_price' => '__Ph0__ Totalt (lagre __Ph1 __%)',
     'dashboard' => 'Dashboard',
+    'character_remain' => 'Tegn igjen',
+    'password_update_success' => 'Passord oppdatert!',
+    'language' => 'Sprak',
+    'buy_credits' => 'Kjop kreditter',
+    'currencies' => 'Valutaer',
+    'go_to_homepage' => 'Ga til hjemmesiden',
+    'hello' => 'Hei',
 ];

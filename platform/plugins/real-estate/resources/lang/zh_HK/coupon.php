@@ -35,4 +35,11 @@ return [
     'total' => '總計',
     'toggle_coupon_form_text' => '您有優惠碼嗎?',
     'apply_coupon_code' => '套用',
+    'remove' => '移除',
+    'your_order' => '您的訂單',
+    'coupon_code_applied' => '優惠券代碼：:code',
+    'invalid' => '此優惠碼無效！',
+    'applied_success' => '成功套用優惠碼「:code」！',
+    'not_used' => '此優惠碼尚未使用！',
+    'removed_success' => '成功移除優惠碼:code！',
 ];

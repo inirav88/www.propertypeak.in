@@ -15,5 +15,12 @@ return [
     'account_limit' => 'Begræns køb pr. konto',
     'account_limit_placeholder' => 'En konto kan købe x gange',
     'subscribe_package' => 'Abonner på pakke',
-    'add_credit_alert' => 'Tilføj venligst din kredit for at oprette dine egne opslag.',
+    'add_credit_alert' => 'Tilf0j venligst din kredit for at oprette dine egne opslag.',
+    'price_per_post' => ':price / pr. opslag',
+    'free_posts' => 'Gratis :number opslag',
+    'price_with_sale' => ':price Total :percentage_sale',
+    'save_percentage' => 'spar :percentage %',
+    'features' => 'Funktioner',
+    'title' => 'Titel',
+    'feature_example' => 'F.eks.: 60-dages jobopslag',
 ];

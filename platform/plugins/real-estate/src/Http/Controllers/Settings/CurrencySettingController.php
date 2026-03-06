@@ -2,14 +2,20 @@
 
 namespace Botble\RealEstate\Http\Controllers\Settings;
 
+use Botble\Base\Supports\Breadcrumb;
 use Botble\RealEstate\Forms\Settings\CurrencySettingForm;
 use Botble\RealEstate\Http\Requests\Settings\CurrencySettingRequest;
 use Botble\RealEstate\Services\StoreCurrenciesService;
-use Botble\Setting\Http\Controllers\SettingController;
 use Illuminate\Support\Arr;
 
-class CurrencySettingController extends SettingController
+class CurrencySettingController extends BaseSettingController
 {
+    protected function breadcrumb(): Breadcrumb
+    {
+        return parent::breadcrumb()
+            ->add(trans('plugins/real-estate::settings.currencies'));
+    }
+
     public function edit()
     {
         $this->pageTitle(trans('plugins/real-estate::settings.currencies'));

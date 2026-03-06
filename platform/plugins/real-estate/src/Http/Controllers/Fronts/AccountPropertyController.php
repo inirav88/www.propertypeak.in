@@ -14,6 +14,9 @@ use Botble\Media\Facades\RvMedia;
 use Botble\Optimize\Facades\OptimizerHelper;
 use Botble\RealEstate\Enums\ModerationStatusEnum;
 use Botble\RealEstate\Enums\PropertyStatusEnum;
+use Botble\RealEstate\Events\PropertyCreated;
+use Botble\RealEstate\Events\PropertyDeleted;
+use Botble\RealEstate\Events\PropertyUpdated;
 use Botble\RealEstate\Facades\RealEstateHelper;
 use Botble\RealEstate\Forms\AccountPropertyForm;
 use Botble\RealEstate\Http\Requests\AccountPropertyRequest;
@@ -89,7 +92,7 @@ class AccountPropertyController extends BaseController
                 'author_type' => Account::class,
             ]));
 
-            $property->expire_date = Carbon::now()->addDays(RealEstateHelper::propertyExpiredDays());
+            $property->expire_date = RealEstateHelper::calculatePropertyExpireDate();
 
             $enabledPostApproval = (bool) setting('enable_post_approval', 1);
 
@@ -132,6 +135,8 @@ class AccountPropertyController extends BaseController
                     ])
                     ->sendUsingTemplate('new-pending-property');
             }
+
+            event(new PropertyCreated($property));
         });
 
         return $this
@@ -184,6 +189,8 @@ class AccountPropertyController extends BaseController
             ])
             ->firstOrFail();
 
+        $originalImages = $property->images ?? [];
+
         $request->merge(['floor_plans' => $this->uploadFloorPlans($request)]);
 
         $propertyForm = AccountPropertyForm::createFromModel($property)->setRequest($request);
@@ -191,7 +198,8 @@ class AccountPropertyController extends BaseController
         $propertyForm->saving(function (AccountPropertyForm $form) use (
             $propertyCategoryService,
             $saveFacilitiesService,
-            $savePropertyCustomFieldService
+            $savePropertyCustomFieldService,
+            $originalImages
         ): void {
             $request = $form->getRequest();
 
@@ -237,6 +245,8 @@ class AccountPropertyController extends BaseController
                     ])
                     ->sendUsingTemplate('new-pending-property');
             }
+
+            event(new PropertyUpdated($property, $originalImages));
         });
 
         return $this
@@ -280,12 +290,23 @@ class AccountPropertyController extends BaseController
             ])
             ->firstOrFail();
 
+        $propertyData = [
+            'id' => $property->getKey(),
+            'unique_id' => $property->unique_id,
+            'name' => $property->name,
+            'deleted_at' => now()->toIso8601String(),
+        ];
+
         AccountActivityLog::query()->create([
             'action' => 'delete_property',
             'reference_name' => $property->name,
         ]);
 
-        return DeleteResourceAction::make($property);
+        $response = DeleteResourceAction::make($property);
+
+        event(new PropertyDeleted($propertyData));
+
+        return $response;
     }
 
     public function renew(int|string $id)
@@ -298,7 +319,7 @@ class AccountPropertyController extends BaseController
             return $this
                 ->httpResponse()
                 ->setError()
-                ->setMessage(__("You don't have enough credit to renew this property!"));
+                ->setMessage(trans('plugins/real-estate::account-property.not_enough_credit_renew'));
         }
 
         $expireDate = $property->expire_date;
@@ -309,7 +330,7 @@ class AccountPropertyController extends BaseController
         DB::beginTransaction();
 
         try {
-            $property->expire_date = $expireDate->addDays(RealEstateHelper::propertyExpiredDays());
+            $property->expire_date = RealEstateHelper::calculatePropertyExpireDate($expireDate);
             $property->save();
 
             if (RealEstateHelper::isEnabledCreditsSystem()) {
@@ -335,7 +356,7 @@ class AccountPropertyController extends BaseController
 
         return $this
             ->httpResponse()
-            ->setMessage(__('Renew property successfully'));
+            ->setMessage(trans('plugins/real-estate::account-property.renew_success'));
     }
 
     protected function uploadFloorPlans(AccountPropertyRequest $request)

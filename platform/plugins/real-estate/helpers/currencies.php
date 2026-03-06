@@ -49,13 +49,15 @@ if (! function_exists('format_price')) {
             return (string) $price;
         }
 
-        if ($useSymbol && $currency->is_prefix_symbol) {
-            $space = $currency->space_between_price_and_currency ? ' ' : null;
+        $space = $currency->space_between_price_and_currency ? ' ' : '';
 
+        if ($useSymbol && $currency->is_prefix_symbol) {
             return $currency->symbol . $space . human_price_text($price, $currency, fullNumber: $fullNumber);
         }
 
-        return human_price_text($price, $currency, ($useSymbol ? $currency->symbol : $currency->title), fullNumber: $fullNumber);
+        $priceUnit = $useSymbol ? $currency->symbol : $currency->title;
+
+        return human_price_text($price, $currency, $space . $priceUnit, fullNumber: $fullNumber);
     }
 }
 
@@ -63,15 +65,16 @@ if (! function_exists('human_price_text')) {
     function human_price_text(float|null|string $price, Currency|null|string $currency, ?string $priceUnit = '', bool $fullNumber = false): string
     {
         $numberAfterDot = ($currency instanceof Currency) ? $currency->decimals : 0;
+        $unitPrefix = '';
 
         if (! $fullNumber && setting('real_estate_convert_money_to_text_enabled', false)) {
             if ($price >= 1000000 && $price < 1000000000) {
                 $price = round($price / 1000000, 2) + 0;
-                $priceUnit = __('million') . ' ' . $priceUnit;
+                $unitPrefix = ' ' . trans('plugins/real-estate::general.million');
                 $numberAfterDot = strlen(substr(strrchr((string) $price, '.'), 1));
             } elseif ($price >= 1000000000) {
                 $price = round($price / 1000000000, 2) + 0;
-                $priceUnit = __('billion') . ' ' . $priceUnit;
+                $unitPrefix = ' ' . trans('plugins/real-estate::general.billion');
                 $numberAfterDot = strlen(substr(strrchr((string) $price, '.'), 1));
             }
         }
@@ -105,9 +108,7 @@ if (! function_exists('human_price_text')) {
             );
         }
 
-        $space = ($currency instanceof Currency && $currency->space_between_price_and_currency) ? ' ' : null;
-
-        return $price . $space . ($priceUnit ?: '');
+        return $price . $unitPrefix . ($priceUnit ?: '');
     }
 }
 

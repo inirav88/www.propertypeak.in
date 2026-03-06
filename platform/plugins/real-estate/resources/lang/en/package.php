@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'An account can purchase x times',
     'subscribe_package' => 'Subscribe package',
     'add_credit_alert' => 'Please add your credit to create your own posts.',
+    'price_per_post' => ':price / per post',
+    'free_posts' => 'Free :number post(s)',
+    'price_with_sale' => ':price Total :percentage_sale',
+    'save_percentage' => 'save :percentage %',
+    'features' => 'Features',
+    'title' => 'Title',
+    'feature_example' => 'Ex: 60-Day Job Postings',
 ];

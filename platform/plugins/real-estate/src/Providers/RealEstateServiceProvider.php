@@ -189,13 +189,10 @@ class RealEstateServiceProvider extends ServiceProvider
 
         $loader = AliasLoader::getInstance();
         $loader->alias('RealEstateHelper', RealEstateHelper::class);
-
-        $this->loadJsonTranslationsFrom($this->getPath() . '/resources/lang');
     }
 
     public function boot(): void
     {
-
         add_filter(IS_IN_ADMIN_FILTER, [$this, 'setInAdmin'], 128);
 
         $this->setNamespace('plugins/real-estate')
@@ -207,7 +204,7 @@ class RealEstateServiceProvider extends ServiceProvider
             ->loadRoutes(['web', 'fronts'])
             ->publishAssets();
 
-        if (class_exists('ApiHelper') && ApiHelper::enabled()) {
+        if (class_exists('ApiHelper')) {
             $this->loadRoutes(['api']);
         }
 
@@ -216,7 +213,7 @@ class RealEstateServiceProvider extends ServiceProvider
                 SeoHelper::registerModule([City::class, State::class]);
             }
 
-            if (!setting('real_estate_enable_account_verification', false)) {
+            if (! setting('real_estate_enable_account_verification', false)) {
                 config([
                     'plugins.real-estate.email.templates' => Arr::except(
                         config('plugins.real-estate.email.templates'),
@@ -227,16 +224,16 @@ class RealEstateServiceProvider extends ServiceProvider
         });
 
         SlugHelper::registering(function (): void {
-            SlugHelper::registerModule(Property::class, fn() => trans('plugins/real-estate::property.properties'));
-            SlugHelper::registerModule(Category::class, fn() => trans('plugins/real-estate::category.property_categories'));
-            SlugHelper::registerModule(Project::class, fn() => trans('plugins/real-estate::project.projects'));
+            SlugHelper::registerModule(Property::class, fn () => trans('plugins/real-estate::property.properties'));
+            SlugHelper::registerModule(Category::class, fn () => trans('plugins/real-estate::category.property_categories'));
+            SlugHelper::registerModule(Project::class, fn () => trans('plugins/real-estate::project.projects'));
             SlugHelper::setPrefix(Project::class, 'projects', true);
 
             SlugHelper::setPrefix(Property::class, 'properties', true);
             SlugHelper::setPrefix(Category::class, 'property-category', true);
 
-            if (!setting('real_estate_disabled_public_profile')) {
-                SlugHelper::registerModule(Account::class, fn() => trans('plugins/real-estate::account.agents'));
+            if (! setting('real_estate_disabled_public_profile')) {
+                SlugHelper::registerModule(Account::class, fn () => trans('plugins/real-estate::account.agents'));
                 SlugHelper::setPrefix(Account::class, 'agents', true);
                 SlugHelper::setColumnUsedForSlugGenerator(Account::class, 'first_name');
             }
@@ -258,7 +255,7 @@ class RealEstateServiceProvider extends ServiceProvider
                     'parent_id' => 'cms-plugins-real-estate',
                     'name' => 'plugins/real-estate::property.name',
                     'icon' => 'ti ti-building',
-                    'url' => fn() => route('property.index'),
+                    'url' => fn () => route('property.index'),
                     'permissions' => ['property.index'],
                 ])
                 ->when(RealEstateHelper::isEnabledProjects(), function (DashboardMenuSupport $dashboardMenu): void {
@@ -269,7 +266,7 @@ class RealEstateServiceProvider extends ServiceProvider
                             'parent_id' => 'cms-plugins-real-estate',
                             'name' => 'plugins/real-estate::project.name',
                             'icon' => 'ti ti-buildings',
-                            'url' => fn() => route('project.index'),
+                            'url' => fn () => route('project.index'),
                             'permissions' => ['project.index'],
                         ]);
                 })
@@ -279,7 +276,7 @@ class RealEstateServiceProvider extends ServiceProvider
                     'parent_id' => 'cms-plugins-real-estate',
                     'name' => 'plugins/real-estate::feature.name',
                     'icon' => 'ti ti-star',
-                    'url' => fn() => route('property_feature.index'),
+                    'url' => fn () => route('property_feature.index'),
                     'permissions' => ['property_feature.index'],
                 ])
                 ->registerItem([
@@ -288,7 +285,7 @@ class RealEstateServiceProvider extends ServiceProvider
                     'parent_id' => 'cms-plugins-real-estate',
                     'name' => 'plugins/real-estate::facility.name',
                     'icon' => 'ti ti-tools',
-                    'url' => fn() => route('facility.index'),
+                    'url' => fn () => route('facility.index'),
                     'permissions' => ['facility.index'],
                 ])
                 ->registerItem([
@@ -297,7 +294,7 @@ class RealEstateServiceProvider extends ServiceProvider
                     'parent_id' => 'cms-plugins-real-estate',
                     'name' => 'plugins/real-estate::investor.name',
                     'icon' => 'ti ti-briefcase',
-                    'url' => fn() => route('investor.index'),
+                    'url' => fn () => route('investor.index'),
                     'permissions' => ['investor.index'],
                 ])
                 ->registerItem([
@@ -306,7 +303,7 @@ class RealEstateServiceProvider extends ServiceProvider
                     'parent_id' => null,
                     'name' => 'plugins/real-estate::consult.name',
                     'icon' => 'ti ti-home-question',
-                    'url' => fn() => route('consult.index'),
+                    'url' => fn () => route('consult.index'),
                     'permissions' => ['consult.index'],
                 ])
                 ->registerItem([
@@ -331,7 +328,7 @@ class RealEstateServiceProvider extends ServiceProvider
                     'parent_id' => 'cms-plugins-real-estate',
                     'name' => 'plugins/real-estate::category.name',
                     'icon' => 'ti ti-category',
-                    'url' => fn() => route('property_category.index'),
+                    'url' => fn () => route('property_category.index'),
                     'permissions' => ['property_category.index'],
                 ])
                 ->registerItem([
@@ -340,7 +337,7 @@ class RealEstateServiceProvider extends ServiceProvider
                     'parent_id' => 'cms-plugins-real-estate',
                     'name' => 'plugins/real-estate::reports.name',
                     'icon' => 'ti ti-chart-bar',
-                    'url' => fn() => route('reports.index'),
+                    'url' => fn () => route('reports.index'),
                     'permissions' => ['reports.index'],
                 ])
                 ->when(setting('real_estate_enable_account_verification', false), function (DashboardMenuSupport $dashboardMenu): void {
@@ -358,7 +355,7 @@ class RealEstateServiceProvider extends ServiceProvider
                             'priority' => 0,
                             'parent_id' => 'cms-plugins-real-estate-accounts',
                             'name' => 'plugins/real-estate::account.name',
-                            'url' => fn() => route('account.index'),
+                            'url' => fn () => route('account.index'),
                             'permissions' => ['account.index'],
                         ])
                         ->registerItem([
@@ -366,7 +363,7 @@ class RealEstateServiceProvider extends ServiceProvider
                             'priority' => 10,
                             'parent_id' => 'cms-plugins-real-estate-accounts',
                             'name' => 'plugins/real-estate::account.unverified_account.name',
-                            'url' => fn() => route('unverified-accounts.index'),
+                            'url' => fn () => route('unverified-accounts.index'),
                             'permissions' => ['account.index'],
                         ]);
                 }, function (DashboardMenuSupport $dashboardMenu): void {
@@ -376,7 +373,7 @@ class RealEstateServiceProvider extends ServiceProvider
                         'parent_id' => null,
                         'name' => 'plugins/real-estate::account.name',
                         'icon' => 'ti ti-users',
-                        'url' => fn() => route('account.index'),
+                        'url' => fn () => route('account.index'),
                         'permissions' => ['account.index'],
                     ]);
                 })
@@ -388,7 +385,7 @@ class RealEstateServiceProvider extends ServiceProvider
                             'parent_id' => 'cms-plugins-real-estate',
                             'name' => 'plugins/real-estate::custom-fields.name',
                             'icon' => 'ti ti-forms',
-                            'url' => fn() => route('real-estate.custom-fields.index'),
+                            'url' => fn () => route('real-estate.custom-fields.index'),
                             'permissions' => ['real-estate.custom-fields.index'],
                         ]);
                 })
@@ -400,7 +397,7 @@ class RealEstateServiceProvider extends ServiceProvider
                             'parent_id' => 'cms-plugins-real-estate',
                             'name' => 'plugins/real-estate::invoice.name',
                             'icon' => 'ti ti-file-invoice',
-                            'url' => fn() => route('invoices.index'),
+                            'url' => fn () => route('invoices.index'),
                             'permissions' => ['invoice.index'],
                         ])
                         ->registerItem([
@@ -409,7 +406,7 @@ class RealEstateServiceProvider extends ServiceProvider
                             'parent_id' => null,
                             'name' => 'plugins/real-estate::coupon.name',
                             'icon' => 'ti ti-discount-2',
-                            'url' => fn() => route('coupons.index'),
+                            'url' => fn () => route('coupons.index'),
                             'permissions' => ['real-estate.coupons.index'],
                         ])
                         ->registerItem([
@@ -418,7 +415,7 @@ class RealEstateServiceProvider extends ServiceProvider
                             'parent_id' => null,
                             'name' => 'plugins/real-estate::package.name',
                             'icon' => 'ti ti-packages',
-                            'url' => fn() => route('package.index'),
+                            'url' => fn () => route('package.index'),
                             'permissions' => ['package.index'],
                         ]);
                 })
@@ -430,12 +427,11 @@ class RealEstateServiceProvider extends ServiceProvider
                             'parent_id' => 'cms-plugins-real-estate',
                             'name' => 'plugins/real-estate::review.name',
                             'icon' => 'ti ti-message-star',
-                            'url' => fn() => route('review.index'),
+                            'url' => fn () => route('review.index'),
                             'permissions' => ['review.index'],
                         ]);
                 });
         });
-
 
         DashboardMenu::for('account')->beforeRetrieving(function (DashboardMenuSupport $dashboardMenu): void {
             $dashboardMenu
@@ -443,97 +439,46 @@ class RealEstateServiceProvider extends ServiceProvider
                     'id' => 'cms-account-dashboard',
                     'priority' => 1,
                     'name' => 'plugins/real-estate::dashboard.dashboard',
-                    'url' => fn() => route('public.account.dashboard'),
+                    'url' => fn () => route('public.account.dashboard'),
                     'icon' => 'ti ti-home',
                 ])
-                ->registerItem([
-                    'id' => 'cms-account-leads',
-                    'priority' => 1,
-                    'name' => 'Leads',
-                    'url' => fn() => route('public.account.leads.index'),
-                    'icon' => 'ti ti-users',
-                ])
-                ->registerItem([
-                    'id' => 'cms-account-microsite',
-                    'priority' => 10,
-                    'name' => 'Microsite Settings',
-                    'url' => fn() => route('public.account.settings.microsite'),
-                    'icon' => 'ti ti-layout-dashboard',
-                ])
-                ->when(function () {
-                    try {
-                        return auth('account')->check() && auth('account')->user() && auth('account')->user()->type == 'builder';
-                    } catch (\Throwable $e) {
-                        return false;
-                    }
-                }, function (DashboardMenuSupport $dashboardMenu): void {
-                    $dashboardMenu->registerItem([
-                        'id' => 'cms-account-projects',
-                        'priority' => 2,
-                        'name' => 'plugins/real-estate::project.name',
-                        'url' => fn() => route('public.account.projects.index'),
-                        'icon' => 'ti ti-buildings',
-                    ]);
-                })
-                ->registerItem([
-                    'id' => 'cms-account-properties',
-                    'priority' => 2,
-                    'name' => 'plugins/real-estate::property.name',
-                    'url' => fn() => route('public.account.properties.index'),
-                    'icon' => 'ti ti-home',
-                ])
-                ->when(function () {
-                    try {
-                        return RealEstateHelper::isEnabledCreditsSystem();
-                    } catch (\Throwable $e) {
-                        return false;
-                    }
-                }, function (DashboardMenuSupport $dashboardMenu): void {
+                ->when(RealEstateHelper::isEnabledCreditsSystem(), function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu
                         ->registerItem([
                             'id' => 'cms-account-buy-credits',
                             'priority' => 3,
                             'name' => 'plugins/real-estate::account.buy_credits',
-                            'url' => fn() => route('public.account.packages'),
+                            'url' => fn () => route('public.account.packages'),
                             'icon' => 'ti ti-credit-card',
                         ]);
                 })
-                ->registerItem([
-                    'id' => 'cms-account-consult',
-                    'priority' => 3,
-                    'name' => 'plugins/real-estate::consult.name',
-                    'url' => fn() => route('public.account.consults.index'),
-                    'icon' => 'ti ti-home-question',
-                ])
-                ->when(function () {
-                    try {
-                        return RealEstateHelper::isEnabledReview();
-                    } catch (\Throwable $e) {
-                        return false;
-                    }
-                }, function (DashboardMenuSupport $dashboardMenu): void {
+                ->when(RealEstateHelper::isEnabledConsultForm(), function (DashboardMenuSupport $dashboardMenu): void {
+                    $dashboardMenu
+                        ->registerItem([
+                            'id' => 'cms-account-consult',
+                            'priority' => 3,
+                            'name' => 'plugins/real-estate::consult.name',
+                            'url' => fn () => route('public.account.consults.index'),
+                            'icon' => 'ti ti-home-question',
+                        ]);
+                })
+                ->when(RealEstateHelper::isEnabledReview(), function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu
                         ->registerItem([
                             'id' => 'cms-account-reviews',
                             'priority' => 3,
                             'name' => 'plugins/real-estate::review.name',
-                            'url' => fn() => route('public.account.reviews.index'),
+                            'url' => fn () => route('public.account.reviews.index'),
                             'icon' => 'ti ti-star',
                         ]);
                 })
-                ->when(function () {
-                    try {
-                        return RealEstateHelper::isEnabledCreditsSystem();
-                    } catch (\Throwable $e) {
-                        return false;
-                    }
-                }, function (DashboardMenuSupport $dashboardMenu): void {
+                ->when(RealEstateHelper::isEnabledCreditsSystem(), function (DashboardMenuSupport $dashboardMenu): void {
                     $dashboardMenu
                         ->registerItem([
                             'id' => 'cms-account-invoices',
                             'priority' => 4,
                             'name' => 'plugins/real-estate::dashboard.sidebar_invoices',
-                            'url' => fn() => route('public.account.invoices.index'),
+                            'url' => fn () => route('public.account.invoices.index'),
                             'icon' => 'ti ti-receipt',
                         ]);
                 })
@@ -541,17 +486,16 @@ class RealEstateServiceProvider extends ServiceProvider
                     'id' => 'cms-account-settings',
                     'priority' => 5,
                     'name' => 'plugins/real-estate::dashboard.header_settings_link',
-                    'url' => fn() => route('public.account.settings'),
+                    'url' => fn () => route('public.account.settings'),
                     'icon' => 'ti ti-settings',
                 ])
                 ->registerItem([
-                    'id' => 'cms-account-logout',
-                    'priority' => 999,
-                    'name' => 'plugins/real-estate::dashboard.header_logout_link',
-                    'icon' => 'ti ti-logout',
-                    'url' => fn() => route('public.account.logout'),
+                    'id' => 'cms-account-properties',
+                    'priority' => 2,
+                    'name' => 'plugins/real-estate::property.name',
+                    'url' => fn () => route('public.account.properties.index'),
+                    'icon' => 'ti ti-bed',
                 ]);
-
         });
 
         DashboardMenu::default();
@@ -564,7 +508,7 @@ class RealEstateServiceProvider extends ServiceProvider
             PanelSectionManager::default()
                 ->registerItem(
                     ExportPanelSection::class,
-                    fn() => PanelSectionItem::make('properties')
+                    fn () => PanelSectionItem::make('properties')
                         ->setTitle(trans('plugins/real-estate::property.properties'))
                         ->withDescription(trans('plugins/real-estate::property.export.description'))
                         ->withPriority(999)
@@ -573,7 +517,7 @@ class RealEstateServiceProvider extends ServiceProvider
                 )
                 ->registerItem(
                     ImportPanelSection::class,
-                    fn() => PanelSectionItem::make('properties')
+                    fn () => PanelSectionItem::make('properties')
                         ->setTitle(trans('plugins/real-estate::property.properties'))
                         ->withDescription(trans('plugins/real-estate::property.import.description'))
                         ->withPriority(999)
@@ -582,7 +526,7 @@ class RealEstateServiceProvider extends ServiceProvider
                 )
                 ->registerItem(
                     ExportPanelSection::class,
-                    fn() => PanelSectionItem::make('projects')
+                    fn () => PanelSectionItem::make('projects')
                         ->setTitle(trans('plugins/real-estate::project.projects'))
                         ->withDescription(trans('plugins/real-estate::project.export.description'))
                         ->withPriority(998)
@@ -591,7 +535,7 @@ class RealEstateServiceProvider extends ServiceProvider
                 )
                 ->registerItem(
                     ImportPanelSection::class,
-                    fn() => PanelSectionItem::make('projects')
+                    fn () => PanelSectionItem::make('projects')
                         ->setTitle(trans('plugins/real-estate::project.projects'))
                         ->withDescription(trans('plugins/real-estate::project.import.description'))
                         ->withPriority(998)
@@ -705,7 +649,7 @@ class RealEstateServiceProvider extends ServiceProvider
                         case Project::class:
                             $options = $request->input('custom_fields', []) ?: [];
 
-                            if (!$options) {
+                            if (! $options) {
                                 return;
                             }
 
@@ -717,7 +661,7 @@ class RealEstateServiceProvider extends ServiceProvider
                                     'ref_lang' => Language::getRefLang(),
                                 ]);
 
-                                if (!$value['id']) {
+                                if (! $value['id']) {
                                     continue;
                                 }
 
@@ -738,7 +682,7 @@ class RealEstateServiceProvider extends ServiceProvider
 
                             $customFieldOptions = $request->input('options', []) ?: [];
 
-                            if (!$customFieldOptions) {
+                            if (! $customFieldOptions) {
                                 return;
                             }
 
@@ -771,7 +715,7 @@ class RealEstateServiceProvider extends ServiceProvider
 
                             $customFieldOptions = $request->input('options', []) ?: [];
 
-                            if (!$customFieldOptions) {
+                            if (! $customFieldOptions) {
                                 return;
                             }
 

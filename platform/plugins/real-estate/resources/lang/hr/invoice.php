@@ -37,4 +37,22 @@ return [
         'preview' => 'Pregled',
         'preview_heading' => 'Pregled predloška računa',
     ],
+    'invoices' => 'Računi',
+    'manage_invoices' => 'Upravljanje računima',
+    'invoice_detail' => 'Detalji računa',
+    'detail' => [
+        'tax_amount' => 'Iznos poreza',
+    ],
+    'template_variables' => [
+        'invoice_code' => 'Kod računa',
+        'invoice_date' => 'Datum računa',
+        'account_name' => 'Ime računa',
+        'account_email' => 'Email računa',
+        'account_phone' => 'Telefon računa',
+        'account_address' => 'Adresa računa',
+        'invoice_items' => 'Stavke računa',
+        'payment_method' => 'Način plaćanja',
+        'payment_status' => 'Status plaćanja',
+        'payment_description' => 'Opis plaćanja',
+    ],
 ];

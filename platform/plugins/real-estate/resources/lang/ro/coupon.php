@@ -35,4 +35,7 @@ return [
     'total' => 'Total',
     'toggle_coupon_form_text' => 'Aveți un cod cupon?',
     'apply_coupon_code' => 'Apply',
+    'remove' => 'Elimină',
+    'your_order' => 'Comanda dvs.',
+    'coupon_code_applied' => 'Cod cupon: :code',
 ];

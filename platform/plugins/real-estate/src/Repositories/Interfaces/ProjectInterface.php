@@ -10,5 +10,5 @@ interface ProjectInterface extends RepositoryInterface
 {
     public function getProjects(array $filters = [], array $params = []): Collection|LengthAwarePaginator;
 
-    public function getRelatedProjects(int $projectId, int $limit = 4, array $with = []): Collection|LengthAwarePaginator;
+    public function getRelatedProjects(int|string $projectId, int $limit = 4, array $with = []): Collection|LengthAwarePaginator;
 }

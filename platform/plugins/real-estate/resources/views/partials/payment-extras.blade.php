@@ -5,9 +5,9 @@
 
 @if ((float) $package->price)
     <p><strong>{{ format_price($package->price / $package->number_of_listings, $package->currency) }}</strong> /
-        {{ __('per post') }}</p>
-    <p><strong>{{ format_price($package->price, $package->currency) }}</strong> {{ __('total') }} ({{ __('save') }}
+        {{ trans('plugins/real-estate::general.per_post') }}</p>
+    <p><strong>{{ format_price($package->price, $package->currency) }}</strong> {{ trans('plugins/real-estate::general.total') }} ({{ trans('plugins/real-estate::general.save') }}
         {{ $package->percent_save }}%)</p>
 @else
-    <p><strong>{{ __('free') }}</strong> {{ $package->number_of_listings }} {{ __('posts') }}</p>
+    <p><strong>{{ trans('plugins/real-estate::general.free') }}</strong> {{ $package->number_of_listings }} {{ trans('plugins/real-estate::general.posts') }}</p>
 @endif

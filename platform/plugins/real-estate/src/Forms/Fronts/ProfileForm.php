@@ -35,7 +35,15 @@ class ProfileForm extends AccountForm
                     'disabled' => true,
                 ],
             ], true)
-            ->remove(['is_change_password', 'password', 'password_confirmation', 'avatar_image', 'is_featured', 'is_public_profile'])
+            ->remove([
+                'is_change_password',
+                'password',
+                'password_confirmation',
+                'avatar_image',
+                'is_featured',
+                'is_blocked',
+                'blocked_reason',
+            ])
             ->addAfter('dob', 'gender', 'select', [
                 'label' => trans('plugins/real-estate::dashboard.gender'),
                 'choices' => [
@@ -55,7 +63,7 @@ class ProfileForm extends AccountForm
                         'locale',
                         SelectField::class,
                         SelectFieldOption::make()
-                            ->label(__('Language'))
+                            ->label(trans('plugins/real-estate::dashboard.language'))
                             ->choices($languages)
                             ->selected($form->getModel()->getMetaData('locale', true) ?: App::getLocale())
                             ->metadata()

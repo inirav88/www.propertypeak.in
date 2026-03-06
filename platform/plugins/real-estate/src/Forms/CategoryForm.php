@@ -2,9 +2,11 @@
 
 namespace Botble\RealEstate\Forms;
 
+use Botble\Base\Forms\FieldOptions\ContentFieldOption;
 use Botble\Base\Forms\FieldOptions\DescriptionFieldOption;
 use Botble\Base\Forms\FieldOptions\NameFieldOption;
 use Botble\Base\Forms\FieldOptions\StatusFieldOption;
+use Botble\Base\Forms\Fields\EditorField;
 use Botble\Base\Forms\Fields\SelectField;
 use Botble\Base\Forms\Fields\TextareaField;
 use Botble\Base\Forms\Fields\TextField;
@@ -21,6 +23,7 @@ class CategoryForm extends FormAbstract
             ->setValidatorClass(CategoryRequest::class)
             ->add('name', TextField::class, NameFieldOption::make()->required()->toArray())
             ->add('description', TextareaField::class, DescriptionFieldOption::make()->toArray())
+            ->add('content', EditorField::class, ContentFieldOption::make()->toArray())
             ->add('is_default', 'onOff', [
                 'label' => trans('core/base::forms.is_default'),
                 'default_value' => false,

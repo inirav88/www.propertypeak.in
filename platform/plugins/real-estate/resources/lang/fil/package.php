@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Ang isang account ay maaaring bumili ng x beses',
     'subscribe_package' => 'Mag-subscribe sa package',
     'add_credit_alert' => 'Mangyaring magdagdag ng iyong credit upang lumikha ng iyong sariling mga post.',
+    'price_per_post' => ':price / bawat post',
+    'free_posts' => 'Libre :number post',
+    'price_with_sale' => ':price Kabuuan :percentage_sale',
+    'save_percentage' => 'makatipid ng :percentage %',
+    'features' => 'Mga Feature',
+    'title' => 'Pamagat',
+    'feature_example' => 'Hal: 60 Araw na Job Post',
 ];

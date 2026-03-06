@@ -1,11 +1,11 @@
 @if (RealEstateHelper::isEnabledProjects())
     <div class="form-group project-filter-input" style="position: relative;">
         <input type="hidden" name="project_id">
-        <label for="filter-by-project" class="control-label">{{ __('Project') }}</label>
+        <label for="filter-by-project" class="control-label">{{ trans('plugins/real-estate::filters.project') }}</label>
         <div style="position: relative;">
             <div class="input-has-icon">
                 <input class="form-control" id="filter-by-project"
-                       data-url="{{ route('public.ajax.projects-filter') }}" value="{{ BaseHelper::stringify(request()->query('project')) }}" placeholder="{{ __('Project') }}"
+                       data-url="{{ route('public.ajax.projects-filter') }}" value="{{ BaseHelper::stringify(request()->query('project')) }}" placeholder="{{ trans('plugins/real-estate::filters.project') }}"
                        autocomplete="off">
             </div>
             <div class="spinner-icon">

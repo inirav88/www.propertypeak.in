@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Účet si môže kúpiť X -krát',
     'subscribe_package' => 'Prihlásiť sa na odber balíka',
     'add_credit_alert' => 'Pridajte svoj kredit a vytvorte si svoje vlastné príspevky.',
+    'price_per_post' => ':price / za príspevok',
+    'free_posts' => 'Zadarmo :number príspevkov',
+    'price_with_sale' => ':price Celkom :percentage_sale',
+    'save_percentage' => 'úspora :percentage %',
+    'features' => 'Funkcie',
+    'title' => 'Názov',
+    'feature_example' => 'Napr.: 60-dňové inzeráty',
 ];

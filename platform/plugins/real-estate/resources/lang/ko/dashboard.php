@@ -109,4 +109,11 @@ return [
     'number_posts_free' => '무료 :posts 게시물',
     'total_package_price' => ':total 합계(:percent% 절약)',
     'dashboard' => 'Dashboard',
+    'language' => '언어',
+    'character_remain' => '남은 글자 수',
+    'password_update_success' => '비밀번호가 성공적으로 업데이트되었습니다!',
+    'buy_credits' => '크레딧 구매',
+    'currencies' => '통화',
+    'go_to_homepage' => '홈페이지로 이동',
+    'hello' => '안녕하세요',
 ];

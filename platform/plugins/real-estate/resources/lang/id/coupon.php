@@ -35,4 +35,11 @@ return [
     'total' => 'Total',
     'toggle_coupon_form_text' => 'Apakah Anda memiliki kode kupon?',
     'apply_coupon_code' => 'Terapkan',
+    'invalid' => 'Kupon ini tidak valid!',
+    'applied_success' => 'Kupon ":code" berhasil diterapkan!',
+    'not_used' => 'Kupon ini belum digunakan!',
+    'removed_success' => 'Kupon :code berhasil dihapus!',
+    'remove' => 'Hapus',
+    'your_order' => 'Pesanan Anda',
+    'coupon_code_applied' => 'Kode kupon: :code',
 ];

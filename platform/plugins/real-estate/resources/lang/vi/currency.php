@@ -16,7 +16,7 @@ return [
     'before_number' => 'Trước giá (ví dụ: ₫100)',
     'after_number' => 'Sau giá (ví dụ: 100₫)',
     'require_at_least_one_currency' => 'Hệ thống yêu cầu ít nhất một loại tiền tệ!',
-    'invalid_currency_name' => 'Invalid currency code, it must be in :currencies.',
+    'invalid_currency_name' => 'Mã tiền tệ không hợp lệ, phải nằm trong :currencies.',
     'instruction' => 'Vui lòng kiểm tra danh sách mã tiền tệ tại đây: https://en.wikipedia.org/wiki/ISO_4217',
     'code' => 'Mã số',
     'no_api_key' => 'Không có khóa API',

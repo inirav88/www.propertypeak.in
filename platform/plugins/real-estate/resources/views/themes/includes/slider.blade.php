@@ -40,7 +40,7 @@
                             <div class="col-6 col-sm-4 col-md-4 col-lg-2 itemct px-1 popup-youtube" href="{{ Botble\Theme\Supports\Youtube::getYoutubeVideoEmbedURL($object->video_url) }}">
                                 <div class="icon">
                                     <i class="fab fa-youtube"></i>
-                                    <p>{{ __('YouTube') }}</p>
+                                    <p>{{ trans('plugins/real-estate::general.youtube') }}</p>
                                 </div>
                             </div>
                         @endif
@@ -48,7 +48,7 @@
                         <div class="col-sm-4 col-md-4 col-lg-2 itemct d-none d-sm-block px-1 show-gallery-image">
                             <div class="icon">
                                 <i class="fas fa-th"></i>
-                                <p>{{ __('Gallery') }}</p>
+                                <p>{{ trans('plugins/real-estate::general.gallery') }}</p>
                             </div>
                         </div>
 
@@ -62,7 +62,7 @@
                                 data-center="{{ json_encode([$object->latitude, $object->longitude]) }}">
                                 <div class="icon">
                                     <i class="far fa-map"></i>
-                                    <p>{{ __('Map') }}</p>
+                                    <p>{{ trans('plugins/real-estate::general.map') }}</p>
                                 </div>
                             </div>
                         @endif

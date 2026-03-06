@@ -68,4 +68,12 @@ return [
             ],
         ],
     ],
+    'form_content' => 'Conteúdo',
+    'form_message' => 'Mensagem',
+    'name_placeholder' => 'João Silva',
+    'phone_placeholder' => 'Ex: 11987654321',
+    'email_placeholder' => 'email@exemplo.com',
+    'message_placeholder' => 'Digite sua mensagem...',
+    'send_consult' => 'Enviar mensagem',
+    'dropdown_show_label' => 'Mostrar notificações de consulta',
 ];

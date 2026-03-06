@@ -1,10 +1,13 @@
 <?php
 
 return [
-    'draft_properties' => 'Projekto ypatybės',
-    'pending_properties' => 'Laukiančios savybės',
-    'published_properties' => 'Paskelbtos savybės',
-    'properties' => 'Properties',
-    'write_property' => 'Parašykite turtą',
-    'images' => 'Vaizdai (maksimalus __Ph0__ vaizdai)',
+    'draft_properties' => 'Nekilnojamojo turto projektai',
+    'pending_properties' => 'Laukiantis nekilnojamasis turtas',
+    'published_properties' => 'Paskelbtas nekilnojamasis turtas',
+    'properties' => 'Nekilnojamasis turtas',
+    'write_property' => 'Parašyti nekilnojamąjį turtą',
+    'images' => 'Nuotraukos (maksimum :max nuotraukų)',
+    'renew' => 'Atnaujinti',
+    'not_enough_credit_renew' => 'Neturite pakankamai kreditų šio nekilnojamojo turto atnaujinimui!',
+    'renew_success' => 'Nekilnojamasis turtas sėkmingai atnaujintas',
 ];

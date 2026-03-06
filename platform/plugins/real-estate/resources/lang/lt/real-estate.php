@@ -1,6 +1,25 @@
 <?php
 
 return [
+    'sorting' => [
+        'newest' => 'Naujausi',
+        'oldest' => 'Seniausi',
+        'price_asc' => 'Kaina (nuo mažiausios)',
+        'price_desc' => 'Kaina (nuo didžiausios)',
+        'name_asc' => 'Pavadinimas (A-Ž)',
+        'name_desc' => 'Pavadinimas (Ž-A)',
+    ],
+    'filtering' => [
+        'all' => 'Visi',
+        'sale' => 'Pardavimui',
+        'rent' => 'Nuomai',
+    ],
+    'status' => [
+        'available' => 'Galima',
+        'not_available' => 'Negalima',
+        'sold' => 'Parduota',
+        'rented' => 'Išnuomota',
+    ],
     'name' => 'Nekilnojamasis turtas',
     'settings' => 'Settings',
     'login_form' => 'Prisijungimo forma',

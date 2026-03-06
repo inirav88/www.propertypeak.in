@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Ilmainen :posts julkaisu(a)',
     'total_package_price' => ':total Yhteensä (Säästä :percent%)',
     'dashboard' => 'Hallintapaneeli',
+    'character_remain' => 'Merkkejä jäljellä',
+    'password_update_success' => 'Salasanan päivitys onnistui!',
+    'language' => 'Kieli',
+    'buy_credits' => 'Osta krediittejä',
+    'currencies' => 'Valuutat',
+    'go_to_homepage' => 'Siirry etusivulle',
+    'hello' => 'Hei',
 ];

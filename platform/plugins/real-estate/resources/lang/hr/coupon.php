@@ -35,4 +35,11 @@ return [
     'total' => 'Ukupno',
     'toggle_coupon_form_text' => 'Imate kod kupona?',
     'apply_coupon_code' => 'Primijeni',
+    'remove' => 'Ukloni',
+    'your_order' => 'Vaša narudžba',
+    'coupon_code_applied' => 'Kod kupona: :code',
+    'invalid' => 'Nevažeći kod kupona',
+    'applied_success' => 'Kupon uspješno primijenjen!',
+    'not_used' => 'Kupon se ne može koristiti',
+    'removed_success' => 'Kupon uspješno uklonjen!',
 ];

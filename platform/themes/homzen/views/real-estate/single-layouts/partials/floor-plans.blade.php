@@ -12,7 +12,7 @@
                 @endphp
 
                 <li class="floor-item">
-                    <div class="floor-header" data-bs-target="#floor-{{ $slug }}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="floor-{{ $slug }}">
+                    <div class="floor-header" role="button" tabindex="0" data-bs-target="#floor-{{ $slug }}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="floor-{{ $slug }}">
                         <div class="inner-left">
                             <i class="icon icon-arr-r"></i>
                             <span class="fw-7">{!! BaseHelper::clean($floorPlan['name']) !!}</span>

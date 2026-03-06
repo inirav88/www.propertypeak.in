@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Besplatno :posts objava/e',
     'total_package_price' => ':total Ukupno (Ušteda :percent%)',
     'dashboard' => 'Nadzorna ploča',
+    'character_remain' => 'preostalo :count znakova',
+    'password_update_success' => 'Lozinka uspješno ažurirana!',
+    'language' => 'Jezik',
+    'buy_credits' => 'Kupi kredite',
+    'currencies' => 'Valute',
+    'go_to_homepage' => 'Idi na početnu stranicu',
+    'hello' => 'Pozdrav',
 ];

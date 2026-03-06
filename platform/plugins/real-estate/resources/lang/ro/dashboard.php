@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Postare gratuită __ph0__',
     'total_package_price' => '__Ph0__ total (economisiți __ph1 __%)',
     'dashboard' => 'Dashboard',
+    'language' => 'Limbă',
+    'character_remain' => 'Caractere rămase',
+    'password_update_success' => 'Parola a fost actualizată cu succes!',
+    'buy_credits' => 'Cumpărați credite',
+    'currencies' => 'Monede',
+    'go_to_homepage' => 'Mergeți la pagina principală',
+    'hello' => 'Bună',
 ];

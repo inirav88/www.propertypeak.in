@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Zdarma :posts příspěvek/y',
     'total_package_price' => ':total Celkem (Ušetříte :percent%)',
     'dashboard' => 'Nástěnka',
+    'character_remain' => 'Zbývá znaků',
+    'password_update_success' => 'Heslo úspěšně aktualizováno!',
+    'language' => 'Jazyk',
+    'buy_credits' => 'Koupit kredity',
+    'currencies' => 'Měny',
+    'go_to_homepage' => 'Přejít na úvodní stránku',
+    'hello' => 'Ahoj',
 ];

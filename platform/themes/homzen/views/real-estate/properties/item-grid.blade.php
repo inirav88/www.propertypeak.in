@@ -24,6 +24,7 @@
                                 data-id="{{ $property->getKey() }}"
                                 data-add-message="{{ __('Added ":name" to wishlist successfully!', ['name' => $property->name]) }}"
                                 data-remove-message="{{ __('Removed ":name" from wishlist successfully!', ['name' => $property->name]) }}"
+                                aria-label="{{ __('Add to wishlist') }}"
                         >
                             <x-core::icon name="ti ti-heart" />
                         </button>
@@ -53,13 +54,13 @@
                 @if($property->number_bedroom)
                     <li class="item">
                         <i class="icon icon-bed"></i>
-                        <span>{{ number_format($property->number_bedroom) }}</span>
+                        <span>{{ fmod($property->number_bedroom, 1) == 0 ? number_format($property->number_bedroom) : $property->number_bedroom }}</span>
                     </li>
                 @endif
                 @if($property->number_bathroom)
                     <li class="item">
                         <i class="icon icon-bathtub"></i>
-                        <span>{{ number_format($property->number_bathroom) }}</span>
+                        <span>{{ fmod($property->number_bathroom, 1) == 0 ? number_format($property->number_bathroom) : $property->number_bathroom }}</span>
                     </li>
                 @endif
                 @if($property->square)
@@ -84,7 +85,7 @@
         @endif
         @if (!setting('real_estate_hide_price', false))
             <div class="d-flex align-items-center">
-                <h6>{{ $property->price_format }}</h6>
+                <span class="h6">{{ $property->price_format }}</span>
             </div>
         @endif
     </div>

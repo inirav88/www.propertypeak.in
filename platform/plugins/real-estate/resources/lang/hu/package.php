@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Egy fiók x alkalommal vásárolhat',
     'subscribe_package' => 'Csomag előfizetése',
     'add_credit_alert' => 'Kérjük, adjon hozzá kreditet saját bejegyzései létrehozásához.',
+    'price_per_post' => ':price bejegyzésenként',
+    'free_posts' => ':posts ingyenes bejegyzés',
+    'price_with_sale' => ':price (Megtakarítás :discount)',
+    'save_percentage' => 'Megtakarítás :percentage%',
+    'features' => 'Jellemzők',
+    'title' => 'Csomagok',
+    'feature_example' => ':limit ingatlan hirdetés',
 ];

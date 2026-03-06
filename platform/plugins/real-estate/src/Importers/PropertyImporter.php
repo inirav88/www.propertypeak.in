@@ -5,6 +5,7 @@ namespace Botble\RealEstate\Importers;
 use Botble\ACL\Models\User;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Events\CreatedContentEvent;
+use Botble\Base\Facades\BaseHelper;
 use Botble\DataSynchronize\Contracts\Importer\WithMapping;
 use Botble\DataSynchronize\Importer\ImportColumn;
 use Botble\DataSynchronize\Importer\Importer;
@@ -15,6 +16,7 @@ use Botble\RealEstate\Enums\ModerationStatusEnum;
 use Botble\RealEstate\Enums\PropertyPeriodEnum;
 use Botble\RealEstate\Enums\PropertyStatusEnum;
 use Botble\RealEstate\Enums\PropertyTypeEnum;
+use Botble\RealEstate\Facades\RealEstateHelper;
 use Botble\RealEstate\Models\Account;
 use Botble\RealEstate\Models\Category;
 use Botble\RealEstate\Models\Currency;
@@ -24,6 +26,7 @@ use Botble\RealEstate\Models\Project;
 use Botble\RealEstate\Models\Property;
 use Botble\Slug\Facades\SlugHelper;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +42,7 @@ class PropertyImporter extends Importer implements WithMapping
 
     public function columns(): array
     {
-        return [
+        $columns = [
             ImportColumn::make('name')
                 ->rules(['required', 'string', 'max:255']),
             ImportColumn::make('type')
@@ -55,9 +58,9 @@ class PropertyImporter extends Importer implements WithMapping
             ImportColumn::make('project_id')
                 ->rules(['nullable', 'integer']),
             ImportColumn::make('number_bedroom')
-                ->rules(['nullable', 'integer', 'min:0']),
+                ->rules(['nullable', 'numeric', 'min:0']),
             ImportColumn::make('number_bathroom')
-                ->rules(['nullable', 'integer', 'min:0']),
+                ->rules(['nullable', 'numeric', 'min:0']),
             ImportColumn::make('number_floor')
                 ->rules(['nullable', 'integer', 'min:0']),
             ImportColumn::make('square')
@@ -93,6 +96,15 @@ class PropertyImporter extends Importer implements WithMapping
                 ->rules(['nullable', 'numeric']),
             ImportColumn::make('longitude')
                 ->rules(['nullable', 'numeric']),
+        ];
+
+        if (RealEstateHelper::isEnabledZipCode()) {
+            $columns[] = ImportColumn::make('zip_code')
+                ->rules(['nullable', ...BaseHelper::getZipcodeValidationRule(true)]);
+        }
+
+        return [
+            ...$columns,
             ImportColumn::make('views')
                 ->rules(['nullable', 'integer', 'min:0']),
             ImportColumn::make('status')
@@ -157,7 +169,7 @@ class PropertyImporter extends Importer implements WithMapping
             ->with(['project', 'categories', 'features', 'facilities', 'customFields', 'slugable'])
             ->get()
             ->map(function (Property $property) { // @phpstan-ignore-line
-                return [
+                $data = [
                     'name' => $property->name,
                     'type' => $property->type,
                     'description' => Str::limit($property->description, 100),
@@ -183,6 +195,14 @@ class PropertyImporter extends Importer implements WithMapping
                     'expire_date' => $property->expire_date?->format('Y-m-d'),
                     'latitude' => $property->latitude,
                     'longitude' => $property->longitude,
+                ];
+
+                if (RealEstateHelper::isEnabledZipCode()) {
+                    $data['zip_code'] = $property->zip_code;
+                }
+
+                return [
+                    ...$data,
                     'views' => $property->views,
                     'status' => $property->status,
                     'moderation_status' => $property->moderation_status,
@@ -205,7 +225,7 @@ class PropertyImporter extends Importer implements WithMapping
             return $properties->all();
         }
 
-        return [
+        $examples = [
             [
                 'name' => 'Luxury Villa with Ocean View',
                 'type' => 'sale',
@@ -283,6 +303,13 @@ class PropertyImporter extends Importer implements WithMapping
                 'custom_fields' => 'Pet Friendly:Yes, Furnished:No',
             ],
         ];
+
+        if (RealEstateHelper::isEnabledZipCode()) {
+            $examples[0]['zip_code'] = '90265';
+            $examples[1]['zip_code'] = '10001';
+        }
+
+        return $examples;
     }
 
     public function map(mixed $row): array
@@ -430,17 +457,18 @@ class PropertyImporter extends Importer implements WithMapping
 
             $propertyData = Arr::except($row, ['categories', 'features', 'facilities', 'custom_fields', 'video_url', 'video_thumbnail']);
 
-            if (isset($propertyData['expire_date']) && ! empty($propertyData['expire_date'])) {
+            if (! empty($propertyData['expire_date'])) {
                 try {
                     $propertyData['expire_date'] = Carbon::parse($propertyData['expire_date'])->format('Y-m-d');
-                } catch (\Exception $e) {
+                } catch (Exception) {
                     unset($propertyData['expire_date']);
                 }
-            } elseif (isset($propertyData['expire_date']) && empty($propertyData['expire_date'])) {
+            } elseif (isset($propertyData['expire_date'])) {
                 $propertyData['expire_date'] = null;
             }
 
             $propertyData['unique_id'] = $uniqueId ?: null;
+            $propertyData['period'] = $propertyData['period'] ?? null;
 
             if (! $property) {
                 $property = new Property();
@@ -457,6 +485,10 @@ class PropertyImporter extends Importer implements WithMapping
             }
 
             $property->forceFill($propertyData);
+
+            /**
+             * @var Property $property
+             */
             $property->save();
 
             if ($property->wasRecentlyCreated) {

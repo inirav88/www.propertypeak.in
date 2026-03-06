@@ -17,7 +17,6 @@ class AccountSeeder extends BaseSeeder
 
         $files = $this->uploadFiles('avatars');
 
-        $faker = $this->fake();
         $now = $this->now();
 
         $socialLinks = [
@@ -79,32 +78,51 @@ class AccountSeeder extends BaseSeeder
             ],
         ];
 
+        $agentDescriptions = [
+            'Dedicated real estate professional with expertise in residential properties.',
+            'Experienced agent specializing in luxury homes and investment properties.',
+            'Passionate about helping clients find their perfect home.',
+            'Top-performing agent with strong negotiation skills.',
+            'Local market expert committed to exceptional client service.',
+            'Full-service real estate professional for buyers and sellers.',
+            'Trusted advisor with deep knowledge of the local market.',
+            'Results-driven agent focused on client satisfaction.',
+            'Seasoned professional with extensive market knowledge.',
+            'Customer-focused agent delivering outstanding results.',
+            'Skilled negotiator with a proven track record of success.',
+            'Committed to making your real estate dreams a reality.',
+        ];
+
+        $firstNames = ['John', 'Sarah', 'Michael', 'Emily', 'David', 'Jennifer', 'Robert', 'Lisa', 'James', 'Amanda', 'William', 'Jessica'];
+        $lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Wilson', 'Anderson'];
+        $phones = ['+14155551234', '+12125559876', '+13105557890', '+17185554321', '+16505558765', '+16465553456', '+14085552468', '+15105551357', '+16195559630', '+19495558520', '+13235557410', '+16265556320'];
+
         $emails = ['john.smith@botble.com', 'agent@botble.com'];
 
         foreach ($emails as $index => $email) {
-            // Verify the first agent
             $isVerified = $index === 0;
 
             $data = [
-                'first_name' => $faker->firstName(),
-                'last_name' => $faker->lastName(),
+                'first_name' => $firstNames[$index],
+                'last_name' => $lastNames[$index],
                 'email' => $email,
-                'username' => Str::slug($faker->unique()->userName()),
+                'username' => Str::slug($firstNames[$index] . '-' . $lastNames[$index] . '-' . rand(100, 999)),
                 'password' => Hash::make('12345678'),
-                'dob' => $faker->dateTime(),
-                'phone' => $faker->e164PhoneNumber(),
-                'description' => $faker->realText(30),
+                'dob' => Carbon::now()->subYears(rand(25, 55))->subDays(rand(0, 365)),
+                'phone' => $phone = $phones[$index],
+                'whatsapp' => $phone,
+                'description' => $agentDescriptions[array_rand($agentDescriptions)],
                 'credits' => 10,
                 'confirmed_at' => $now,
                 'approved_at' => $now,
-                'avatar_id' => $faker->randomElements($files)[0]['data']->id,
+                'avatar_id' => $files[array_rand($files)]['data']->id,
                 'is_public_profile' => true,
                 'is_verified' => $isVerified,
             ];
 
             if ($isVerified) {
-                $data['verified_at'] = Carbon::now()->subDays($faker->numberBetween(1, 365));
-                $data['verified_by'] = 1; // Admin user
+                $data['verified_at'] = Carbon::now()->subDays(rand(1, 365));
+                $data['verified_by'] = 1;
                 $data['verification_note'] = 'Verified trusted agent';
             }
 
@@ -113,39 +131,42 @@ class AccountSeeder extends BaseSeeder
             MetaBox::saveMetaBoxData($account, 'social_links', $socialLinks);
         }
 
+        $verificationNotes = [
+            'Verified after background check',
+            'Documents verified successfully',
+            'Agent credentials confirmed',
+            'Verified trusted partner',
+            'Premium agent - verified',
+            null,
+        ];
+
         foreach (range(1, 10) as $index) {
-            // Randomly verify about 40% of agents
-            $isVerified = $faker->boolean(40);
+            $isVerified = rand(0, 100) < 40;
+            $nameIndex = ($index + 1) % count($firstNames);
 
             $data = [
-                'first_name' => $faker->firstName(),
-                'last_name' => $faker->lastName(),
-                'email' => $faker->email(),
-                'username' => Str::slug($faker->unique()->userName()),
-                'password' => Hash::make($faker->password()),
-                'dob' => $faker->dateTime(),
-                'phone' => $faker->e164PhoneNumber(),
-                'description' => $faker->realText(30),
-                'credits' => $faker->numberBetween(1, 10),
+                'first_name' => $firstNames[$nameIndex],
+                'last_name' => $lastNames[($nameIndex + 3) % count($lastNames)],
+                'email' => strtolower($firstNames[$nameIndex]) . '.' . strtolower($lastNames[($nameIndex + 3) % count($lastNames)]) . $index . '@example.com',
+                'username' => Str::slug($firstNames[$nameIndex] . '-' . $lastNames[($nameIndex + 3) % count($lastNames)] . '-' . rand(100, 999)),
+                'password' => Hash::make('password123'),
+                'dob' => Carbon::now()->subYears(rand(25, 55))->subDays(rand(0, 365)),
+                'phone' => $phone = $phones[$index % count($phones)],
+                'whatsapp' => $phone,
+                'description' => $agentDescriptions[array_rand($agentDescriptions)],
+                'credits' => rand(1, 10),
                 'confirmed_at' => $now,
                 'approved_at' => $now,
-                'avatar_id' => $faker->randomElements($files)[0]['data']->id,
+                'avatar_id' => $files[array_rand($files)]['data']->id,
                 'is_public_profile' => true,
-                'is_featured' => $faker->boolean(),
+                'is_featured' => (bool) rand(0, 1),
                 'is_verified' => $isVerified,
             ];
 
             if ($isVerified) {
-                $data['verified_at'] = Carbon::now()->subDays($faker->numberBetween(1, 365));
-                $data['verified_by'] = 1; // Admin user
-                $data['verification_note'] = $faker->randomElement([
-                    'Verified after background check',
-                    'Documents verified successfully',
-                    'Agent credentials confirmed',
-                    'Verified trusted partner',
-                    'Premium agent - verified',
-                    null, // Some may not have notes
-                ]);
+                $data['verified_at'] = Carbon::now()->subDays(rand(1, 365));
+                $data['verified_by'] = 1;
+                $data['verification_note'] = $verificationNotes[array_rand($verificationNotes)];
             }
 
             $account = Account::query()->create($data);

@@ -35,4 +35,11 @@ return [
     'total' => 'Kokku',
     'toggle_coupon_form_text' => 'Kas teil on kupongi kood?',
     'apply_coupon_code' => 'Rakenda',
+    'invalid' => 'See kupong on kehtetu!',
+    'applied_success' => 'Kupong ":code" edukalt rakendatud!',
+    'not_used' => 'Seda kupongi pole veel kasutatud!',
+    'removed_success' => 'Kupong :code edukalt eemaldatud!',
+    'remove' => 'Eemalda',
+    'your_order' => 'Teie tellimus',
+    'coupon_code_applied' => 'Kupongikood: :code',
 ];

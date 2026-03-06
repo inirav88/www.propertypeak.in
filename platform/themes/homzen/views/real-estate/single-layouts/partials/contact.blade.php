@@ -4,44 +4,25 @@
 @endphp
 
 <div @class(['widget-box single-property-contact', $class ?? null])>
-    @if (!RealEstateHelper::hideAgentInfoInPropertyDetailPage() && ($account = $model->author) && $account->exists)
-        <div class="h7 title fw-7">{{ $account->isBuilder() ? __('Developer') : __('Contact Agency') }}</div>
+    @if (! RealEstateHelper::hideAgentInfoInPropertyDetailPage() && ($account = $model->author) && $account->exists)
+        <div class="h7 title fw-7">{{ __('Contact Agency') }}</div>
 
         <div class="box-avatar">
             <div class="avatar avt-100 round">
-                @php
-                    // Safe URL generation - handle both Botble Account and custom models
-                    $profileUrl = null;
-                    if ($account->username ?? false) {
-                        $profileUrl = route('public.' . ($account->isBuilder() ? 'developer' : 'agent'), $account->username);
-                    } elseif ($account->slug ?? false) {
-                        $profileUrl = route(($account->isBuilder() ? 'developers' : 'agents') . '.show', $account->slug);
-                    }
-                @endphp
-                @if($profileUrl)
-                    <a href="{{ $profileUrl }}" class="d-block">
-                        {{ RvMedia::image($account->avatar?->url ?: $account->avatar_url, $account->name) }}
-                    </a>
-                @else
-                    <span class="d-block">
-                        {{ RvMedia::image($account->avatar?->url ?: $account->avatar_url, $account->name) }}
-                    </span>
-                @endif
+                <a href="{{ $account->url }}" class="d-block">
+                    {{ RvMedia::image($account->avatar?->url ?: $account->avatar_url, $account->name) }}
+                </a>
             </div>
             <div class="info line-clamp-1">
                 <div class="text-1 name">
-                    @if($profileUrl)
-                        <a href="{{ $profileUrl }}">{{ $account->name }} {!! $account->badge ?? '' !!}</a>
-                    @else
-                        <span>{{ $account->name }} {!! $account->badge ?? '' !!}</span>
-                    @endif
+                    <a href="{{ $account->url }}">{{ $account->name }} {!! $account->badge !!}</a>
                 </div>
-                @if ($account->phone && !setting('real_estate_hide_agency_phone', false))
+                @if ($account->phone && ! setting('real_estate_hide_agency_phone', false) && ! $account->hide_phone)
                     <a href="tel:{{ $account->phone }}" class="info-item">{{ $account->phone }}</a>
                 @elseif($hotline = theme_option('hotline'))
                     <a href="tel:{{ $hotline }}" class="info-item">{{ $hotline }}</a>
                 @endif
-                @if ($account->email && !setting('real_estate_hide_agency_email', false))
+                @if ($account->email && ! setting('real_estate_hide_agency_email', false) && ! $account->hide_email)
                     <a href="mailto:{{ $account->email }}" class="info-item">{{ $account->email }}</a>
                 @endif
             </div>
@@ -56,18 +37,49 @@
         {!! apply_filters('property_right_details_info', null, $model) !!}
     @endif
 
-    {!! apply_filters('before_consult_form', null, $model) !!}
+    @if (RealEstateHelper::isEnabledConsultForm())
+        {!! apply_filters('before_consult_form', null, $model) !!}
 
-    {!! \Botble\RealEstate\Forms\Fronts\ConsultForm::create()
-    ->formClass('contact-form')
-    ->setFormInputWrapperClass('ip-group')
-    ->modify('content', 'textarea', ['attr' => ['class' => 'form-control']])
-    ->modify('submit', 'submit', ['attr' => ['class' => 'tf-btn primary w-100']])
-    ->add('type', 'hidden', ['attr' => ['value' => $isProject ? 'project' : 'property']])
-    ->add('data_id', 'hidden', ['attr' => ['value' => $model->getKey()]])
-    ->addBefore('content', 'data_name', 'text', ['label' => false, 'attr' => ['value' => $model->name, 'disabled' => true]])
-    ->renderForm()
-    !!}
+        {!! \Botble\RealEstate\Forms\Fronts\ConsultForm::create()
+            ->formClass('contact-form')
+            ->setFormInputWrapperClass('ip-group')
+            ->modify('content', 'textarea', ['attr' => ['class' => 'form-control']])
+            ->modify('submit', 'submit', ['attr' => ['class' => 'tf-btn primary w-100']])
+            ->add('type', 'hidden', ['attr' => ['value' => $isProject ? 'project' : 'property']])
+            ->add('data_id', 'hidden', ['attr' => ['value' => $model->getKey()]])
+            ->addBefore('content', 'data_name', 'text', ['label' => false, 'attr' => ['value' => $model->name, 'disabled' => true, 'aria-label' => $isProject ? __('Project name') : __('Property name')]])
+            ->renderForm()
+        !!}
 
-    {!! apply_filters('after_consult_form', null, $model) !!}
+        {!! apply_filters('after_consult_form', null, $model) !!}
+    @endif
+
+    @php
+        $whatsappNumber = null;
+
+        if (! RealEstateHelper::hideAgentInfoInPropertyDetailPage() && ($account = $model->author) && $account->exists && $account->whatsapp) {
+            $whatsappNumber = $account->whatsapp;
+        } elseif ($globalWhatsapp = theme_option('whatsapp_phone_number')) {
+            $whatsappNumber = $globalWhatsapp;
+        }
+    @endphp
+
+    @if ($whatsappNumber && theme_option('enable_whatsapp_button', 'yes') === 'yes')
+        @php
+            $whatsappMessage = theme_option('whatsapp_inquiry_message', __('Hi, I have an inquiry about this property: [property_url]'));
+            $whatsappMessage = str_replace('[property_url]', $model->url, $whatsappMessage);
+        @endphp
+        <div class="whatsapp-contact-section mt-4 pt-4" style="border-top: 1px solid #e4e4e4;">
+            <div class="text-center mb-3">
+                <p class="mb-2" style="color: #666; font-size: 14px;">{{ __('Or get instant response via WhatsApp') }}</p>
+            </div>
+            <div class="text-center">
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $whatsappNumber) }}?text={{ urlencode($whatsappMessage) }}" target="_blank" class="contact-whatsapp-btn justify-content-center">
+                    <x-core::icon name="ti ti-brand-whatsapp" />
+                    <span>{{ __('Chat on WhatsApp') }}</span>
+                </a>
+            </div>
+        </div>
+    @endif
 </div>
+

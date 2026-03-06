@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Ett konto kan köpa x gånger',
     'subscribe_package' => 'Prenumerera',
     'add_credit_alert' => 'Lägg till din kredit för att skapa dina egna inlägg.',
+    'price_per_post' => ':price / per inlagg',
+    'free_posts' => 'Gratis :number inlagg',
+    'price_with_sale' => ':price Totalt :percentage_sale',
+    'save_percentage' => 'spara :percentage %',
+    'features' => 'Funktioner',
+    'title' => 'Titel',
+    'feature_example' => 'T.ex.: 60-dagars jobbannonser',
 ];

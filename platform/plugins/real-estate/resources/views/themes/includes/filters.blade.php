@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-toggle-filter col-12 col-xs-2 col-sm-2 d-md-none my-1 pr-sm-1">
             <div class="toggle-filter-offcanvas bg-light toggle-filter-mobile">
-                <i class="fal fa-filter mr-1"></i> <span class="toggle-filter-name d-block d-xs-none d-sm-block d-md-block">{{ __('Filter') }}</span>
+                <i class="fal fa-filter mr-1"></i> <span class="toggle-filter-name d-block d-xs-none d-sm-block d-md-block">{{ trans('plugins/real-estate::general.filter') }}</span>
             </div>
         </div>
         <div class="col-showing col-6 col-sm-5 col-md-6 my-1">
@@ -10,7 +10,7 @@
                 <div class="form-group__content">
                     <div class="select--arrow">
                         <select name="per_page" id="per-page" class="form-control">
-                            <option value="">{{ __('Showing') }}</option>
+                            <option value="">{{ trans('plugins/real-estate::general.showing') }}</option>
                             <option value="" @if (request()->input('per_page') == 15) selected @endif>15</option>
                             <option value="30" @if (request()->input('per_page') == 30) selected @endif>30</option>
                             <option value="45" @if (request()->input('per_page') == 45) selected @endif>45</option>
@@ -28,14 +28,14 @@
                     <div class="form-group__content">
                         <div class="select--arrow">
                             <select name="sort_by" id="sort-by" class="form-control">
-                                <option value="">{{ __('Sort by') }}</option>
-                                <option value="" @if (request()->input('sort_by') == 'default_sorting') selected @endif>{{ __('Default') }}</option>
-                                <option value="date_asc" @if (request()->input('sort_by') == 'date_asc') selected @endif>{{ __('Oldest') }}</option>
-                                <option value="date_desc" @if (request()->input('sort_by') == 'date_desc') selected @endif>{{ __('Newest') }}</option>
-                                <option value="price_asc" @if (request()->input('sort_by') == 'price_asc') selected @endif>{{ __('Price')  . ': ' . __('low to high') }}</option>
-                                <option value="price_desc" @if (request()->input('sort_by') == 'price_desc') selected @endif>{{ __('Price')  . ': ' . __('high to low') }}</option>
-                                <option value="name_asc" @if (request()->input('sort_by') == 'name_asc') selected @endif>{{ __('Name') . ': ' . __('A-Z') }}</option>
-                                <option value="name_desc" @if (request()->input('sort_by') == 'name_desc') selected @endif>{{ __('Name')  . ': ' . __('Z-A') }}</option>
+                                <option value="">{{ trans('plugins/real-estate::general.sort_by') }}</option>
+                                <option value="" @if (request()->input('sort_by') == 'default_sorting') selected @endif>{{ trans('plugins/real-estate::general.default') }}</option>
+                                <option value="date_asc" @if (request()->input('sort_by') == 'date_asc') selected @endif>{{ trans('plugins/real-estate::general.oldest') }}</option>
+                                <option value="date_desc" @if (request()->input('sort_by') == 'date_desc') selected @endif>{{ trans('plugins/real-estate::general.newest') }}</option>
+                                <option value="price_asc" @if (request()->input('sort_by') == 'price_asc') selected @endif>{{ trans('plugins/real-estate::general.price')  . ': ' . trans('plugins/real-estate::general.low_to_high') }}</option>
+                                <option value="price_desc" @if (request()->input('sort_by') == 'price_desc') selected @endif>{{ trans('plugins/real-estate::general.price')  . ': ' . trans('plugins/real-estate::general.high_to_low') }}</option>
+                                <option value="name_asc" @if (request()->input('sort_by') == 'name_asc') selected @endif>{{ trans('plugins/real-estate::general.name') . ': ' . trans('plugins/real-estate::general.az') }}</option>
+                                <option value="name_desc" @if (request()->input('sort_by') == 'name_desc') selected @endif>{{ trans('plugins/real-estate::general.name')  . ': ' . trans('plugins/real-estate::general.za') }}</option>
                             </select>
                             <i class="fas fa-angle-down"></i>
                         </div>

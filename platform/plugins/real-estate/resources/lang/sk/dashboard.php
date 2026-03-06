@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Zadarmo :posts Post (S)',
     'total_package_price' => '__Ph0__ celkom (ušetri __ph1 __%)',
     'dashboard' => 'Dashboard',
+    'character_remain' => 'Zostáva znakov',
+    'password_update_success' => 'Heslo úspešne aktualizované!',
+    'language' => 'Jazyk',
+    'buy_credits' => 'Kúpiť kredity',
+    'currencies' => 'Meny',
+    'go_to_homepage' => 'Prejsť na domovskú stránku',
+    'hello' => 'Ahoj',
 ];

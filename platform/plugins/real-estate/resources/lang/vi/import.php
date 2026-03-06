@@ -2,7 +2,7 @@
 
 return [
     'choose_file' => 'Chọn tập tin',
-    'choose_file_description' => 'Choose file with mimes: :types.',
+    'choose_file_description' => 'Chọn tệp với định dạng: :types.',
     'import_success_message' => 'Đã nhập thành công.',
     'import_failed_message' => 'Nhập không thành công, vui lòng kiểm tra lỗi bên dưới!',
     'row' => 'Hàng ngang',
@@ -19,8 +19,14 @@ return [
     'uploading' => 'Đang tải lên...',
     'validating' => 'Đang xác thực...',
     'importing' => 'Đang nhập khẩu...',
-    'importing_message' => 'Importing form :from to :to',
-    'validating_message' => 'Validating form :from to :to',
-    'total_rows' => 'You have imported :total rows successfully!',
+    'importing_message' => 'Đang nhập từ :from đến :to',
+    'validating_message' => 'Đang xác thực từ :from đến :to',
+    'total_rows' => 'Bạn đã nhập thành công :total dòng!',
     'imported_successfully' => 'Thuộc tính của bạn đã được nhập thành công!',
+    'update_existing_properties' => 'Cập nhật bất động sản hiện có',
+    'update_existing_properties_description' => 'Nếu chọn, các bất động sản có cùng ID hoặc ID duy nhất sẽ được cập nhật thay vì tạo mới.',
+    'update_existing_projects' => 'Cập nhật dự án hiện có',
+    'update_existing_projects_description' => 'Nếu chọn, các dự án có cùng ID hoặc ID duy nhất sẽ được cập nhật thay vì tạo mới.',
+    'unique_id_exists' => 'ID duy nhất ":id" đã tồn tại. Vui lòng dùng ID khác hoặc bật tùy chọn "Cập nhật bất động sản hiện có".',
+    'project_unique_id_exists' => 'ID duy nhất ":id" đã tồn tại. Vui lòng dùng ID khác hoặc bật tùy chọn "Cập nhật dự án hiện có".',
 ];

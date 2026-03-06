@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Libre ang :posts post',
     'total_package_price' => ':total Kabuuan (Makatipid ng :percent%)',
     'dashboard' => 'Dashboard',
+    'language' => 'Wika',
+    'character_remain' => 'Natitirang mga karakter',
+    'password_update_success' => 'Matagumpay na na-update ang password!',
+    'buy_credits' => 'Bumili ng credits',
+    'currencies' => 'Mga pera',
+    'go_to_homepage' => 'Pumunta sa homepage',
+    'hello' => 'Kumusta',
 ];

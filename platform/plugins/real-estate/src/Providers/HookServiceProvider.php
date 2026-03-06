@@ -12,6 +12,8 @@ use Botble\Base\Supports\TwigCompiler;
 use Botble\Dashboard\Supports\DashboardWidgetInstance;
 use Botble\Language\Facades\Language;
 use Botble\LanguageAdvanced\Supports\LanguageAdvancedManager;
+use Botble\Location\Models\City;
+use Botble\Location\Models\State;
 use Botble\Media\Facades\RvMedia;
 use Botble\Menu\Facades\Menu;
 use Botble\Page\Models\Page;
@@ -36,6 +38,7 @@ use Botble\RealEstate\Services\HandleFrontPages;
 use Botble\RealEstate\Supports\InvoiceHelper;
 use Botble\RealEstate\Supports\TwigExtension;
 use Botble\RealEstate\Tables\PropertyTable;
+use Botble\SeoHelper\Facades\SeoHelper;
 use Botble\Setting\Facades\Setting;
 use Botble\Slug\Models\Slug;
 use Botble\Theme\Events\RenderingThemeOptionSettings;
@@ -45,6 +48,7 @@ use Botble\Theme\Http\Requests\UpdateOptionsRequest;
 use Botble\Theme\Supports\ThemeSupport;
 use Botble\Theme\ThemeOption\Fields\NumberField;
 use Botble\Theme\ThemeOption\Fields\SelectField;
+use Botble\Theme\ThemeOption\Fields\TextareaField;
 use Botble\Theme\ThemeOption\Fields\TextField;
 use Botble\Theme\ThemeOption\ThemeOptionSection;
 use Illuminate\Database\Eloquent\Model;
@@ -94,7 +98,7 @@ class HookServiceProvider extends ServiceProvider
             }
 
             add_filter('cms_twig_compiler', function (TwigCompiler $twigCompiler) {
-                if (!array_key_exists(TwigExtension::class, $twigCompiler->getExtensions())) {
+                if (! array_key_exists(TwigExtension::class, $twigCompiler->getExtensions())) {
                     $twigCompiler->addExtension(new TwigExtension());
                 }
 
@@ -109,7 +113,7 @@ class HookServiceProvider extends ServiceProvider
 
             if (defined('PAYMENT_FILTER_PAYMENT_PARAMETERS')) {
                 add_filter(PAYMENT_FILTER_PAYMENT_PARAMETERS, function ($html) {
-                    if (!auth('account')->check()) {
+                    if (! auth('account')->check()) {
                         return $html;
                     }
 
@@ -117,21 +121,6 @@ class HookServiceProvider extends ServiceProvider
                         Form::hidden('customer_type', Account::class)->toHtml();
                 }, 123);
             }
-
-            // Add Microsite Settings Tab
-            add_filter('account_settings_register_content_tabs', function ($html) {
-                if (auth('account')->check() && auth('account')->user()->hasPackageFeature('microsite')) {
-                    $html .= view('plugins/real-estate::themes.dashboard.settings.microsite-tab')->render();
-                }
-                return $html;
-            });
-
-            add_filter('account_settings_register_content_tab_inside', function ($html) {
-                if (auth('account')->check() && auth('account')->user()->hasPackageFeature('microsite')) {
-                    $html .= view('plugins/real-estate::themes.dashboard.settings.microsite-content')->render();
-                }
-                return $html;
-            });
 
             if (defined('PAYMENT_ACTION_PAYMENT_PROCESSED')) {
                 add_action(PAYMENT_ACTION_PAYMENT_PROCESSED, function ($data): void {
@@ -152,12 +141,12 @@ class HookServiceProvider extends ServiceProvider
 
                 add_action(BASE_ACTION_META_BOXES, function ($context, $payment): void {
                     if (get_class($payment) == Payment::class && $context == 'advanced' && Route::currentRouteName() == 'payments.show') {
-                        MetaBox::addMetaBox('additional_payment_data', __('Package information'), function () use ($payment) {
+                        MetaBox::addMetaBox('additional_payment_data', trans('plugins/real-estate::settings.theme_options.package_information'), function () use ($payment) {
                             $subscribedPackageId = MetaBox::getMetaData($payment, 'subscribed_packaged_id', true);
 
                             $package = Package::query()->find($subscribedPackageId);
 
-                            if (!$package) {
+                            if (! $package) {
                                 return null;
                             }
 
@@ -171,7 +160,7 @@ class HookServiceProvider extends ServiceProvider
                 add_filter(PAYMENT_FILTER_REDIRECT_URL, function ($checkoutToken) {
                     $checkoutToken = $checkoutToken ?: session('subscribed_packaged_id');
 
-                    if (!$checkoutToken) {
+                    if (! $checkoutToken) {
                         return route('public.index');
                     }
 
@@ -187,7 +176,7 @@ class HookServiceProvider extends ServiceProvider
                 add_filter(PAYMENT_FILTER_CANCEL_URL, function ($checkoutToken) {
                     $checkoutToken = $checkoutToken ?: session('subscribed_packaged_id');
 
-                    if (!$checkoutToken) {
+                    if (! $checkoutToken) {
                         return route('public.index');
                     }
 
@@ -205,19 +194,18 @@ class HookServiceProvider extends ServiceProvider
                         PaymentCompleted::dispatch($payment);
                     }
 
-                    if (
-                        in_array($payment->payment_channel, [PaymentMethodEnum::COD, PaymentMethodEnum::BANK_TRANSFER])
+                    if (in_array($payment->payment_channel, [PaymentMethodEnum::COD, PaymentMethodEnum::BANK_TRANSFER])
                         && $request->input('status') == PaymentStatusEnum::COMPLETED
                     ) {
                         $subscribedPackageId = MetaBox::getMetaData($payment, 'subscribed_packaged_id', true);
 
-                        if (!$subscribedPackageId) {
+                        if (! $subscribedPackageId) {
                             return;
                         }
 
                         $package = Package::query()->find($subscribedPackageId);
 
-                        if (!$package) {
+                        if (! $package) {
                             return;
                         }
 
@@ -226,7 +214,7 @@ class HookServiceProvider extends ServiceProvider
                          */
                         $account = Account::query()->find($payment->customer_id);
 
-                        if (!$account) {
+                        if (! $account) {
                             return;
                         }
 
@@ -253,7 +241,7 @@ class HookServiceProvider extends ServiceProvider
 
                     $package = Package::query()->whereIn('id', $orderIds)->first();
 
-                    if (!$package) {
+                    if (! $package) {
                         return $data;
                     }
 
@@ -326,14 +314,12 @@ class HookServiceProvider extends ServiceProvider
 
             add_filter(DASHBOARD_FILTER_ADMIN_LIST, function ($widgets) {
                 foreach ($widgets as $key => $widget) {
-                    if (
-                        in_array($key, [
-                            'widget_total_themes',
-                            'widget_total_users',
-                            'widget_total_plugins',
-                            'widget_total_pages',
-                        ]) && $widget['type'] == 'stats'
-                    ) {
+                    if (in_array($key, [
+                        'widget_total_themes',
+                        'widget_total_users',
+                        'widget_total_plugins',
+                        'widget_total_pages',
+                    ]) && $widget['type'] == 'stats') {
                         Arr::forget($widgets, $key);
                     }
                 }
@@ -470,7 +456,7 @@ class HookServiceProvider extends ServiceProvider
             }, 49, 3);
 
             add_filter('social_login_before_creating_account', function ($data) {
-                if (!RealEstateHelper::isRegisterEnabled()) {
+                if (! RealEstateHelper::isRegisterEnabled()) {
                     return (new BaseHttpResponse())
                         ->setError()
                         ->setMessage(trans('auth.failed'));
@@ -481,8 +467,7 @@ class HookServiceProvider extends ServiceProvider
 
             if (is_plugin_active('language') && is_plugin_active('language-advanced')) {
                 add_filter(BASE_FILTER_BEFORE_RENDER_FORM, function ($form, $data) {
-                    if (
-                        is_in_admin() &&
+                    if (is_in_admin() &&
                         request()->segment(1) === 'account' &&
                         Auth::guard('account')->check() &&
                         Language::getCurrentAdminLocaleCode() != Language::getDefaultLocaleCode() &&
@@ -522,18 +507,18 @@ class HookServiceProvider extends ServiceProvider
 
                     switch ($page->getKey()) {
                         case theme_option('properties_list_page_id'):
-                            $subTitle = __('Properties List');
+                            $subTitle = trans('plugins/real-estate::settings.theme_options.properties_list');
 
                             break;
                         case theme_option('projects_list_page_id'):
                             if (RealEstateHelper::isEnabledProjects()) {
-                                $subTitle = __('Projects List');
+                                $subTitle = trans('plugins/real-estate::settings.theme_options.projects_list');
                             }
 
                             break;
                     }
 
-                    if (!$subTitle) {
+                    if (! $subTitle) {
                         return $name;
                     }
 
@@ -549,7 +534,7 @@ class HookServiceProvider extends ServiceProvider
             }
 
             add_filter('core_request_rules', function (array $rules, Request $request): array {
-                if (!$request instanceof UpdateOptionsRequest) {
+                if (! $request instanceof UpdateOptionsRequest) {
                     return $rules;
                 }
 
@@ -577,14 +562,14 @@ class HookServiceProvider extends ServiceProvider
                         }
                     );
 
-                $rules = $fields->mapWithKeys(fn($value, $key) => [$key => ['nullable', 'string']])->all();
+                $rules = $fields->mapWithKeys(fn ($value, $key) => [$key => ['nullable', 'string']])->all();
 
                 foreach ($fields as $key => $value) {
                     $rules[$key][] = function ($attribute, $value, $fail) use ($locale, $fields, $key, $themeOptions): void {
                         if (
-                            collect($fields)->reject(fn($v, $k) => $k === $key)->contains($value)
+                            collect($fields)->reject(fn ($v, $k) => $k === $key)->contains($value)
                             || $themeOptions
-                                ->reject(fn($value, $k) => $k === ThemeOption::getOptionKey($key, $locale))
+                                ->reject(fn ($value, $k) => $k === ThemeOption::getOptionKey($key, $locale))
                                 ->contains($value)
                         ) {
                             $fail(trans('plugins/real-estate::real-estate.theme_options.page_slug_already_exists', [
@@ -601,9 +586,30 @@ class HookServiceProvider extends ServiceProvider
                 return $canBeReviewed || (auth('account')->check() && AdminHelper::isInAdmin());
             }, 999, 2);
 
+            // Auto-generate SEO metadata for City and State pages
+            if (is_plugin_active('location')) {
+                add_action(BASE_ACTION_PUBLIC_RENDER_SINGLE, function ($screen, $model): void {
+                    if (! $model instanceof City && ! $model instanceof State) {
+                        return;
+                    }
+
+                    $this->setLocationSeoMeta($model);
+                }, 25, 2);
+            }
+
             if (defined('THEME_FRONT_HEADER')) {
                 add_action(BASE_ACTION_PUBLIC_RENDER_SINGLE, function ($screen, $model): void {
                     add_filter(THEME_FRONT_HEADER, function ($html) use ($model) {
+                        // Add schema.org structured data for City pages
+                        if ($model instanceof City) {
+                            $html .= $this->getCitySchemaMarkup($model);
+                        }
+
+                        // Add schema.org structured data for State pages
+                        if ($model instanceof State) {
+                            $html .= $this->getStateSchemaMarkup($model);
+                        }
+
                         // Add Organization schema for property/project detail pages
                         if (get_class($model) == Property::class || get_class($model) == Project::class) {
                             $organizationSchema = [
@@ -622,7 +628,7 @@ class HookServiceProvider extends ServiceProvider
                             }
 
                             $html .= Html::tag('script', json_encode($organizationSchema), ['type' => 'application/ld+json'])
-                                ->toHtml();
+                                    ->toHtml();
                         }
 
                         // Add RealEstateListing schema for properties
@@ -633,7 +639,7 @@ class HookServiceProvider extends ServiceProvider
                                 'name' => $model->name,
                                 'url' => $model->url,
                                 'description' => BaseHelper::clean($model->content),
-                                'image' => collect($model->images)->map(fn($image) => RvMedia::getImageUrl($image))->toArray(),
+                                'image' => collect($model->images)->map(fn ($image) => RvMedia::getImageUrl($image))->toArray(),
                                 'address' => [
                                     '@type' => 'PostalAddress',
                                     'streetAddress' => $model->location,
@@ -674,7 +680,7 @@ class HookServiceProvider extends ServiceProvider
                             }
 
                             $html .= Html::tag('script', json_encode($schema), ['type' => 'application/ld+json'])
-                                ->toHtml();
+                                    ->toHtml();
                         }
 
                         // Add Project schema
@@ -685,7 +691,7 @@ class HookServiceProvider extends ServiceProvider
                                 'name' => $model->name,
                                 'url' => $model->url,
                                 'description' => BaseHelper::clean($model->content),
-                                'image' => collect($model->images)->map(fn($image) => RvMedia::getImageUrl($image))->toArray(),
+                                'image' => collect($model->images)->map(fn ($image) => RvMedia::getImageUrl($image))->toArray(),
                                 'address' => [
                                     '@type' => 'PostalAddress',
                                     'streetAddress' => $model->location,
@@ -727,7 +733,7 @@ class HookServiceProvider extends ServiceProvider
                             }
 
                             $html .= Html::tag('script', json_encode($schema), ['type' => 'application/ld+json'])
-                                ->toHtml();
+                                    ->toHtml();
                         }
 
                         return $html;
@@ -741,49 +747,49 @@ class HookServiceProvider extends ServiceProvider
                 ThemeOption::setSection(
                     ThemeOptionSection::make('opt-text-subsection-real-estate')
                         ->icon('ti ti-briefcase')
-                        ->title(__('Real Estate'))
-                        ->description(__('Theme options for Real Estate'))
+                        ->title(trans('plugins/real-estate::settings.theme_options.real_estate'))
+                        ->description(trans('plugins/real-estate::settings.theme_options.real_estate_description'))
                         ->fields([
                             SelectField::make()
                                 ->sectionId('opt-text-subsection-real-estate')
                                 ->name('projects_list_page_id')
-                                ->options(['' => __('-- Select --')] + $pages)
-                                ->label(__('Projects List page')),
+                                ->options(['' => trans('plugins/real-estate::settings.theme_options.select_option')] + $pages)
+                                ->label(trans('plugins/real-estate::settings.theme_options.projects_list_page')),
                             SelectField::make()
                                 ->sectionId('opt-text-subsection-real-estate')
                                 ->name('properties_list_page_id')
-                                ->options(['' => __('-- Select --')] + $pages)
-                                ->label(__('Properties List page')),
+                                ->options(['' => trans('plugins/real-estate::settings.theme_options.select_option')] + $pages)
+                                ->label(trans('plugins/real-estate::settings.theme_options.properties_list_page')),
                             NumberField::make()
                                 ->sectionId('opt-text-subsection-real-estate')
                                 ->name('number_of_projects_per_page')
                                 ->defaultValue(12)
-                                ->label(__('Number of projects per page')),
+                                ->label(trans('plugins/real-estate::settings.theme_options.number_of_projects_per_page')),
                             NumberField::make()
                                 ->sectionId('opt-text-subsection-real-estate')
                                 ->name('number_of_properties_per_page')
                                 ->defaultValue(15)
-                                ->label(__('Number of properties per page')),
+                                ->label(trans('plugins/real-estate::settings.theme_options.number_of_properties_per_page')),
                             NumberField::make()
                                 ->sectionId('opt-text-subsection-real-estate')
                                 ->name('number_of_related_projects')
                                 ->defaultValue(8)
-                                ->label(__('Number of related projects')),
+                                ->label(trans('plugins/real-estate::settings.theme_options.number_of_related_projects')),
                             NumberField::make()
                                 ->sectionId('opt-text-subsection-real-estate')
                                 ->name('number_of_related_properties')
                                 ->defaultValue(8)
-                                ->label(__('Number of related properties')),
+                                ->label(trans('plugins/real-estate::settings.theme_options.number_of_related_properties')),
                             TextField::make()
                                 ->sectionId('opt-text-subsection-real-estate')
                                 ->name('latitude_longitude_center_on_properties_page')
                                 ->defaultValue('43.615134, -76.393186')
-                                ->label(__('Latitude longitude center on properties page')),
+                                ->label(trans('plugins/real-estate::settings.theme_options.latitude_longitude_center')),
                             TextField::make()
                                 ->sectionId('opt-text-subsection-real-estate')
                                 ->name('term_and_privacy_policy_url')
-                                ->label(__('Term and Privacy Policy URL'))
-                                ->placeholder(__('https://example.com/term-and-privacy-policy')),
+                                ->label(trans('plugins/real-estate::settings.theme_options.term_privacy_policy_url'))
+                                ->placeholder(trans('plugins/real-estate::settings.theme_options.term_privacy_policy_placeholder')),
                         ])
                 )
                     ->setSection(
@@ -793,7 +799,7 @@ class HookServiceProvider extends ServiceProvider
                             ->icon('ti ti-link')
                             ->fields(
                                 collect(RealEstateHelper::getDefaultPageSlug())
-                                    ->map(fn($value, $key) => [
+                                    ->map(fn ($value, $key) => [
                                         'id' => sprintf('real_estate_%s_page_slug', $key),
                                         'type' => 'text',
                                         'label' => trans(
@@ -830,6 +836,41 @@ class HookServiceProvider extends ServiceProvider
                                     ->all()
                             )
                     );
+
+                if (is_plugin_active('location')) {
+                    ThemeOption::setSection(
+                        ThemeOptionSection::make('opt-text-subsection-location-seo')
+                            ->title(trans('plugins/real-estate::real-estate.theme_options.location_seo'))
+                            ->description(trans('plugins/real-estate::real-estate.theme_options.location_seo_description'))
+                            ->icon('ti ti-seo')
+                            ->fields([
+                                TextareaField::make()
+                                    ->sectionId('opt-text-subsection-location-seo')
+                                    ->name('real_estate_city_seo_title_template')
+                                    ->label(trans('plugins/real-estate::real-estate.theme_options.city_seo_title'))
+                                    ->helperText(trans('plugins/real-estate::real-estate.theme_options.seo_placeholders_help'))
+                                    ->placeholder('Real Estate in {City}, {State} - Properties for Sale & Rent | {site_name}'),
+                                TextareaField::make()
+                                    ->sectionId('opt-text-subsection-location-seo')
+                                    ->name('real_estate_city_seo_description_template')
+                                    ->label(trans('plugins/real-estate::real-estate.theme_options.city_seo_description'))
+                                    ->helperText(trans('plugins/real-estate::real-estate.theme_options.seo_placeholders_help'))
+                                    ->placeholder('Find properties for sale and rent in {City} {ZIP}, {State}. Browse listings with photos, prices, and details.'),
+                                TextareaField::make()
+                                    ->sectionId('opt-text-subsection-location-seo')
+                                    ->name('real_estate_state_seo_title_template')
+                                    ->label(trans('plugins/real-estate::real-estate.theme_options.state_seo_title'))
+                                    ->helperText(trans('plugins/real-estate::real-estate.theme_options.seo_placeholders_help'))
+                                    ->placeholder('Real Estate in {State} - Properties for Sale & Rent | {site_name}'),
+                                TextareaField::make()
+                                    ->sectionId('opt-text-subsection-location-seo')
+                                    ->name('real_estate_state_seo_description_template')
+                                    ->label(trans('plugins/real-estate::real-estate.theme_options.state_seo_description'))
+                                    ->helperText(trans('plugins/real-estate::real-estate.theme_options.seo_placeholders_help'))
+                                    ->placeholder('Find properties for sale and rent in {State}. Browse listings with photos, prices, and details.'),
+                            ])
+                    );
+                }
             });
 
             add_filter(BASE_FILTER_PUBLIC_SINGLE_DATA, [$this, 'handleSingleView'], 30);
@@ -845,7 +886,7 @@ class HookServiceProvider extends ServiceProvider
 
                         $view = Theme::getThemeNamespace() . '::views.real-estate.projects';
 
-                        if (!view()->exists($view)) {
+                        if (! view()->exists($view)) {
                             $view = 'plugins/real-estate::themes.projects';
                         }
 
@@ -857,7 +898,7 @@ class HookServiceProvider extends ServiceProvider
 
                         $view = Theme::getThemeNamespace() . '::views.real-estate.properties';
 
-                        if (!view()->exists($view)) {
+                        if (! view()->exists($view)) {
                             $view = 'plugins/real-estate::themes.properties';
                         }
 
@@ -871,11 +912,11 @@ class HookServiceProvider extends ServiceProvider
             add_action(
                 BASE_ACTION_TOP_FORM_CONTENT_NOTIFICATION,
                 function (Request $request, Model|string|null $data = null): void {
-                    if (!setting('verify_account_email', false)) {
+                    if (! setting('verify_account_email', false)) {
                         return;
                     }
 
-                    if (!$data instanceof Account || Route::currentRouteName() !== 'account.edit') {
+                    if (! $data instanceof Account || Route::currentRouteName() !== 'account.edit') {
                         return;
                     }
 
@@ -928,11 +969,11 @@ class HookServiceProvider extends ServiceProvider
                 return view('core/base::partials.navbar.badge-count', ['class' => 'unread-consults'])->render();
             case 'cms-plugins-real-estate-unverified-accounts':
             case 'cms-plugins-real-estate-accounts':
-                if (!Auth::user()->hasPermission('unverified-accounts.index')) {
+                if (! Auth::user()->hasPermission('unverified-accounts.index')) {
                     return $number;
                 }
 
-                if (!setting('real_estate_enable_account_verification', false)) {
+                if (! setting('real_estate_enable_account_verification', false)) {
                     return $number;
                 }
 
@@ -999,22 +1040,22 @@ class HookServiceProvider extends ServiceProvider
         ];
 
         $currentRoute = Route::currentRouteName();
-        if (!isset($routeMap[$currentRoute])) {
+        if (! isset($routeMap[$currentRoute])) {
             return $url;
         }
 
         $locationSlug = collect(request()->segments())
-            ->reject(fn($segment) => isset(Language::getSupportedLocales()[$segment]))
+            ->reject(fn ($segment) => isset(Language::getSupportedLocales()[$segment]))
             ->last();
 
-        if (!$locationSlug) {
+        if (! $locationSlug) {
             return $url;
         }
 
         $pageType = $routeMap[$currentRoute];
         $targetSlug = $this->getLocalizedPageSlug($pageType, $languageCode);
 
-        if (!$targetSlug) {
+        if (! $targetSlug) {
             return $url;
         }
 
@@ -1038,5 +1079,180 @@ class HookServiceProvider extends ServiceProvider
         $value = Setting::get($key);
 
         return $value ?: RealEstateHelper::getDefaultPageSlug($pageType);
+    }
+
+    protected function setLocationSeoMeta(City|State $model): void
+    {
+        $model->loadMissing(['metadata']);
+        $meta = $model->getMetaData('seo_meta', true);
+
+        if (! empty($meta['seo_title']) && ! empty($meta['seo_description'])) {
+            return;
+        }
+
+        $replacements = $this->getLocationReplacements($model);
+
+        if (empty($meta['seo_title'])) {
+            $titleTemplate = $this->getLocationSeoTemplate($model, 'title');
+            $title = $this->replaceLocationPlaceholders($titleTemplate, $replacements);
+            SeoHelper::setTitle($title);
+        }
+
+        if (empty($meta['seo_description'])) {
+            $descriptionTemplate = $this->getLocationSeoTemplate($model, 'description');
+            $description = $this->replaceLocationPlaceholders($descriptionTemplate, $replacements);
+            SeoHelper::setDescription($description);
+        }
+    }
+
+    protected function getLocationReplacements(City|State $model): array
+    {
+        $siteName = theme_option('site_title', config('app.name'));
+
+        if ($model instanceof City) {
+            $model->loadMissing(['state', 'country']);
+
+            return [
+                '{city}' => $model->name,
+                '{City}' => $model->name,
+                '{zip}' => $model->zip_code ?: '',
+                '{ZIP}' => $model->zip_code ?: '',
+                '{state}' => $model->state?->name ?: '',
+                '{State}' => $model->state?->name ?: '',
+                '{state_abbr}' => $model->state?->abbreviation ?: '',
+                '{county}' => $model->state?->name ?: '',
+                '{County}' => $model->state?->name ?: '',
+                '{country}' => $model->country?->name ?: '',
+                '{Country}' => $model->country?->name ?: '',
+                '{site_name}' => $siteName,
+                '{Site_Name}' => $siteName,
+            ];
+        }
+
+        $model->loadMissing(['country']);
+
+        return [
+            '{city}' => '',
+            '{City}' => '',
+            '{zip}' => '',
+            '{ZIP}' => '',
+            '{state}' => $model->name,
+            '{State}' => $model->name,
+            '{state_abbr}' => $model->abbreviation ?: '',
+            '{county}' => '',
+            '{County}' => '',
+            '{country}' => $model->country?->name ?: '',
+            '{Country}' => $model->country?->name ?: '',
+            '{site_name}' => $siteName,
+            '{Site_Name}' => $siteName,
+        ];
+    }
+
+    protected function getLocationSeoTemplate(City|State $model, string $type): string
+    {
+        $key = $model instanceof City ? 'city' : 'state';
+
+        $optionKey = sprintf('real_estate_%s_seo_%s_template', $key, $type);
+        $template = theme_option($optionKey);
+
+        if ($template) {
+            return $template;
+        }
+
+        if ($type === 'title') {
+            return $model instanceof City
+                ? __('Real Estate in {City}, {State} - Properties for Sale & Rent | {site_name}')
+                : __('Real Estate in {State} - Properties for Sale & Rent | {site_name}');
+        }
+
+        return $model instanceof City
+            ? __('Find properties for sale and rent in {City} {ZIP}, {State}. Browse listings with photos, prices, and details. Contact agents today.')
+            : __('Find properties for sale and rent in {State}. Browse listings with photos, prices, and details. Contact agents today.');
+    }
+
+    protected function replaceLocationPlaceholders(string $template, array $replacements): string
+    {
+        $result = str_replace(array_keys($replacements), array_values($replacements), $template);
+
+        $result = preg_replace('/\s+,/', ',', $result);
+        $result = preg_replace('/,\s*,/', ',', $result);
+        $result = preg_replace('/\s+/', ' ', $result);
+
+        return trim($result, ' ,');
+    }
+
+    protected function getCitySchemaMarkup(City $city): string
+    {
+        $city->loadMissing(['state', 'country']);
+
+        $propertyCount = Property::query()
+            ->where('city_id', $city->getKey())
+            ->active()
+            ->count();
+
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Place',
+            'name' => $city->name,
+            'address' => [
+                '@type' => 'PostalAddress',
+                'addressLocality' => $city->name,
+                'addressRegion' => $city->state?->name,
+                'addressCountry' => $city->country?->name,
+            ],
+        ];
+
+        if ($city->zip_code) {
+            $schema['address']['postalCode'] = $city->zip_code;
+        }
+
+        if ($city->image) {
+            $schema['image'] = RvMedia::getImageUrl($city->image);
+        }
+
+        if ($propertyCount > 0) {
+            $schema['additionalProperty'] = [
+                '@type' => 'PropertyValue',
+                'name' => 'Available Properties',
+                'value' => $propertyCount,
+            ];
+        }
+
+        return Html::tag('script', json_encode($schema), ['type' => 'application/ld+json'])->toHtml();
+    }
+
+    protected function getStateSchemaMarkup(State $state): string
+    {
+        $state->loadMissing(['country']);
+
+        $propertyCount = Property::query()
+            ->where('state_id', $state->getKey())
+            ->active()
+            ->count();
+
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Place',
+            'name' => $state->name,
+            'address' => [
+                '@type' => 'PostalAddress',
+                'addressRegion' => $state->name,
+                'addressCountry' => $state->country?->name,
+            ],
+        ];
+
+        if ($state->image) {
+            $schema['image'] = RvMedia::getImageUrl($state->image);
+        }
+
+        if ($propertyCount > 0) {
+            $schema['additionalProperty'] = [
+                '@type' => 'PropertyValue',
+                'name' => 'Available Properties',
+                'value' => $propertyCount,
+            ];
+        }
+
+        return Html::tag('script', json_encode($schema), ['type' => 'application/ld+json'])->toHtml();
     }
 }

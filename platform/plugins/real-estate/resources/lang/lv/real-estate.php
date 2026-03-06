@@ -1,6 +1,25 @@
 <?php
 
 return [
+    'sorting' => [
+        'newest' => 'Jaunākie',
+        'oldest' => 'Vecākie',
+        'price_asc' => 'Cena (zemākā)',
+        'price_desc' => 'Cena (augstākā)',
+        'name_asc' => 'Nosaukums (A-Z)',
+        'name_desc' => 'Nosaukums (Z-A)',
+    ],
+    'filtering' => [
+        'all' => 'Visi',
+        'sale' => 'Pārdošanai',
+        'rent' => 'Īrei',
+    ],
+    'status' => [
+        'available' => 'Pieejams',
+        'not_available' => 'Nav pieejams',
+        'sold' => 'Pārdots',
+        'rented' => 'Izīrēts',
+    ],
     'name' => 'Nekustamais īpašums',
     'settings' => 'Settings',
     'login_form' => 'Pieteikšanās forma',

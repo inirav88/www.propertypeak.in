@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => '一個帳戶可購買 x 次',
     'subscribe_package' => '訂閱套餐',
     'add_credit_alert' => '請新增您的積分以建立您的文章。',
+    'price_per_post' => ':price / 每篇文章',
+    'free_posts' => '免費 :number 篇文章',
+    'price_with_sale' => ':price 總計 :percentage_sale',
+    'save_percentage' => '節省 :percentage %',
+    'features' => '功能',
+    'title' => '標題',
+    'feature_example' => '例如：60天物業刊登',
 ];

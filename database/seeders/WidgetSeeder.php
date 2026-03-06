@@ -6,7 +6,9 @@ use Botble\Base\Supports\BaseSeeder;
 use Botble\Page\Database\Traits\HasPageSeeder;
 use Botble\Widget\Database\Traits\HasWidgetSeeder;
 use Botble\Widget\Widgets\CoreSimpleMenu;
+use FriendsOfBotble\MortgageCalculator\Widgets\MortgageCalculatorWidget;
 use NewsletterWidget;
+use PropertyDisclaimerWidget;
 use RelatedPostsWidget;
 use SiteCopyrightWidget;
 use SiteInformationWidget;
@@ -364,6 +366,32 @@ class WidgetSeeder extends BaseSeeder
                     'subtitle' => 'Related Posts',
                     'limit' => 3,
                 ],
+            ],
+            [
+                'widget_id' => MortgageCalculatorWidget::class,
+                'sidebar_id' => 'bottom_property_detail_sidebar',
+                'position' => 1,
+                'data' => [
+                    'id' => MortgageCalculatorWidget::class,
+                    'name' => 'Mortgage Calculator',
+                    'style' => 'default',
+                    'layout' => 'horizontal',
+                    'form_style' => 'default',
+                    'form_margin' => '40px 0 40px',
+                    'form_padding' => '',
+                    'default_price' => '',
+                    'default_term' => '',
+                    'default_rate' => '',
+                    'default_down_payment_type' => '',
+                    'default_down_payment_value' => '',
+                    'show_extra_costs' => '0',
+                ],
+            ],
+            [
+                'widget_id' => PropertyDisclaimerWidget::class,
+                'sidebar_id' => 'bottom_property_detail_sidebar',
+                'position' => 2,
+                'data' => [],
             ],
         ]);
     }

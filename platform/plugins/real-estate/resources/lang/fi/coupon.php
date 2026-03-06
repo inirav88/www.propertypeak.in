@@ -35,4 +35,11 @@ return [
     'total' => 'Yhteensä',
     'toggle_coupon_form_text' => 'Onko sinulla kuponkikoodi?',
     'apply_coupon_code' => 'Käytä',
+    'invalid' => 'Tämä kuponki on virheellinen!',
+    'applied_success' => 'Kuponki ":code" käytetty onnistuneesti!',
+    'not_used' => 'Tätä kuponkia ei ole vielä käytetty!',
+    'removed_success' => 'Kuponki :code poistettu onnistuneesti!',
+    'remove' => 'Poista',
+    'your_order' => 'Tilauksesi',
+    'coupon_code_applied' => 'Kuponkikoodi: :code',
 ];

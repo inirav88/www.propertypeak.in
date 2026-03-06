@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Konts var iegādāties x reizes',
     'subscribe_package' => 'Abonēt paketi',
     'add_credit_alert' => 'Lūdzu, pievienojiet savu kredītu, lai izveidotu savas ziņas.',
+    'price_per_post' => ':price par ierakstu',
+    'free_posts' => ':posts bezmaksas ieraksti',
+    'price_with_sale' => ':price (ietaupiet :discount)',
+    'save_percentage' => 'Ietaupiet :percentage%',
+    'features' => 'Funkcijas',
+    'title' => 'Paketes',
+    'feature_example' => ':limit īpašuma sludinājumi',
 ];

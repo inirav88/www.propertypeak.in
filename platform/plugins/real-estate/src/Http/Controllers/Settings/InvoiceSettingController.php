@@ -2,12 +2,18 @@
 
 namespace Botble\RealEstate\Http\Controllers\Settings;
 
+use Botble\Base\Supports\Breadcrumb;
 use Botble\RealEstate\Forms\Settings\InvoiceSettingForm;
 use Botble\RealEstate\Http\Requests\Settings\InvoiceSettingRequest;
-use Botble\Setting\Http\Controllers\SettingController;
 
-class InvoiceSettingController extends SettingController
+class InvoiceSettingController extends BaseSettingController
 {
+    protected function breadcrumb(): Breadcrumb
+    {
+        return parent::breadcrumb()
+            ->add(trans('plugins/real-estate::settings.invoice.name'));
+    }
+
     public function edit()
     {
         $this->pageTitle(trans('plugins/real-estate::settings.invoice.name'));

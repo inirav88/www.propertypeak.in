@@ -43,6 +43,9 @@ class SubscribedPackageListener
             return;
         }
 
+        /**
+         * @var Account $account
+         */
         $account = Account::query()->whereKey($accountId)->first();
 
         if (! $account) {
@@ -64,7 +67,7 @@ class SubscribedPackageListener
             'user_id' => 0,
             'account_id' => $account->getKey(),
             'credits' => $package->number_of_listings,
-            'payment_id' => $payment?->id,
+            'payment_id' => $payment->id,
         ]);
 
         $emailHandler = EmailHandler::setModule(REAL_ESTATE_MODULE_SCREEN_NAME)

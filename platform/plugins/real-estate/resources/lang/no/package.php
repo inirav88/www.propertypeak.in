@@ -15,5 +15,12 @@ return [
     'account_limit' => 'Begrens kjøp etter konto',
     'account_limit_placeholder' => 'En konto kan kjøpe x ganger',
     'subscribe_package' => 'Abonner pakken',
-    'add_credit_alert' => 'Legg til kreditt for å opprette dine egne innlegg.',
+    'add_credit_alert' => 'Legg til kreditt for a opprette dine egne innlegg.',
+    'price_per_post' => ':price / pr. innlegg',
+    'free_posts' => 'Gratis :number innlegg',
+    'price_with_sale' => ':price Totalt :percentage_sale',
+    'save_percentage' => 'spar :percentage %',
+    'features' => 'Funksjoner',
+    'title' => 'Tittel',
+    'feature_example' => 'F.eks.: 60-dagers jobbannonser',
 ];

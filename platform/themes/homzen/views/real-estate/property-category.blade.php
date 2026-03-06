@@ -3,6 +3,8 @@
     Theme::set('pageTitle', $category->name);
 @endphp
 
+<h1 class="d-none">{{ $category->name }}</h1>
+
 @include(Theme::getThemeNamespace('views.real-estate.partials.listing'), [
     'actionUrl' => RealEstateHelper::getPropertiesListPageUrl(),
     'ajaxUrl' => route('public.properties'),
@@ -12,6 +14,7 @@
     'perPages' => RealEstateHelper::getPropertiesPerPageList(),
     'filterViewPath' => Theme::getThemeNamespace('views.real-estate.partials.filters.property-search-box'),
     'itemsViewPath' => Theme::getThemeNamespace('views.real-estate.properties.index'),
+    'category' => $category,
 ])
 
 @include(Theme::getThemeNamespace('views.real-estate.partials.property-map-content'))

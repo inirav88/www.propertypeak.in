@@ -69,7 +69,7 @@ class CheckoutController extends BaseController
                 ->setError()
                 ->setNextUrl($returnUrl)
                 ->withInput()
-                ->setMessage($data['message'] ?: __('Checkout error!'));
+                ->setMessage($data['message'] ?: trans('plugins/real-estate::account.checkout_error'));
         }
 
         $callbackUrl = $request->input('callback_url') . '?' . http_build_query($data);

@@ -3,7 +3,7 @@
 
     @if($careers->hasPages())
         <div class="d-flex align-items-center justify-content-center mt-3">
-            {{ $careers->links(Theme::getThemeNamespace('partials.pagination')) }}
+            {{ $careers->onEachSide(1)->links(Theme::getThemeNamespace('partials.pagination')) }}
         </div>
     @endif
 </section>

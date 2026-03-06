@@ -34,5 +34,12 @@ return [
     'discount_amount' => 'Износ попуста',
     'total' => 'Total',
     'toggle_coupon_form_text' => 'Имате код купона?',
-    'apply_coupon_code' => 'Apply',
+    'apply_coupon_code' => 'Примени',
+    'invalid' => 'Овај купон је неважећи!',
+    'applied_success' => 'Купон ":code" је успешно примењен!',
+    'not_used' => 'Овај купон још није искоришћен!',
+    'removed_success' => 'Купон :code је успешно уклоњен!',
+    'remove' => 'Уклони',
+    'your_order' => 'Ваша поруџбина',
+    'coupon_code_applied' => 'Код купона: :code',
 ];

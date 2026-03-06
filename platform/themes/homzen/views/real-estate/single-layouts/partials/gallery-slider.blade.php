@@ -5,7 +5,11 @@
                 @foreach ($model->images as $image)
                     <div class="swiper-slide">
                         <a href="{{ RvMedia::getImageUrl($image) }}" data-fancybox="gallery" class="box-imgage-detail d-block">
-                            {{ RvMedia::image($image, $model->name, attributes: ['width' => '100%'], lazy: false) }}
+                            @if ($loop->first)
+                                {{ RvMedia::image($image, $model->name, attributes: ['width' => '100%', 'fetchpriority' => 'high'], lazy: false) }}
+                            @else
+                                {{ RvMedia::image($image, $model->name, attributes: ['width' => '100%', 'loading' => 'lazy']) }}
+                            @endif
                         </a>
                     </div>
                 @endforeach

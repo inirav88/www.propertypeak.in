@@ -44,6 +44,12 @@ class SettingRealEstatePanelSetting extends PanelSection
                     ->withDescription(trans('plugins/real-estate::settings.invoice_template.description'))
                     ->withPriority(50)
                     ->withRoute('real-estate.settings.invoice-template'),
+                PanelSectionItem::make('settings.real-estate.webhook_settings')
+                    ->setTitle(trans('plugins/real-estate::settings.webhook.name'))
+                    ->withIcon('ti ti-webhook')
+                    ->withDescription(trans('plugins/real-estate::settings.webhook.description'))
+                    ->withPriority(60)
+                    ->withRoute('real-estate.settings.webhook'),
             ]);
     }
 }

@@ -35,4 +35,11 @@ return [
     'total' => 'Total',
     'toggle_coupon_form_text' => '쿠폰 코드가 있나요?',
     'apply_coupon_code' => 'Apply',
+    'remove' => '제거',
+    'your_order' => '귀하의 주문',
+    'coupon_code_applied' => '쿠폰 코드: :code',
+    'invalid' => '이 쿠폰은 유효하지 않습니다!',
+    'applied_success' => '쿠폰 ":code" 적용 성공!',
+    'not_used' => '이 쿠폰은 아직 사용되지 않았습니다!',
+    'removed_success' => '쿠폰 :code 삭제 성공!',
 ];

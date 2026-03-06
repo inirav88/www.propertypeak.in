@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name' => 'Facilities',
+    'name' => 'Instalações',
     'create' => 'Nova instalação',
     'edit' => 'Editar instalação',
 ];

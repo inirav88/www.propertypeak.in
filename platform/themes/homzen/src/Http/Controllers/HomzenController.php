@@ -55,9 +55,9 @@ class HomzenController extends PublicController
         $validated = $request->validate([
             'k' => ['nullable', 'string'],
             'type' => ['nullable', Rule::in(PropertyTypeEnum::values())],
-            'bedroom' => ['nullable', 'integer'],
-            'bathroom' => ['nullable', 'integer'],
-            'floor' => ['nullable', 'integer'],
+            'bedroom' => ['nullable'],
+            'bathroom' => ['nullable'],
+            'floor' => ['nullable'],
             'min_price' => ['nullable', 'numeric'],
             'max_price' => ['nullable', 'numeric'],
             'min_square' => ['nullable', 'numeric'],
@@ -66,6 +66,8 @@ class HomzenController extends PublicController
             'category_id' => ['nullable', 'string'],
             'city' => ['nullable', 'string'],
             'city_id' => ['nullable', 'integer'],
+            'state' => ['nullable', 'string'],
+            'state_id' => ['nullable', 'integer'],
             'location' => ['nullable', 'string'],
         ]);
 

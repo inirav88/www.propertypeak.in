@@ -2,6 +2,7 @@
 
 namespace Botble\RealEstate\Http\Requests;
 
+use Botble\Base\Facades\BaseHelper;
 use Botble\RealEstate\Enums\ModerationStatusEnum;
 use Botble\RealEstate\Enums\PropertyStatusEnum;
 use Botble\Support\Http\Requests\Request;
@@ -25,7 +26,7 @@ class PropertyRequest extends Request
                 'nullable',
                 'regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/',
             ],
-            'zip_code' => ['nullable', 'string', 'max:20'],
+            'zip_code' => ['nullable', ...BaseHelper::getZipcodeValidationRule(true)],
             'status' => Rule::in(PropertyStatusEnum::values()),
             'moderation_status' => Rule::in(ModerationStatusEnum::values()),
             'custom_fields.*.name' => ['required', 'string', 'max:255'],

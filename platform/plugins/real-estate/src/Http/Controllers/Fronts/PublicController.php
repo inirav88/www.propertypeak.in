@@ -16,7 +16,6 @@ use Botble\RealEstate\Models\Account;
 use Botble\RealEstate\Models\Consult;
 use Botble\RealEstate\Models\ConsultCustomField;
 use Botble\RealEstate\Models\Currency;
-use Botble\RealEstate\Models\Package;
 use Botble\RealEstate\Models\Project;
 use Botble\RealEstate\Models\Property;
 use Botble\SeoHelper\Facades\SeoHelper;
@@ -86,12 +85,12 @@ class PublicController extends BaseController
                         $field = $customFields->firstWhere('id', $id);
                         $option = $field->options->firstWhere('value', $item);
 
-                        if (!$field) {
+                        if (! $field) {
                             return [];
                         }
 
                         $value = match ($field->type->getValue()) {
-                            ConsultCustomFieldTypeEnum::CHECKBOX => $item ? __('Yes') : __('No'),
+                            ConsultCustomFieldTypeEnum::CHECKBOX => $item ? trans('plugins/real-estate::real-estate.yes') : trans('plugins/real-estate::real-estate.no'),
                             ConsultCustomFieldTypeEnum::RADIO, ConsultCustomFieldTypeEnum::DROPDOWN => $option?->label,
                             default => $item,
                         };
@@ -137,7 +136,7 @@ class PublicController extends BaseController
 
     public function getProjects(Request $request)
     {
-        SeoHelper::setTitle(__('Projects'));
+        SeoHelper::setTitle(trans('plugins/real-estate::real-estate.projects'));
 
         Theme::addBodyAttributes(['id' => 'page-projects']);
 
@@ -152,7 +151,7 @@ class PublicController extends BaseController
 
             $view = Theme::getThemeNamespace('partials.real-estate.projects.items');
 
-            if (!view()->exists($view)) {
+            if (! view()->exists($view)) {
                 $view = Theme::getThemeNamespace('views.real-estate.projects.index');
             }
 
@@ -166,7 +165,7 @@ class PublicController extends BaseController
 
     public function getProperties(Request $request)
     {
-        SeoHelper::setTitle(__('Properties'));
+        SeoHelper::setTitle(trans('plugins/real-estate::real-estate.properties'));
 
         Theme::addBodyAttributes(['id' => 'page-properties']);
 
@@ -181,7 +180,7 @@ class PublicController extends BaseController
 
             $view = Theme::getThemeNamespace('partials.real-estate.properties.items');
 
-            if (!view()->exists($view)) {
+            if (! view()->exists($view)) {
                 $view = Theme::getThemeNamespace('views.real-estate.properties.index');
             }
 
@@ -199,7 +198,7 @@ class PublicController extends BaseController
             $title = $request->input('currency');
         }
 
-        if (!$title) {
+        if (! $title) {
             return $this->httpResponse();
         }
 
@@ -221,7 +220,7 @@ class PublicController extends BaseController
     {
         $city = City::query()->wherePublished()->where('slug', $slug)->firstOrFail();
 
-        SeoHelper::setTitle(__('Projects in :city', ['city' => $city->name]));
+        SeoHelper::setTitle(trans('plugins/real-estate::real-estate.projects_in_city', ['city' => $city->name]));
 
         Theme::breadcrumb()
             ->add(SeoHelper::getTitle(), route('public.projects-by-city', $city->slug));
@@ -230,7 +229,7 @@ class PublicController extends BaseController
 
         $perPage = $request->integer('per_page') ?: (int) theme_option('number_of_projects_per_page', 12);
 
-        $request->merge(['city' => $slug, 'city_id' => $city->id]);
+        $request->merge(['city' => $slug, 'city_id' => $city->id, 'location' => $city->name]);
 
         $projects = RealEstateHelper::getProjectsFilter($perPage, RealEstateHelper::getReviewExtraData());
 
@@ -250,6 +249,7 @@ class PublicController extends BaseController
             'projects' => $projects,
             'ajaxUrl' => route('public.projects-by-city', $city->slug),
             'actionUrl' => route('public.projects-by-city', $city->slug),
+            'mapUrl' => route('public.ajax.projects.map') . '?' . http_build_query(['city_id' => $city->id]),
         ], 'plugins/real-estate::themes.projects')
             ->render();
     }
@@ -258,7 +258,7 @@ class PublicController extends BaseController
     {
         $city = City::query()->wherePublished()->where('slug', $slug)->firstOrFail();
 
-        SeoHelper::setTitle(__('Properties in :city', ['city' => $city->name]));
+        SeoHelper::setTitle(trans('plugins/real-estate::real-estate.properties_in_city', ['city' => $city->name]));
 
         do_action(BASE_ACTION_PUBLIC_RENDER_SINGLE, CITY_MODULE_SCREEN_NAME, $city);
 
@@ -267,7 +267,7 @@ class PublicController extends BaseController
 
         $perPage = $request->integer('per_page') ?: (int) theme_option('number_of_properties_per_page', 12);
 
-        $request->merge(['city' => $slug, 'city_id' => $city->id]);
+        $request->merge(['city' => $slug, 'city_id' => $city->id, 'location' => $city->name]);
 
         $properties = RealEstateHelper::getPropertiesFilter($perPage, RealEstateHelper::getReviewExtraData());
 
@@ -287,6 +287,7 @@ class PublicController extends BaseController
             'properties' => $properties,
             'ajaxUrl' => route('public.properties-by-city', $city->slug),
             'actionUrl' => route('public.properties-by-city', $city->slug),
+            'mapUrl' => route('public.ajax.properties.map') . '?' . http_build_query(['city_id' => $city->id]),
         ], 'plugins/real-estate::themes.properties')
             ->render();
     }
@@ -298,7 +299,7 @@ class PublicController extends BaseController
             ->where('slug', $slug)
             ->firstOrFail();
 
-        SeoHelper::setTitle(__('Projects in :state', ['state' => $state->name]));
+        SeoHelper::setTitle(trans('plugins/real-estate::real-estate.projects_in_state', ['state' => $state->name]));
 
         Theme::breadcrumb()
             ->add(SeoHelper::getTitle(), route('public.projects-by-city', $state->slug));
@@ -307,7 +308,7 @@ class PublicController extends BaseController
 
         $perPage = $request->integer('per_page') ?: (int) theme_option('number_of_projects_per_page', 12);
 
-        $request->merge(['state' => $slug, 'state_id' => $state->id]);
+        $request->merge(['state' => $slug, 'state_id' => $state->id, 'location' => $state->name]);
 
         $projects = RealEstateHelper::getProjectsFilter($perPage, RealEstateHelper::getReviewExtraData());
 
@@ -327,6 +328,7 @@ class PublicController extends BaseController
             'projects' => $projects,
             'ajaxUrl' => route('public.projects-by-state', $state->slug),
             'actionUrl' => route('public.projects-by-state', $state->slug),
+            'mapUrl' => route('public.ajax.projects.map') . '?' . http_build_query(['state_id' => $state->id]),
         ], 'plugins/real-estate::themes.projects')
             ->render();
     }
@@ -338,7 +340,7 @@ class PublicController extends BaseController
             ->where('slug', $slug)
             ->firstOrFail();
 
-        SeoHelper::setTitle(__('Properties in :state', ['state' => $state->name]));
+        SeoHelper::setTitle(trans('plugins/real-estate::real-estate.properties_in_state', ['state' => $state->name]));
 
         do_action(BASE_ACTION_PUBLIC_RENDER_SINGLE, STATE_MODULE_SCREEN_NAME, $state);
 
@@ -347,7 +349,7 @@ class PublicController extends BaseController
 
         $perPage = $request->integer('per_page') ?: (int) theme_option('number_of_properties_per_page', 12);
 
-        $request->merge(['state' => $slug, 'state_id' => $state->id]);
+        $request->merge(['state' => $slug, 'state_id' => $state->id, 'location' => $state->name]);
 
         $properties = RealEstateHelper::getPropertiesFilter($perPage, RealEstateHelper::getReviewExtraData());
 
@@ -367,6 +369,7 @@ class PublicController extends BaseController
             'properties' => $properties,
             'ajaxUrl' => route('public.properties-by-state', $state->slug),
             'actionUrl' => route('public.properties-by-state', $state->slug),
+            'mapUrl' => route('public.ajax.properties.map') . '?' . http_build_query(['state_id' => $state->id]),
         ], 'plugins/real-estate::themes.properties')
             ->render();
     }
@@ -389,78 +392,10 @@ class PublicController extends BaseController
             ->with(['avatar'])
             ->paginate(12);
 
-        SeoHelper::setTitle(__('Agents'));
+        SeoHelper::setTitle(trans('plugins/real-estate::real-estate.agents'));
 
-        Theme::breadcrumb()->add(__('Agents'), route('public.agents'));
+        Theme::breadcrumb()->add(trans('plugins/real-estate::real-estate.agents'), route('public.agents'));
 
         return Theme::scope('real-estate.agents', compact('accounts'), 'plugins/real-estate::themes.agents')->render();
-    }
-
-    public function getDevelopers()
-    {
-        Theme::addBodyAttributes(['id' => 'page-developers']);
-
-        $accounts = Account::query()
-            ->where('type', 'builder')
-            ->where('is_public_profile', true)
-            ->latest('is_featured')
-            ->oldest('first_name')
-            ->withCount([
-                'projects' => function ($query) {
-                    return RepositoryHelper::applyBeforeExecuteQuery($query, $query->getModel());
-                },
-            ])
-            ->with(['avatar'])
-            ->paginate(12);
-
-        SeoHelper::setTitle(__('Developers'));
-
-        Theme::breadcrumb()->add(__('Developers'), route('public.developers'));
-
-        return Theme::scope('real-estate.developers', compact('accounts'), 'plugins/real-estate::themes.developers')->render();
-    }
-
-    public function getAgent(string $slug, \Botble\Slug\Repositories\Interfaces\SlugInterface $slugRepository)
-    {
-        $slug = $slugRepository->getFirstBy(['key' => $slug, 'reference_type' => Account::class]);
-
-        if (!$slug) {
-            abort(404);
-        }
-
-        $account = $slug->reference;
-
-        if (!$account || !$account->is_public_profile) {
-            abort(404);
-        }
-
-        SeoHelper::setTitle($account->name);
-        Theme::breadcrumb()->add($account->name, route('public.agent', $account->username));
-
-        return Theme::scope('real-estate.agent', compact('account'), 'plugins/real-estate::themes.agent')->render();
-    }
-
-    public function getPackages()
-    {
-        SeoHelper::setTitle(__('Packages & Pricing'));
-
-        Theme::addBodyAttributes(['id' => 'page-packages']);
-
-        $packages = Package::query()
-            ->where('status', 'published')
-            ->orderBy('order')
-            ->get();
-
-        $builderPackages = $packages->where('package_type', 'builder');
-        $agentPackages = $packages->where('package_type', 'agent');
-        $ownerPackages = $packages->where('package_type', 'owner');
-        $addonPackages = $packages->where('package_type', 'addon');
-
-        return Theme::scope('real-estate.packages', compact(
-            'builderPackages',
-            'agentPackages',
-            'ownerPackages',
-            'addonPackages'
-        ), 'plugins/real-estate::themes.packages')->render();
     }
 }

@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'invoices' => 'Számlák',
+    'manage_invoices' => 'Számlák kezelése',
+    'invoice_detail' => 'Számla részletei',
     'name' => 'Számlák',
     'amount' => 'Összeg',
     'code' => 'Kód',
@@ -36,5 +39,14 @@ return [
         'setting_content' => 'Tartalom',
         'preview' => 'Előnézet',
         'preview_heading' => 'Számla sablon előnézete',
+    ],
+    'detail' => [
+        'tax_amount' => 'Adó összege',
+    ],
+    'template_variables' => [
+        'account_name' => 'Fiók neve',
+        'account_email' => 'Fiók e-mail',
+        'account_phone' => 'Fiók telefonszám',
+        'account_address' => 'Fiók cím',
     ],
 ];

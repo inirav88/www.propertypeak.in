@@ -95,9 +95,10 @@ class CurrencySupport
             $this->currencies = collect();
         }
 
-        if ($this->currencies->count() == 0) {
-            $this->currencies = Currency::query()->latest('order')
-                ->get();
+        if ($this->currencies->isEmpty()) {
+            $this->currencies = cache()->remember('currencies', 3600, function () {
+                return Currency::query()->latest('order')->get();
+            });
         }
 
         return $this->currencies;

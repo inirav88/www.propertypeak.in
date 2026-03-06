@@ -109,4 +109,11 @@ return [
     'number_posts_free' => ':posts publication(s) gratuite(s)',
     'total_package_price' => ':total Total (Économisez :percent%)',
     'dashboard' => 'Tableau de bord',
+    'language' => 'Langue',
+    'character_remain' => 'Caractères restants',
+    'password_update_success' => 'Mot de passe mis à jour avec succès !',
+    'buy_credits' => 'Acheter des crédits',
+    'currencies' => 'Devises',
+    'go_to_homepage' => 'Aller à l\'accueil',
+    'hello' => 'Bonjour',
 ];

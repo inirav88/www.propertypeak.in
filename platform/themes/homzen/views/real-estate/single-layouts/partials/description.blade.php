@@ -2,110 +2,7 @@
     $model = $model ?? $property ?? null;
 @endphp
 
-<style>
-/* Overview Section UI/UX Fixes - Inline for priority */
-.single-property-overview {
-    background: #fff !important;
-    padding: 30px !important;
-    border-radius: 16px !important;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
-    margin-bottom: 30px !important;
-}
-
-.single-property-overview .title {
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    margin-bottom: 24px !important;
-    color: #1a1a1a !important;
-}
-
-/* Use CSS Grid for consistent layout */
-.single-property-overview .info-box {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
-    gap: 16px !important;
-}
-
-.single-property-overview .info-box .item {
-    display: flex !important;
-    align-items: flex-start !important;
-    gap: 12px !important;
-    padding: 16px !important;
-    background: #f8f9fa !important;
-    border-radius: 12px !important;
-    border: 1px solid #e5e7eb !important;
-    transition: all 0.2s ease !important;
-}
-
-.single-property-overview .info-box .item:hover {
-    background: #f3f4f6 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
-}
-
-.single-property-overview .info-box .box-icon {
-    width: 44px !important;
-    height: 44px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: #fff !important;
-    border-radius: 10px !important;
-    color: #3b82f6 !important;
-    font-size: 20px !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
-    flex-shrink: 0 !important;
-}
-
-.single-property-overview .info-box .content {
-    flex: 1 !important;
-    min-width: 0 !important;
-    overflow-wrap: break-word !important;
-    word-wrap: break-word !important;
-    word-break: break-word !important;
-}
-
-.single-property-overview .label {
-    font-size: 11px !important;
-    color: #6b7280 !important;
-    font-weight: 600 !important;
-    text-transform: uppercase !important;
-    display: block !important;
-    margin-bottom: 4px !important;
-}
-
-.single-property-overview .content span:last-child {
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    color: #111827 !important;
-    line-height: 1.5 !important;
-    display: block !important;
-}
-
-/* Description Section */
-.single-property-desc {
-    background: #fff !important;
-    padding: 30px !important;
-    border-radius: 16px !important;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
-    margin-bottom: 30px !important;
-}
-
-.single-property-desc .title {
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    margin-bottom: 16px !important;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .single-property-overview .info-box {
-        grid-template-columns: 1fr !important;
-    }
-}
-</style>
-
-@if ($model->content || ($model->private_notes ?? null))
+@if ($model->content || (($model->can_see_private_notes ?? false) && ($model->private_notes ?? null)))
     <div @class(['single-property-desc', $class ?? null])>
         @if($model->content)
             <div class="h7 title fw-7">{{ __('Description') }}</div>
@@ -117,9 +14,11 @@
         @endif
 
         @if(($model->can_see_private_notes ?? false) && ($model->private_notes ?? null))
-            <div class="bd-callout bd-callout-info mt-4">
-                <div class="h7 title fw-7 mb-2">{{ __('Private Notes') }}</div>
-                {!! BaseHelper::clean(nl2br($model->private_notes)) !!}
+            <div class="alert alert-primary py-2 px-3 mt-3" role="alert">
+                <div class="fw-semibold mb-1" style="font-size: 0.875rem;">{{ __('Private Notes') }}</div>
+                <div style="font-size: 0.8125rem;">
+                    {!! BaseHelper::clean(nl2br($model->private_notes)) !!}
+                </div>
             </div>
         @endif
     </div>
@@ -127,8 +26,8 @@
 
 <div @class(['single-property-overview', $class ?? null])>
     <div class="h7 title fw-7">{{ __('Overview') }}</div>
-    <div class="info-box">
-        <div class="item">
+    <div class="row row-cols-sm-2 row-cols-lg-3 g-3 g-lg-4 info-box">
+        <div class="col item">
             <div class="box-icon w-52">
                 <x-core::icon name="ti ti-home" />
             </div>
@@ -144,7 +43,7 @@
             </div>
         </div>
         @if ($model->categories->isNotEmpty())
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
                     <x-core::icon name="ti ti-category" />
                 </div>
@@ -159,9 +58,9 @@
             </div>
         @endif
         @if (($model->investor->name ?? null))
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
-                    <x-core::icon name="ti ti-building" />
+                    <x-core::icon name="ti ti-category" />
                 </div>
                 <div class="content">
                     <span class="label">{{ __('Investor:') }}</span>
@@ -170,7 +69,7 @@
             </div>
         @endif
         @if (($model->number_block ?? null))
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
                     <x-core::icon name="ti ti-packages" />
                 </div>
@@ -181,7 +80,7 @@
             </div>
         @endif
         @if (($model->number_flat ?? null))
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
                     <x-core::icon name="ti ti-building" />
                 </div>
@@ -192,29 +91,29 @@
             </div>
         @endif
         @if (($model->number_bedroom ?? null))
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
                     <x-core::icon name="ti ti-bed" />
                 </div>
                 <div class="content">
                     <span class="label">{{ __('Bedrooms:') }}</span>
-                    <span>{{ number_format($model->number_bedroom) }}</span>
+                    <span>{{ fmod($model->number_bedroom, 1) == 0 ? number_format($model->number_bedroom) : $model->number_bedroom }}</span>
                 </div>
             </div>
         @endif
         @if (($model->number_bathroom ?? null))
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
                     <x-core::icon name="ti ti-bath" />
                 </div>
                 <div class="content">
                     <span class="label">{{ __('Bathrooms:') }}</span>
-                    <span>{{ number_format($model->number_bathroom) }}</span>
+                    <span>{{ fmod($model->number_bathroom, 1) == 0 ? number_format($model->number_bathroom) : $model->number_bathroom }}</span>
                 </div>
             </div>
         @endif
         @if (($model->number_floor ?? null))
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
                     <x-core::icon name="ti ti-stairs" />
                 </div>
@@ -225,7 +124,7 @@
             </div>
         @endif
         @if (($model->square ?? null))
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
                     <x-core::icon name="ti ti-ruler-2" />
                 </div>
@@ -236,7 +135,7 @@
             </div>
         @endif
         @if (($model->date_finish ?? null))
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
                     <x-core::icon name="ti ti-calendar-check" />
                 </div>
@@ -247,7 +146,7 @@
             </div>
         @endif
         @if (($model->date_sell ?? null))
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
                     <x-core::icon name="ti ti-calendar-dollar" />
                 </div>
@@ -259,7 +158,7 @@
         @endif
         @foreach ($model->customFields as $customField)
             @continue(! $customField->value)
-            <div class="item">
+            <div class="col item">
                 <div class="box-icon w-52">
                     <x-core::icon name="ti ti-box" />
                 </div>

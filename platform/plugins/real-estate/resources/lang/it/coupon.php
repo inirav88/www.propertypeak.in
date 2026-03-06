@@ -35,4 +35,7 @@ return [
     'total' => 'Total',
     'toggle_coupon_form_text' => 'You have a coupon code?',
     'apply_coupon_code' => 'Apply',
+    'remove' => 'Rimuovi',
+    'your_order' => 'Il tuo ordine',
+    'coupon_code_applied' => 'Codice coupon: :code',
 ];

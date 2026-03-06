@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'ฟรี :posts โพสต์',
     'total_package_price' => ':total รวม (ประหยัด :percent%)',
     'dashboard' => 'แดชบอร์ด',
+    'language' => 'ภาษา',
+    'character_remain' => 'ตัวอักษรที่เหลือ',
+    'password_update_success' => 'อัปเดตรหัสผ่านสำเร็จ!',
+    'buy_credits' => 'ซื้อเครดิต',
+    'currencies' => 'สกุลเงิน',
+    'go_to_homepage' => 'ไปยังหน้าแรก',
+    'hello' => 'สวัสดี',
 ];

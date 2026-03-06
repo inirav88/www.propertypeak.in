@@ -28,6 +28,7 @@ class AccountSettingForm extends SettingForm
                 OnOffCheckboxField::class,
                 OnOffFieldOption::make()
                     ->label(trans('plugins/real-estate::settings.account.form.real_estate_enabled_login'))
+                    ->helperText(trans('plugins/real-estate::settings.account.form.real_estate_enabled_login_helper'))
                     ->value($enabledLogin = RealEstateHelper::isLoginEnabled())
             )
             ->addOpenCollapsible('real_estate_enabled_login', '1', $enabledLogin)
@@ -36,6 +37,7 @@ class AccountSettingForm extends SettingForm
                 OnOffCheckboxField::class,
                 OnOffFieldOption::make()
                     ->label(trans('plugins/real-estate::settings.account.form.real_estate_enabled_register'))
+                    ->helperText(trans('plugins/real-estate::settings.account.form.real_estate_enabled_register_helper'))
                     ->value(RealEstateHelper::isRegisterEnabled())
             )
             ->add(
@@ -80,6 +82,7 @@ class AccountSettingForm extends SettingForm
                 OnOffCheckboxField::class,
                 OnOffFieldOption::make()
                     ->label(trans('plugins/real-estate::settings.account.form.enable_credits_system'))
+                    ->helperText(trans('plugins/real-estate::settings.account.form.enable_credits_system_helper'))
                     ->value(RealEstateHelper::isEnabledCreditsSystem())
             )
             ->add(
@@ -101,6 +104,9 @@ class AccountSettingForm extends SettingForm
             ->add('real_estate_max_filesize_upload_by_agent', NumberField::class, [
                 'label' => trans('plugins/real-estate::settings.account.form.max_upload_filesize'),
                 'value' => RealEstateHelper::maxFilesizeUploadByAgent(),
+                'help_block' => [
+                    'text' => trans('plugins/real-estate::settings.account.form.max_upload_filesize_helper'),
+                ],
                 'attr' => [
                     'placeholder' => trans('plugins/real-estate::settings.account.form.max_upload_filesize_placeholder', [
                         'size' => RealEstateHelper::maxFilesizeUploadByAgent(),
@@ -110,6 +116,9 @@ class AccountSettingForm extends SettingForm
             ->add('real_estate_max_property_images_upload_by_agent', NumberField::class, [
                 'label' => trans('plugins/real-estate::settings.account.form.max_property_images_upload_by_agent'),
                 'value' => RealEstateHelper::maxPropertyImagesUploadByAgent(),
+                'help_block' => [
+                    'text' => trans('plugins/real-estate::settings.account.form.max_property_images_upload_by_agent_helper'),
+                ],
             ])
             ->add(
                 'real_estate_enable_account_verification',
@@ -123,26 +132,44 @@ class AccountSettingForm extends SettingForm
             ->add('property_expired_after_days', NumberField::class, [
                 'label' => trans('plugins/real-estate::settings.account.form.property_expired_after_days'),
                 'value' => RealEstateHelper::propertyExpiredDays(),
+                'help_block' => [
+                    'text' => trans('plugins/real-estate::settings.account.form.property_expired_after_days_helper'),
+                ],
             ])
             ->add('real_estate_enable_wishlist', OnOffCheckboxField::class, [
                 'label' => trans('plugins/real-estate::settings.account.form.enable_wishlist'),
                 'value' => setting('real_estate_enable_wishlist', true),
+                'help_block' => [
+                    'text' => trans('plugins/real-estate::settings.account.form.enable_wishlist_helper'),
+                ],
             ])
             ->add('real_estate_hide_agency_phone', OnOffCheckboxField::class, [
                 'label' => trans('plugins/real-estate::settings.account.form.hide_agency_phone'),
                 'value' => setting('real_estate_hide_agency_phone', false),
+                'help_block' => [
+                    'text' => trans('plugins/real-estate::settings.account.form.hide_agency_phone_helper'),
+                ],
             ])
             ->add('real_estate_hide_agency_email', OnOffCheckboxField::class, [
                 'label' => trans('plugins/real-estate::settings.account.form.hide_agency_email'),
                 'value' => setting('real_estate_hide_agency_email', false),
+                'help_block' => [
+                    'text' => trans('plugins/real-estate::settings.account.form.hide_agency_email_helper'),
+                ],
             ])
             ->add('real_estate_hide_agent_info_in_property_detail_page', OnOffCheckboxField::class, [
                 'label' => trans('plugins/real-estate::settings.account.form.hide_agent_info_in_property_detail_page'),
                 'value' => RealEstateHelper::hideAgentInfoInPropertyDetailPage(),
+                'help_block' => [
+                    'text' => trans('plugins/real-estate::settings.account.form.hide_agent_info_in_property_detail_page_helper'),
+                ],
             ])
             ->add('real_estate_disabled_public_profile', OnOffCheckboxField::class, [
                 'label' => trans('plugins/real-estate::settings.account.form.disabled_public_profile'),
                 'value' => RealEstateHelper::isDisabledPublicProfile(),
+                'help_block' => [
+                    'text' => trans('plugins/real-estate::settings.account.form.disabled_public_profile_helper'),
+                ],
             ])
             ->add(
                 'real_estate_account_default_avatar',

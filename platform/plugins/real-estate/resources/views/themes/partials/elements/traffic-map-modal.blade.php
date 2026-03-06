@@ -1,5 +1,5 @@
 <div id="zxcvbnm">
-    <h5 class="headifhouse">{{ __('Location') }}</h5>
+    <h5 class="headifhouse">{{ trans('plugins/real-estate::general.location') }}</h5>
     @if (!empty($location)) <p class="d-print-none">{{ $location }}</p> @endif
     <div class="traffic-map-container">
         <div class="row justify-content-center">

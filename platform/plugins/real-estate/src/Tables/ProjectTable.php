@@ -117,6 +117,8 @@ class ProjectTable extends TableAbstract
                         'status',
                         'created_at',
                         'unique_id',
+                        'location',
+                        'zip_code',
                     ])
                     ->withCount('properties');
             })
@@ -125,6 +127,28 @@ class ProjectTable extends TableAbstract
                     $table
                         ->table
                         ->eloquent($table->query())
+                        ->filter(function ($query) {
+                            if ($keyword = $this->request->input('search.value')) {
+                                $keyword = '%' . $keyword . '%';
+
+                                return $query
+                                    ->where('name', 'LIKE', $keyword)
+                                    ->orWhere('unique_id', 'LIKE', $keyword)
+                                    ->orWhere('location', 'LIKE', $keyword)
+                                    ->orWhere('zip_code', 'LIKE', $keyword)
+                                    ->orWhereHas('city', function ($query) use ($keyword): void {
+                                        $query->where('name', 'LIKE', $keyword);
+                                    })
+                                    ->orWhereHas('state', function ($query) use ($keyword): void {
+                                        $query->where('name', 'LIKE', $keyword);
+                                    })
+                                    ->orWhereHas('country', function ($query) use ($keyword): void {
+                                        $query->where('name', 'LIKE', $keyword);
+                                    });
+                            }
+
+                            return $query;
+                        })
                 );
             });
     }

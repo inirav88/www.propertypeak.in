@@ -109,4 +109,5 @@ return [
     'number_posts_free' => 'Kostenlos :posts Beitrag/Beiträge',
     'total_package_price' => ':total Gesamt (Sparen Sie :percent%)',
     'dashboard' => 'Armaturenbrett',
+    'language' => 'Sprache',
 ];

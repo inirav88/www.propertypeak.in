@@ -46,8 +46,8 @@ class ConsultForm extends FormFront
                 TextField::class,
                 TextFieldOption::make()
                     ->required()
-                    ->label(__('Name'))
-                    ->placeholder(__('Johny Dane')),
+                    ->label(trans('plugins/real-estate::consult.form_name'))
+                    ->placeholder(trans('plugins/real-estate::consult.name_placeholder')),
             )
             ->when(! RealEstateHelper::isHiddenFieldAtConsultForm('phone'), function (ConsultForm $form) use (
                 $mandatoryFields
@@ -57,8 +57,8 @@ class ConsultForm extends FormFront
                     TextField::class,
                     TextFieldOption::make()
                         ->required(in_array('phone', $mandatoryFields))
-                        ->label(__('Phone'))
-                        ->placeholder(__('Ex 0123456789')),
+                        ->label(trans('plugins/real-estate::consult.form_phone'))
+                        ->placeholder(trans('plugins/real-estate::consult.phone_placeholder')),
                 );
             })
             ->when(! RealEstateHelper::isHiddenFieldAtConsultForm('email'), function (ConsultForm $form) use (
@@ -69,8 +69,8 @@ class ConsultForm extends FormFront
                     TextField::class,
                     TextFieldOption::make()
                         ->required(in_array('email', $mandatoryFields))
-                        ->label(__('Email'))
-                        ->placeholder(__('email@example.com')),
+                        ->label(trans('plugins/real-estate::consult.form_email'))
+                        ->placeholder(trans('plugins/real-estate::consult.email_placeholder')),
                 );
             })
             ->when($customFields, function (ConsultForm $form, Collection $customFields): void {
@@ -128,8 +128,8 @@ class ConsultForm extends FormFront
                 TextareaField::class,
                 TextareaFieldOption::make()
                     ->required()
-                    ->label(__('Message'))
-                    ->placeholder(__('Enter your message...')),
+                    ->label(trans('plugins/real-estate::consult.form_message'))
+                    ->placeholder(trans('plugins/real-estate::consult.message_placeholder')),
             )
             ->add(
                 'form_extra_fields_render',
@@ -140,7 +140,7 @@ class ConsultForm extends FormFront
                 'submit',
                 'submit',
                 ButtonFieldOption::make()
-                    ->label(__('Send Message'))
+                    ->label(trans('plugins/real-estate::consult.send_consult'))
             );
     }
 

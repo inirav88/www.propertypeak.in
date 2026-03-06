@@ -78,10 +78,10 @@ class SendConsultRequest extends Request
     public function attributes(): array
     {
         $attributes = [
-            'name' => __('Name'),
-            'phone' => __('Phone'),
-            'email' => __('Email'),
-            'content' => __('Content'),
+            'name' => trans('plugins/real-estate::consult.form_name'),
+            'phone' => trans('plugins/real-estate::consult.form_phone'),
+            'email' => trans('plugins/real-estate::consult.form_email'),
+            'content' => trans('plugins/real-estate::consult.form_content'),
         ] + (is_plugin_active('captcha') ? Captcha::attributes() : []);
 
         $customFields = $this->getCustomFields();

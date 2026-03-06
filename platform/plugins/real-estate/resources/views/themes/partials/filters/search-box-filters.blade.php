@@ -1,5 +1,5 @@
 <div class="advanced-search">
-    <a href="#" class="advanced-search-toggler">{{ __('Advanced') }} <i class="fas fa-caret-down"></i></a>
+    <a href="#" class="advanced-search-toggler">{{ trans('plugins/real-estate::filters.advanced') }} <i class="fas fa-caret-down"></i></a>
     <div class="advanced-search-content property-advanced-search">
         <div class="form-group">
             <div class="row">

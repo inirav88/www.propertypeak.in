@@ -109,4 +109,11 @@ return [
     'number_posts_free' => '__Ph0__ percuma',
     'total_package_price' => '__Ph0__ Jumlah (simpan __ph1 __%)',
     'dashboard' => 'Dashboard',
+    'language' => 'Bahasa',
+    'character_remain' => 'Aksara yang tinggal',
+    'password_update_success' => 'Kata laluan berjaya dikemas kini!',
+    'buy_credits' => 'Beli kredit',
+    'currencies' => 'Mata wang',
+    'go_to_homepage' => 'Pergi ke laman utama',
+    'hello' => 'Helo',
 ];

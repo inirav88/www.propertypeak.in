@@ -1,6 +1,25 @@
 <?php
 
 return [
+    'sorting' => [
+        'newest' => 'Legújabb',
+        'oldest' => 'Legrégebbi',
+        'price_asc' => 'Ár (legalacsonyabb)',
+        'price_desc' => 'Ár (legmagasabb)',
+        'name_asc' => 'Név (A-Z)',
+        'name_desc' => 'Név (Z-A)',
+    ],
+    'filtering' => [
+        'all' => 'Összes',
+        'sale' => 'Eladó',
+        'rent' => 'Kiadó',
+    ],
+    'status' => [
+        'available' => 'Elérhető',
+        'not_available' => 'Nem elérhető',
+        'sold' => 'Eladva',
+        'rented' => 'Kiadva',
+    ],
     'name' => 'Ingatlan',
     'settings' => 'Beállítások',
     'login_form' => 'Bejelentkezési űrlap',

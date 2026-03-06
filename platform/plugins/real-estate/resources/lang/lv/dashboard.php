@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Bezmaksas __ph0__ post (-i)',
     'total_package_price' => '__Ph0__ kopā (ietaupiet __ph1 __%)',
     'dashboard' => 'Dashboard',
+    'character_remain' => 'Atlikuši :count simboli',
+    'password_update_success' => 'Parole veiksmīgi atjaunināta!',
+    'language' => 'Valoda',
+    'buy_credits' => 'Pirkt kredītus',
+    'currencies' => 'Valūtas',
+    'go_to_homepage' => 'Doties uz sākumlapu',
+    'hello' => 'Sveiki',
 ];

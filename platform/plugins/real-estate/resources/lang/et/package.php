@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Konto võib osta x korda',
     'subscribe_package' => 'Telli pakett',
     'add_credit_alert' => 'Palun lisage oma krediit, et luua oma postitusi.',
+    'price_per_post' => ':price / postituse kohta',
+    'free_posts' => 'Tasuta :number postitus(t)',
+    'price_with_sale' => ':price Kokku :percentage_sale',
+    'save_percentage' => 'säästa :percentage %',
+    'features' => 'Omadused',
+    'title' => 'Pealkiri',
+    'feature_example' => 'Nt: 60-päevased tööpakkumised',
 ];

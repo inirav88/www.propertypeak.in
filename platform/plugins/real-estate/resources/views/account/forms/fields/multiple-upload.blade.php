@@ -198,7 +198,7 @@
                     $('.dz-sortable').sortable();
                 },
                 removedfile: function(file) {
-                    if (!confirm('{{ __('Do you want to delete this image?') }}')) {
+                    if (!confirm('{{ trans('plugins/real-estate::account.do_you_want_to_delete_this_image') }}')) {
                         return false;
                     }
                     dropzone.options.maxFiles = dropzone.options.maxFiles + 1;

@@ -1,7 +1,7 @@
 @if (theme_option('real_estate_enable_filter_by_flat', 'yes') == 'yes')
     @php
-        $minFlat = get_min_flat();
-        $maxFlat = get_max_flat();
+        $minFlat = RealEstateHelper::getMinFlat();
+        $maxFlat = RealEstateHelper::getMaxFlat();
     @endphp
 
     @if ($maxFlat > $minFlat)
@@ -16,8 +16,8 @@
                 </div>
             </div>
             <div id="slider-flat"
-                 data-min="{{ get_min_flat() }}"
-                 data-max="{{ get_max_flat() }}"
+                 data-min="{{ $minFlat }}"
+                 data-max="{{ $maxFlat }}"
             ></div>
             <div class="slider-labels">
                 <div>

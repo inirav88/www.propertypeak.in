@@ -94,7 +94,7 @@ class HandleFrontPages
                 SeoHelper::setSeoOpenGraph($meta);
 
                 Theme::breadcrumb()
-                    ->add(__('Properties'), route('public.properties'))
+                    ->add(trans('plugins/real-estate::real-estate.properties'), route('public.properties'))
                     ->add($property->name);
 
                 Helper::handleViewCount($property, 'viewed_property');
@@ -102,7 +102,7 @@ class HandleFrontPages
                 do_action(BASE_ACTION_PUBLIC_RENDER_SINGLE, PROPERTY_MODULE_SCREEN_NAME, $property);
 
                 if (function_exists('admin_bar')) {
-                    admin_bar()->registerLink(__('Edit this property'), route('property.edit', $property->id));
+                    admin_bar()->registerLink(trans('plugins/real-estate::real-estate.edit_property'), route('property.edit', $property->id));
                 }
 
                 $images = [];
@@ -167,7 +167,7 @@ class HandleFrontPages
                 SeoHelper::setSeoOpenGraph($meta);
 
                 Theme::breadcrumb()
-                    ->add(__('Projects'), route('public.projects'))
+                    ->add(trans('plugins/real-estate::real-estate.projects'), route('public.projects'))
                     ->add($project->name);
 
                 $relatedProjects = app(ProjectInterface::class)->getRelatedProjects(
@@ -176,7 +176,7 @@ class HandleFrontPages
                 );
 
                 if (function_exists('admin_bar')) {
-                    admin_bar()->registerLink(__('Edit this project'), route('project.edit', $project->id));
+                    admin_bar()->registerLink(trans('plugins/real-estate::real-estate.edit_project'), route('project.edit', $project->id));
                 }
 
                 Helper::handleViewCount($project, 'viewed_project');
@@ -256,7 +256,7 @@ class HandleFrontPages
                 Theme::breadcrumb()->add($account->name);
 
                 if (function_exists('admin_bar')) {
-                    admin_bar()->registerLink(__('Edit this agent'), route('account.edit', $account->getKey()));
+                    admin_bar()->registerLink(trans('plugins/real-estate::real-estate.edit_agent'), route('account.edit', $account->getKey()));
                 }
 
                 $filters = [
@@ -289,22 +289,22 @@ class HandleFrontPages
     {
         $property->setRelation('slugable', $slug);
 
-        SeoHelper::setTitle(__('Property No Longer Available: :name', ['name' => $property->name]))
-            ->setDescription(__('This property listing has expired'));
+        SeoHelper::setTitle(trans('plugins/real-estate::real-estate.property_no_longer_available', ['name' => $property->name]))
+            ->setDescription(trans('plugins/real-estate::real-estate.property_listing_expired'));
 
         $meta = new SeoOpenGraph();
         if ($property->image) {
             $meta->setImage(RvMedia::getImageUrl($property->image));
         }
-        $meta->setDescription(__('This property listing is no longer available'));
+        $meta->setDescription(trans('plugins/real-estate::real-estate.property_listing_no_longer_available'));
         $meta->setUrl($property->url);
-        $meta->setTitle(__('Property Expired: :name', ['name' => $property->name]));
+        $meta->setTitle(trans('plugins/real-estate::real-estate.property_expired_title', ['name' => $property->name]));
         $meta->setType('article');
 
         SeoHelper::setSeoOpenGraph($meta);
 
         Theme::breadcrumb()
-            ->add(__('Properties'), route('public.properties'))
+            ->add(trans('plugins/real-estate::real-estate.properties'), route('public.properties'))
             ->add($property->name);
 
         $propertiesUrl = RealEstateHelper::getPropertiesListPageUrl();

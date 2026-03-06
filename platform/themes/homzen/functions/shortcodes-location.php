@@ -10,6 +10,7 @@ use Botble\Location\Models\City;
 use Botble\Location\Models\State;
 use Botble\Shortcode\Compilers\Shortcode as ShortcodeCompiler;
 use Botble\Shortcode\Facades\Shortcode;
+use Botble\Shortcode\ShortcodeField;
 use Botble\Theme\Facades\Theme;
 use Illuminate\Routing\Events\RouteMatched;
 use Illuminate\Support\Arr;
@@ -105,7 +106,7 @@ Event::listen(RouteMatched::class, function (): void {
                             ->pluck('name', 'id')
                             ->all()
                     )
-                    ->selected(explode(',', Arr::get($attributes, 'city_ids', '')))
+                    ->selected(ShortcodeField::parseIds(Arr::get($attributes, 'city_ids')))
             )
             ->add(
                 'state_ids',
@@ -121,7 +122,7 @@ Event::listen(RouteMatched::class, function (): void {
                             ->pluck('name', 'id')
                             ->all()
                     )
-                    ->selected(explode(',', Arr::get($attributes, 'state_ids', '')))
+                    ->selected(ShortcodeField::parseIds(Arr::get($attributes, 'state_ids')))
             )
             ->add(
                 'destination',

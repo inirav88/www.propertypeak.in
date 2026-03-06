@@ -4,7 +4,10 @@ return [
     'draft_properties' => 'Osnutek lastnosti',
     'pending_properties' => 'Dočakane nepremičnine',
     'published_properties' => 'Objavljene lastnosti',
-    'properties' => 'Properties',
+    'properties' => 'Nepremičnine',
     'write_property' => 'Napišite lastnost',
-    'images' => 'Slike (največ __ph0__ slik)',
+    'images' => 'Slike (največ :max slik)',
+    'renew' => 'Obnovi',
+    'not_enough_credit_renew' => 'Nimate dovolj kreditov za obnovitev te nepremičnine!',
+    'renew_success' => 'Nepremičnina uspešno obnovljena',
 ];

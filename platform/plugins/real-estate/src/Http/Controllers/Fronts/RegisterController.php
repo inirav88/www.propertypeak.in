@@ -33,7 +33,7 @@ class RegisterController extends BaseController
     {
         abort_unless(RealEstateHelper::isRegisterEnabled(), 404);
 
-        SeoHelper::setTitle(__('Register'));
+        SeoHelper::setTitle(trans('plugins/real-estate::account.register'));
 
         Theme::addBodyAttributes(['id' => 'page-auth-register']);
 
@@ -63,7 +63,7 @@ class RegisterController extends BaseController
         return $this
             ->httpResponse()
             ->setNextUrl(route('public.account.dashboard'))
-            ->setMessage(__('You successfully confirmed your email address.'));
+            ->setMessage(trans('plugins/real-estate::account.email_confirmed_success'));
     }
 
     protected function guard()
@@ -80,18 +80,18 @@ class RegisterController extends BaseController
          */
         $account = Account::query()->where('email', $request->input('email'))->first();
 
-        if (!$account) {
+        if (! $account) {
             return $this
                 ->httpResponse()
                 ->setError()
-                ->setMessage(__('Cannot find this account!'));
+                ->setMessage(trans('plugins/real-estate::account.account_not_found'));
         }
 
         $this->sendConfirmationToUser($account);
 
         return $this
             ->httpResponse()
-            ->setMessage(__('We sent you another confirmation email. You should receive it shortly.'));
+            ->setMessage(trans('plugins/real-estate::account.confirmation_resent'));
     }
 
     protected function sendConfirmationToUser(Account $account): void
@@ -103,13 +103,11 @@ class RegisterController extends BaseController
     {
         abort_unless(RealEstateHelper::isRegisterEnabled(), 404);
 
-        if (!$request->has('username')) {
-            $request->merge([
-                'username' => Account::generateUsername(
-                    $request->input('first_name'),
-                    $request->input('last_name')
-                )
-            ]);
+        if (! $request->has('username')) {
+            $request->merge(['username' => Account::generateUsername(
+                $request->input('first_name'),
+                $request->input('last_name')
+            )]);
         }
 
         /**
@@ -131,7 +129,7 @@ class RegisterController extends BaseController
 
             $this->registered($request, $account);
 
-            $message = __('We have sent you an email to verify your email. Please check and confirm your email address!');
+            $message = trans('plugins/real-estate::account.verification_email_sent');
 
             return $this
                 ->httpResponse()
@@ -150,7 +148,7 @@ class RegisterController extends BaseController
 
         return $this
             ->httpResponse()
-            ->setNextUrl($this->redirectPath())->setMessage(__('Registered successfully!'));
+            ->setNextUrl($this->redirectPath())->setMessage(trans('plugins/real-estate::account.registered_success'));
     }
 
     protected function create(array $data)
@@ -161,7 +159,6 @@ class RegisterController extends BaseController
             'username' => $data['username'] ?? null,
             'email' => $data['email'] ?? null,
             'phone' => $data['phone'] ?? null,
-            'type' => $data['type'] ?? 'agent',
             'password' => Hash::make($data['password']),
         ]);
     }

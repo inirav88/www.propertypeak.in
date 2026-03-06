@@ -9,7 +9,7 @@
                 @class(['active' => $item['active']])
             >
                 <x-core::icon :name="$item['icon']" />
-                {{ __($item['name']) }}
+                {{ trans($item['name']) }}
             </a>
         </li>
     @endforeach

@@ -35,4 +35,11 @@ return [
     'total' => 'Total',
     'toggle_coupon_form_text' => 'Har du en kupongkod?',
     'apply_coupon_code' => 'Apply',
+    'remove' => 'Ta bort',
+    'your_order' => 'Din beställning',
+    'coupon_code_applied' => 'Kupongkod: :code',
+    'invalid' => 'Denna kupong ar ogiltig!',
+    'applied_success' => 'Kupong ":code" tillämpad!',
+    'not_used' => 'Denna kupong har inte anvants an!',
+    'removed_success' => 'Kupong :code borttagen!',
 ];

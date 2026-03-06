@@ -1,4 +1,4 @@
-<h1>{{ __('Properties') }}</h1>
+<h1>{{ trans('plugins/real-estate::general.properties') }}</h1>
 {!! Theme::breadcrumb()->render() !!}
 
 <div class="row">

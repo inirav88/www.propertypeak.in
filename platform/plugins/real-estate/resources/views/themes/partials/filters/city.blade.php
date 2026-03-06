@@ -1,10 +1,10 @@
 <div class="form-group" style="position: relative;">
     <input type="hidden" name="city_id">
-    <label for="location" class="control-label">{{ __('Location') }}</label>
+    <label for="location" class="control-label">{{ trans('plugins/real-estate::filters.location') }}</label>
     <div class="location-input" data-url="{{ route('public.ajax.cities') }}" style="position: relative;">
         <div class="input-has-icon">
             <input class="select-city-state form-control" id="location" name="location"
-                value="{{ BaseHelper::stringify(request()->input('location')) }}" placeholder="{{ __('City, State') }}"
+                value="{{ BaseHelper::stringify(request()->input('location')) }}" placeholder="{{ trans('plugins/real-estate::filters.city_state') }}"
                 autocomplete="off">
             <i class="far fa-location"></i>
         </div>

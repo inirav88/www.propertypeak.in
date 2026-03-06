@@ -23,6 +23,7 @@ class Category extends BaseModel implements HasTreeCategoryContract
     protected $fillable = [
         'name',
         'description',
+        'content',
         'status',
         'order',
         'is_default',

@@ -28,11 +28,11 @@
                                     <span>{{ Theme::formatDate($post->created_at) }}</span>
                                 @endif
                             </div>
-                            <h5 class="title">
+                            <h3 class="title">
                                 <a href="{{ $post->url }}">
                                     {!! BaseHelper::clean($post->name) !!}
                                 </a>
-                            </h5>
+                            </h3>
                             @if($post->description)
                                 <p class="description body-1">{!! BaseHelper::clean(Str::limit($post->description)) !!}</p>
                             @endif
@@ -41,7 +41,7 @@
                     </div>
                 @endforeach
 
-                {{ $posts->links(Theme::getThemeNamespace('partials.pagination')) }}
+                {{ $posts->onEachSide(1)->links(Theme::getThemeNamespace('partials.pagination')) }}
             </div>
         </div>
         <div class="col-lg-4">

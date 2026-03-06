@@ -20,7 +20,7 @@ class AccountSettingRequest extends Request
             'allow_customizing_post_url' => $onOffRule,
             'real_estate_max_filesize_upload_by_agent' => $intRule = ['required', 'int', 'min:1'],
             'real_estate_max_property_images_upload_by_agent' => $intRule,
-            'property_expired_after_days' => $intRule,
+            'property_expired_after_days' => ['required', 'int', 'min:0'],
             'real_estate_enable_wishlist' => $onOffRule,
             'real_estate_hide_agency_phone' => $onOffRule,
             'real_estate_hide_agency_email' => $onOffRule,

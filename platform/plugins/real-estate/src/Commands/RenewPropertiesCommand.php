@@ -97,7 +97,7 @@ class RenewPropertiesCommand extends Command
                 ? $oldExpireDate
                 : Carbon::today();
 
-            $newExpireDate = $baseDate->copy()->addDays(RealEstateHelper::propertyExpiredDays());
+            $newExpireDate = RealEstateHelper::calculatePropertyExpireDate($baseDate->copy());
             $property->expire_date = $newExpireDate;
             $property->save();
 
@@ -111,7 +111,7 @@ class RenewPropertiesCommand extends Command
                 'name' => $property->name,
                 'author' => $property->author->name ?? 'N/A',
                 'old_expire_date' => $oldExpireDate ? $oldExpireDate->toDateTimeString() : 'N/A',
-                'new_expire_date' => $newExpireDate->toDateTimeString(),
+                'new_expire_date' => $newExpireDate ? $newExpireDate->toDateTimeString() : 'Never',
                 'credits_remaining' => RealEstateHelper::isEnabledCreditsSystem() ? $property->author->credits : 'N/A',
             ];
 
@@ -120,7 +120,7 @@ class RenewPropertiesCommand extends Command
                 'property_name' => $property->name,
                 'author' => $property->author->name ?? 'N/A',
                 'old_expire_date' => $oldExpireDate ? $oldExpireDate->toDateTimeString() : null,
-                'new_expire_date' => $newExpireDate->toDateTimeString(),
+                'new_expire_date' => $newExpireDate ? $newExpireDate->toDateTimeString() : null,
                 'extended_days' => RealEstateHelper::propertyExpiredDays(),
                 'credits_remaining' => RealEstateHelper::isEnabledCreditsSystem() ? $property->author->credits : null,
             ]);
@@ -132,12 +132,12 @@ class RenewPropertiesCommand extends Command
             ));
 
             $daysAdded = RealEstateHelper::propertyExpiredDays();
-            $actualDaysExtended = $oldExpireDate ? $oldExpireDate->diffInDays($newExpireDate, false) : $daysAdded;
+            $actualDaysExtended = $oldExpireDate && $newExpireDate ? $oldExpireDate->diffInDays($newExpireDate, false) : $daysAdded;
 
             $bulletPoints = [
                 sprintf('Author: %s', $property->author->name ?? 'N/A'),
                 sprintf('Old expire date: %s', $oldExpireDate ? $oldExpireDate->format('Y-m-d H:i:s') : 'N/A'),
-                sprintf('New expire date: %s', $newExpireDate->format('Y-m-d H:i:s')),
+                sprintf('New expire date: %s', $newExpireDate ? $newExpireDate->format('Y-m-d H:i:s') : 'Never'),
                 sprintf('Extended by: %d day(s)', $actualDaysExtended),
             ];
 

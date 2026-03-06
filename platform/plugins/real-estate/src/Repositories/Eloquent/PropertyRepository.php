@@ -9,6 +9,7 @@ use Botble\RealEstate\Enums\PropertyTypeEnum;
 use Botble\RealEstate\Facades\RealEstateHelper;
 use Botble\RealEstate\Models\Account;
 use Botble\RealEstate\Models\Property;
+use Botble\RealEstate\Repositories\Concerns\HasRoomFilter;
 use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
 use Botble\Support\Repositories\Eloquent\RepositoriesAbstract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -18,7 +19,8 @@ use Illuminate\Support\Collection;
 
 class PropertyRepository extends RepositoriesAbstract implements PropertyInterface
 {
-    public function getRelatedProperties(int $propertyId, int $limit = 4, array $with = [], array $extra = []): Collection|LengthAwarePaginator
+    use HasRoomFilter;
+    public function getRelatedProperties(int|string $propertyId, int $limit = 4, array $with = [], array $extra = []): Collection|LengthAwarePaginator
     {
         $limit = $limit > 1 ? $limit : 4;
         $currentProperty = $this->findById($propertyId, ['categories']);
@@ -73,6 +75,7 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
             'state' => null,
             'state_id' => null,
             'location' => null,
+            'zip_code' => null,
             'sort_by' => null,
             'features' => null,
         ], $filters);
@@ -164,27 +167,15 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
         }
 
         if ($filters['bedroom']) {
-            if ($filters['bedroom'] < 5) {
-                $this->model = $this->model->where('number_bedroom', $filters['bedroom']);
-            } else {
-                $this->model = $this->model->where('number_bedroom', '>=', $filters['bedroom']);
-            }
+            $this->applyRoomFilter('number_bedroom', $filters['bedroom']);
         }
 
         if ($filters['bathroom']) {
-            if ($filters['bathroom'] < 5) {
-                $this->model = $this->model->where('number_bathroom', $filters['bathroom']);
-            } else {
-                $this->model = $this->model->where('number_bathroom', '>=', $filters['bathroom']);
-            }
+            $this->applyRoomFilter('number_bathroom', $filters['bathroom']);
         }
 
         if ($filters['floor']) {
-            if ($filters['floor'] < 5) {
-                $this->model = $this->model->where('number_floor', $filters['floor']);
-            } else {
-                $this->model = $this->model->where('number_floor', '>=', $filters['floor']);
-            }
+            $this->applyRoomFilter('number_floor', $filters['floor']);
         }
 
         if ($filters['min_square'] !== null || $filters['max_square'] !== null) {
@@ -290,6 +281,9 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
                             })
                             ->orWhereHas('state.translations', function (BaseQueryBuilder $query) use ($locationSearch): void {
                                 $query->addSearch('name', $locationSearch, false, false);
+                            })
+                            ->when(RealEstateHelper::isEnabledZipCode(), function (BaseQueryBuilder $query) use ($locationSearch): void {
+                                $query->orWhere('zip_code', $locationSearch);
                             });
                     });
             } else {
@@ -302,9 +296,16 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
                             })
                             ->orWhereHas('state', function (BaseQueryBuilder $query) use ($locationSearch): void {
                                 $query->addSearch('states.name', $locationSearch, false, false);
+                            })
+                            ->when(RealEstateHelper::isEnabledZipCode(), function (BaseQueryBuilder $query) use ($locationSearch): void {
+                                $query->orWhere('zip_code', $locationSearch);
                             });
                     });
             }
+        }
+
+        if ($filters['zip_code'] !== null) {
+            $this->model = $this->model->where('zip_code', $filters['zip_code']);
         }
 
         if (count($filters['category_ids'] ?? [])) {
@@ -337,6 +338,9 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
                                 foreach ($locationsSearch as $location) {
                                     $query->addSearch('name', $location, false);
                                 }
+                            })
+                            ->when(RealEstateHelper::isEnabledZipCode(), function (BaseQueryBuilder $query) use ($locationsSearch): void {
+                                $query->orWhereIn('zip_code', $locationsSearch);
                             });
                     });
             } else {
@@ -357,6 +361,9 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
                                 foreach ($locationsSearch as $location) {
                                     $query->addSearch('states.name', $location, false);
                                 }
+                            })
+                            ->when(RealEstateHelper::isEnabledZipCode(), function (BaseQueryBuilder $query) use ($locationsSearch): void {
+                                $query->orWhereIn('zip_code', $locationsSearch);
                             });
                     });
             }
@@ -386,7 +393,7 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
         return $this->advancedGet($params);
     }
 
-    public function getProperty(int $propertyId, array $with = [], array $extra = []): ?Property
+    public function getProperty(int|string $propertyId, array $with = [], array $extra = []): ?Property
     {
         $params = array_merge([
             'condition' => [

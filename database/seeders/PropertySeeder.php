@@ -125,14 +125,45 @@ class PropertySeeder extends BaseSeeder
         $featuresCount = $features->count();
         $facilitiesCount = Facility::query()->count();
 
-        $faker = $this->fake();
+        $descriptions = [
+            'Beautiful property featuring modern design and premium finishes throughout. This stunning home offers an open floor plan perfect for entertaining.',
+            'Exceptional residence in a prime location with easy access to schools, shopping, and public transportation. Recently renovated with high-end fixtures.',
+            'Charming property with spacious rooms and abundant natural light. The well-maintained garden adds to the appeal of this lovely home.',
+            'Contemporary living at its finest. This property boasts state-of-the-art amenities and a sleek, modern aesthetic throughout.',
+            'Elegant home with timeless architecture and thoughtful design elements. Perfect for families seeking comfort and style.',
+            'Stunning property offering panoramic views and luxurious finishes. Every detail has been carefully considered in this exceptional home.',
+            'Spacious and bright residence with an excellent layout for modern living. Move-in ready with all appliances included.',
+            'Prime real estate opportunity in a desirable neighborhood. This property combines location, quality, and value perfectly.',
+            'Meticulously maintained property with upgrades throughout. Features include hardwood floors, granite countertops, and stainless appliances.',
+            'Inviting home with a warm atmosphere and practical layout. The outdoor space is perfect for relaxation and entertainment.',
+        ];
+
+        $contents = [
+            'Welcome to this exceptional property that redefines modern living. From the moment you enter, you will be captivated by the attention to detail and quality craftsmanship evident throughout. The open-concept living area flows seamlessly into the gourmet kitchen, featuring premium appliances, quartz countertops, and custom cabinetry. Large windows flood the space with natural light while offering views of the beautifully landscaped surroundings. The primary suite is a true retreat, complete with a spa-like bathroom and generous walk-in closet. Additional bedrooms are well-appointed, perfect for family members or guests. The outdoor living space extends your entertaining options with a covered patio and mature landscaping. Located in a sought-after neighborhood with excellent schools, convenient shopping, and easy highway access, this property offers the perfect combination of comfort, style, and location.',
+            'This stunning residence offers an unparalleled living experience in one of the most desirable locations. The thoughtfully designed floor plan maximizes space and functionality while maintaining an elegant aesthetic. Upon entering, you are greeted by soaring ceilings and an abundance of natural light that highlights the premium finishes throughout. The chef-inspired kitchen features top-of-the-line appliances, a large center island, and ample storage. The living areas are perfect for both intimate gatherings and large-scale entertaining. Each bedroom is generously sized with excellent closet space. The primary suite includes a luxurious bathroom with dual vanities, a soaking tub, and a separate shower. Outside, the property boasts professional landscaping, a private backyard, and a covered outdoor entertaining area. Smart home features, energy-efficient systems, and a two-car garage complete this exceptional offering.',
+            'Discover your dream home in this beautifully appointed property that combines classic elegance with modern convenience. The grand entryway sets the tone for the sophisticated living spaces that follow. Gleaming hardwood floors flow throughout the main level, connecting the formal living room, dining area, and family room. The updated kitchen is a chef delight with granite counters, stainless steel appliances, and a breakfast nook overlooking the garden. Upstairs, the spacious primary suite features a sitting area, walk-in closet, and renovated bathroom. Additional bedrooms provide flexibility for family, guests, or a home office. The finished lower level offers extra living space for recreation or entertainment. Outside, mature trees provide privacy while the manicured lawn and garden beds enhance curb appeal. This is a rare opportunity to own a property that offers both character and modern updates.',
+        ];
+
+        $locations = [
+            '123 Oak Street, Riverside Heights',
+            '456 Maple Avenue, Downtown District',
+            '789 Pine Road, Garden Quarter',
+            '321 Cedar Lane, Lakeside Park',
+            '654 Birch Boulevard, Sunset Hills',
+            '987 Elm Drive, Mountain View',
+            '147 Willow Way, Harbor Point',
+            '258 Spruce Court, Valley Green',
+            '369 Ash Circle, Meadow Springs',
+            '741 Hickory Place, Forest Glen',
+        ];
 
         foreach ($properties as $property) {
-            $type = $faker->randomElement(['sale', 'rent']);
+            $type = rand(0, 1) ? 'sale' : 'rent';
 
             $images = [];
+            $randomImages = array_rand(array_flip(range(1, 12)), rand(5, 12));
 
-            foreach ($faker->randomElements(range(1, 12), rand(5, 12)) as $image) {
+            foreach ((array) $randomImages as $image) {
                 $images[] = $this->filePath("properties/$image.jpg");
             }
 
@@ -144,9 +175,9 @@ class PropertySeeder extends BaseSeeder
             $property = Property::query()->forceCreate([
                 'unique_id' => strtoupper(Str::random(6)),
                 'name' => $property,
-                'description' => $faker->paragraph(),
-                'content' => $faker->paragraph(10),
-                'location' => $faker->address(),
+                'description' => $descriptions[array_rand($descriptions)],
+                'content' => $contents[array_rand($contents)],
+                'location' => $locations[array_rand($locations)],
                 'images' => $images,
                 'project_id' => $projects->isNotEmpty() ? $projects->random() : null,
                 'author_id' => $accounts->random(),
@@ -156,14 +187,14 @@ class PropertySeeder extends BaseSeeder
                 'number_floor' => rand(1, 100),
                 'square' => rand(1, 100) * 10,
                 'price' => rand(100, 10000) * 100,
-                'is_featured' => $faker->boolean(),
+                'is_featured' => (bool) rand(0, 1),
                 'status' => $type === 'sale' ? 'selling' : 'renting',
                 'type' => $type,
                 'moderation_status' => ModerationStatusEnum::APPROVED,
                 'expire_date' => Carbon::now()->days(rand(30, 365)),
                 'never_expired' => true,
-                'latitude' => $faker->latitude(42.4772, 44.0153),
-                'longitude' => $faker->longitude(-74.7624, -76.7517),
+                'latitude' => 42.4772 + (rand(0, 15000) / 10000),
+                'longitude' => -76.7517 + (rand(0, 20000) / 10000),
                 'views' => rand(0, 100000),
                 'country_id' => $state->country->id,
                 'state_id' => $state->id,

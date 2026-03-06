@@ -24,7 +24,7 @@
                     @if($post->firstCategory)
                         <a href="{{ $post->firstCategory->url }}" class="blog-tag primary">{{ $post->firstCategory->name }}</a>
                     @endif
-                    <h3 class="text-capitalize">{!! BaseHelper::clean($post->name) !!}</h3>
+                    <h1 class="h2">{!! BaseHelper::clean($post->name) !!}</h1>
                     <div class="mt-12 d-flex align-items-center gap-16 mb-3">
                         @if (theme_option('blog_show_author_name', 'yes') == 'yes' && class_exists($post->author_type) && ($author = $post->author ?? null) && trim($author->name))
                             <div class="avatar avt-40 round">

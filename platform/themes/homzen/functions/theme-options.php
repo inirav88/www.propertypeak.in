@@ -1,6 +1,7 @@
 <?php
 
 use Botble\Base\Facades\Html;
+use Botble\RealEstate\Facades\RealEstateHelper;
 use Botble\Theme\Events\RenderingThemeOptionSettings;
 use Botble\Theme\Facades\Theme;
 use Botble\Theme\Facades\ThemeOption;
@@ -30,6 +31,18 @@ app('events')->listen(RenderingThemeOptionSettings::class, function (): void {
                     ->name('footer_background_color')
                     ->label(__('Footer background color'))
                     ->defaultValue('#161e2d'),
+                ColorField::make()
+                    ->name('footer_text_color')
+                    ->label(__('Footer text color'))
+                    ->defaultValue('#a3abb0'),
+                ColorField::make()
+                    ->name('footer_heading_color')
+                    ->label(__('Footer heading color'))
+                    ->defaultValue('#ffffff'),
+                ColorField::make()
+                    ->name('footer_hover_color')
+                    ->label(__('Footer link hover color'))
+                    ->defaultValue('#cd380f'),
                 MediaImageField::make()
                     ->name('footer_background_image')
                     ->label(__('Footer background image')),
@@ -62,6 +75,14 @@ app('events')->listen(RenderingThemeOptionSettings::class, function (): void {
                     ->name('sticky_header_enabled')
                     ->label(__('Enable sticky header'))
                     ->defaultValue(true),
+                SelectField::make()
+                    ->name('mobile_menu_switcher_style')
+                    ->label(__('Mobile menu currency/language switcher style'))
+                    ->defaultValue('inline')
+                    ->options([
+                        'inline' => __('Inline (show all options)'),
+                        'dropdown' => __('Dropdown'),
+                    ]),
             ])
     )
         ->setField(
@@ -221,6 +242,17 @@ app('events')->listen(RenderingThemeOptionSettings::class, function (): void {
         ->setField(
             SelectField::make()
                 ->sectionId('opt-text-subsection-real-estate')
+                ->name('real_estate_show_location_on_detail_page')
+                ->label(__('Show location section on property/project detail page'))
+                ->defaultValue('yes')
+                ->options([
+                    'yes' => __('Yes'),
+                    'no' => __('No'),
+                ])
+        )
+        ->setField(
+            SelectField::make()
+                ->sectionId('opt-text-subsection-real-estate')
                 ->name('real_estate_use_location_in_search_box_as_dropdown')
                 ->label(__('Use location in search box as dropdown instead of input auto-complete'))
                 ->defaultValue('no')
@@ -254,6 +286,17 @@ app('events')->listen(RenderingThemeOptionSettings::class, function (): void {
                 ->sectionId('opt-text-subsection-real-estate')
                 ->defaultValue('22')
                 ->helperText(__('Set the maximum zoom level for maps. Default is 22. Higher values allow more detailed zoom.'))
+        )
+        ->setField(
+            SelectField::make()
+                ->sectionId('opt-text-subsection-real-estate')
+                ->name('real_estate_default_sort_order')
+                ->label(__('Default sort order for property/project listings'))
+                ->defaultValue('')
+                ->options(array_merge(
+                    ['' => __('Default (Newest)')],
+                    RealEstateHelper::getSortByList()
+                ))
         )
         ->setField(
             SelectField::make()
@@ -409,6 +452,32 @@ app('events')->listen(RenderingThemeOptionSettings::class, function (): void {
                     'yes' => __('Yes'),
                     'no' => __('No'),
                 ])
+        )
+        ->setField(
+            SelectField::make()
+                ->sectionId('opt-text-subsection-real-estate')
+                ->name('enable_whatsapp_button')
+                ->label(__('Enable WhatsApp button on property/project detail'))
+                ->defaultValue('yes')
+                ->options([
+                    'yes' => __('Yes'),
+                    'no' => __('No'),
+                ])
+        )
+        ->setField(
+            TextField::make()
+                ->sectionId('opt-text-subsection-real-estate')
+                ->name('whatsapp_phone_number')
+                ->label(__('Global WhatsApp phone number'))
+                ->helperText(__('Fallback WhatsApp number used when an agent does not have their own. Include country code (e.g. 84901234567).'))
+        )
+        ->setField(
+            TextField::make()
+                ->sectionId('opt-text-subsection-real-estate')
+                ->name('whatsapp_inquiry_message')
+                ->label(__('WhatsApp inquiry message template'))
+                ->defaultValue(__('Hi, I have an inquiry about this property: [property_url]'))
+                ->helperText(__('Use [property_url] as a placeholder for the property/project URL. Example: "Hi, I have an inquiry about this property: [property_url]"'))
         )
     ;
 });

@@ -10,5 +10,5 @@
         @endforeach
     </x-core::step>
 @else
-    <p class="mb-0 text-muted text-center">{{ __('No transactions!') }}</p>
+    <p class="mb-0 text-muted text-center">{{ trans('plugins/real-estate::account.no_transactions') }}</p>
 @endif

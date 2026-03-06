@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Račun lahko kupi x krat',
     'subscribe_package' => 'Naročite paket',
     'add_credit_alert' => 'Prosimo, dodajte svoj kredit, da ustvarite svoje objave.',
+    'price_per_post' => 'cena na objavo',
+    'free_posts' => 'Brezplačne objave',
+    'price_with_sale' => ':price (Popust :percent%)',
+    'save_percentage' => 'Prihranite :percent%',
+    'features' => 'Funkcije',
+    'title' => 'Naslov',
+    'feature_example' => 'npr: Možnost objave nepremičnin',
 ];

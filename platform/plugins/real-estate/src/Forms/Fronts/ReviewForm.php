@@ -29,15 +29,15 @@ class ReviewForm extends FormFront
                     ->choices(collect(range(1, 5))->mapWithKeys(fn ($i) => [$i => $i])->all())
                     ->defaultValue(5)
                     ->label(false)
-                    ->attributes(['class' => 'star-rating'])
+                    ->attributes(['class' => 'star-rating', 'aria-label' => trans('plugins/real-estate::review.star')])
                     ->when(! $alreadyReviewed, fn (SelectFieldOption $option) => $option->disabled())
             )
             ->add(
                 'content',
                 TextareaField::class,
                 TextareaFieldOption::make()
-                    ->label(__('Review'))
-                    ->placeholder(__('Write comment'))
+                    ->label(trans('plugins/real-estate::review.review_label'))
+                    ->placeholder(trans('plugins/real-estate::review.write_comment'))
                     ->when(! $alreadyReviewed, fn (TextareaFieldOption $option) => $option->disabled())
                     ->required()
             )
@@ -45,7 +45,7 @@ class ReviewForm extends FormFront
                 'submit',
                 'submit',
                 ButtonFieldOption::make()
-                    ->label(__('Send Review'))
+                    ->label(trans('plugins/real-estate::review.send_review'))
                     ->when(! $alreadyReviewed, fn (ButtonFieldOption $option) => $option->disabled())
             )
             ->when(
@@ -56,7 +56,7 @@ class ReviewForm extends FormFront
                         LabelField::class,
                         LabelFieldOption::make()
                             ->wrapperAttributes(['class' => 'mt-3 text-danger'])
-                            ->label(__('You need to login to write review.'))
+                            ->label(trans('plugins/real-estate::review.login_required'))
                     );
                 }
             );

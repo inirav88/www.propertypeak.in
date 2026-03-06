@@ -109,4 +109,11 @@ return [
     'number_posts_free' => ':posts منشور(ات) مجاني',
     'total_package_price' => ':total الإجمالي (وفر :percent%)',
     'dashboard' => 'لوحة التحكم',
+    'language' => 'اللغة',
+    'character_remain' => 'الأحرف المتبقية',
+    'password_update_success' => 'تم تحديث كلمة المرور بنجاح!',
+    'buy_credits' => 'شراء رصيد',
+    'currencies' => 'العملات',
+    'go_to_homepage' => 'الذهاب إلى الصفحة الرئيسية',
+    'hello' => 'مرحباً',
 ];

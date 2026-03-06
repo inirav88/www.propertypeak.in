@@ -21,8 +21,8 @@
     <div @class(['single-property-video', $class ?? null])>
         <div class="h7 title fw-7">{{ __('Video') }}</div>
         <div class="img-video">
-            <img src="{{ RvMedia::getImageUrl($videoThumbnail) }}" alt="{{ $model->name }}">
-            <a href="{{ $videoUrl }}" @if ($isYouTubeVideo) data-fancybox="gallery2" @endif class="btn-video">
+            <img src="{{ RvMedia::getImageUrl($videoThumbnail) }}" alt="{{ $model->name }}" loading="lazy">
+            <a href="{{ $videoUrl }}" @if ($isYouTubeVideo) data-fancybox="gallery2" @endif class="btn-video" aria-label="{{ __('Play video') }}">
                 <x-core::icon name="ti ti-player-play-filled" />
             </a>
         </div>

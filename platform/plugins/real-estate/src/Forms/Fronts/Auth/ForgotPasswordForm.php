@@ -17,23 +17,23 @@ class ForgotPasswordForm extends AuthForm
             ->setUrl(route('public.account.password.email'))
             ->setValidatorClass(ForgotPasswordRequest::class)
             ->icon('ti ti-lock-question')
-            ->heading(__('Forgot Password'))
-            ->description(__('Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.'))
+            ->heading(trans('plugins/real-estate::account.forgot_password_heading'))
+            ->description(trans('plugins/real-estate::account.forgot_password_description'))
             ->add(
                 'email',
                 EmailField::class,
                 EmailFieldOption::make()
-                    ->label(__('Email'))
-                    ->placeholder(__('Email address'))
+                    ->label(trans('plugins/real-estate::account.email'))
+                    ->placeholder(trans('plugins/real-estate::account.email_address'))
                     ->icon('ti ti-mail')
                     ->toArray()
             )
-            ->submitButton(__('Send Password Reset Link'))
+            ->submitButton(trans('plugins/real-estate::account.send_password_reset_link'))
             ->add('back_to_login', HtmlField::class, [
                 'html' => sprintf(
                     '<div class="mt-3 text-center"><a href="%s" class="text-decoration-underline">%s</a></div>',
                     route('public.account.login'),
-                    __('Back to login page')
+                    trans('plugins/real-estate::account.back_to_login_page')
                 ),
             ]);
     }

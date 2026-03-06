@@ -35,4 +35,11 @@ return [
     'total' => 'Total',
     'toggle_coupon_form_text' => 'Masz kod kuponu?',
     'apply_coupon_code' => 'Apply',
+    'invalid' => 'Ten kupon jest nieprawidłowy!',
+    'applied_success' => 'Kupon ":code" został pomyślnie zastosowany!',
+    'not_used' => 'Ten kupon nie został jeszcze użyty!',
+    'removed_success' => 'Kupon :code został pomyślnie usunięty!',
+    'remove' => 'Usuń',
+    'your_order' => 'Twoje zamówienie',
+    'coupon_code_applied' => 'Kod kuponu: :code',
 ];

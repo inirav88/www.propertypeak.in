@@ -2,12 +2,18 @@
 
 namespace Botble\RealEstate\Http\Controllers\Settings;
 
+use Botble\Base\Supports\Breadcrumb;
 use Botble\RealEstate\Forms\Settings\AccountSettingForm;
 use Botble\RealEstate\Http\Requests\Settings\AccountSettingRequest;
-use Botble\Setting\Http\Controllers\SettingController;
 
-class AccountSettingController extends SettingController
+class AccountSettingController extends BaseSettingController
 {
+    protected function breadcrumb(): Breadcrumb
+    {
+        return parent::breadcrumb()
+            ->add(trans('plugins/real-estate::settings.account.name'));
+    }
+
     public function edit()
     {
         $this->pageTitle(trans('plugins/real-estate::settings.account.name'));

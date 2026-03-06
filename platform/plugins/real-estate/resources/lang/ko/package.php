@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => '계정은 x번 구매할 수 있습니다.',
     'subscribe_package' => '패키지 구독',
     'add_credit_alert' => '나만의 게시물을 작성하려면 크레딧을 추가하세요.',
+    'price_per_post' => ':price / 게시물당',
+    'free_posts' => '무료 :number 게시물',
+    'price_with_sale' => ':price 합계 :percentage_sale',
+    'save_percentage' => ':percentage % 절약',
+    'features' => '기능',
+    'title' => '제목',
+    'feature_example' => '예: 60일 채용 공고',
 ];

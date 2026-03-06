@@ -72,7 +72,7 @@ class ReviewController extends BaseController
 
         if (! $account->canReview($reviewable)) {
             throw ValidationException::withMessages([
-                'content' => __('You have already submitted a review.'),
+                'content' => trans('plugins/real-estate::review.already_submitted'),
             ]);
         }
 
@@ -87,10 +87,10 @@ class ReviewController extends BaseController
 
         return $this
             ->httpResponse()
-            ->setMessage(__('Your review has been submitted!'))
+            ->setMessage(trans('plugins/real-estate::review.review_submitted'))
             ->setData([
-                'count' => $reviewsCount === 1 ? __('1 Review') : __(':number Reviews', ['number' => $reviewsCount]),
-                'message' => __('Your review has been submitted!'),
+                'count' => $reviewsCount === 1 ? trans('plugins/real-estate::review.one_review') : trans('plugins/real-estate::review.number_reviews', ['number' => $reviewsCount]),
+                'message' => trans('plugins/real-estate::review.review_submitted'),
             ]);
     }
 }

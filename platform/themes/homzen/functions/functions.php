@@ -39,6 +39,7 @@ use Botble\Theme\Facades\Theme;
 use Botble\Theme\Supports\ThemeSupport;
 use Botble\Theme\Typography\TypographyItem;
 use Botble\Widget\Facades\WidgetGroup;
+use Illuminate\Support\Collection;
 
 if (! function_exists('get_max_properties_price')) {
     function get_max_properties_price(): int
@@ -77,36 +78,35 @@ if (! function_exists('get_max_projects_price')) {
 if (! function_exists('get_min_square')) {
     function get_min_square(): int
     {
-        $square = Property::query()->min('square');
-
-        return $square ? (int) ceil($square) : 0;
+        return RealEstateHelper::getMinSquare();
     }
 }
 
 if (! function_exists('get_max_square')) {
     function get_max_square(): int
     {
-        $square = Property::query()->max('square');
-
-        return $square ? (int) ceil($square) : 0;
+        return RealEstateHelper::getMaxSquare();
     }
 }
 
 if (! function_exists('get_min_flat')) {
     function get_min_flat(): int
     {
-        $flat = Project::query()->min('number_flat');
-
-        return $flat ? (int) ceil($flat) : 0;
+        return RealEstateHelper::getMinFlat();
     }
 }
 
 if (! function_exists('get_max_flat')) {
     function get_max_flat(): int
     {
-        $flat = Project::query()->max('number_flat');
+        return RealEstateHelper::getMaxFlat();
+    }
+}
 
-        return $flat ? (int) ceil($flat) : 0;
+if (! function_exists('get_published_features')) {
+    function get_published_features(): Collection
+    {
+        return RealEstateHelper::getPublishedFeatures();
     }
 }
 
@@ -157,6 +157,24 @@ app()->booted(function (): void {
         'id' => 'bottom_post_detail_sidebar',
         'name' => __('Bottom Post Detail Sidebar'),
         'description' => __('Place widgets here to display additional content below individual blog posts.'),
+    ]);
+
+    register_sidebar([
+        'id' => 'property_detail_sidebar',
+        'name' => __('Property/Project Detail Sidebar'),
+        'description' => __('Sidebar widgets for property and project detail pages. Ideal for mortgage calculator, contact forms, or related listings.'),
+    ]);
+
+    register_sidebar([
+        'id' => 'top_property_detail_sidebar',
+        'name' => __('Top Property/Project Detail'),
+        'description' => __('Widgets displayed before the description section on property/project detail pages.'),
+    ]);
+
+    register_sidebar([
+        'id' => 'bottom_property_detail_sidebar',
+        'name' => __('Bottom Property/Project Detail'),
+        'description' => __('Widgets displayed before the reviews section on property/project detail pages.'),
     ]);
 
     WidgetGroup::removeGroup('primary_sidebar');
@@ -233,6 +251,22 @@ app()->booted(function (): void {
     }, 999);
 
     if (is_plugin_active('real-estate')) {
+        add_filter('properties_filter_validation_rules', function (array $rules) {
+            if (! request()->has('sort_by') && ($default = theme_option('real_estate_default_sort_order'))) {
+                request()->merge(['sort_by' => $default]);
+            }
+
+            return $rules;
+        });
+
+        add_filter('projects_filter_validation_rules', function (array $rules) {
+            if (! request()->has('sort_by') && ($default = theme_option('real_estate_default_sort_order'))) {
+                request()->merge(['sort_by' => $default]);
+            }
+
+            return $rules;
+        });
+
         add_filter('theme_front_footer_content', function (?string $html): ?string {
             if (RealEstateHelper::isLoginEnabled() && theme_option('use_modal_for_authentication', true)) {
                 $loginForm = LoginForm::create()
@@ -278,7 +312,7 @@ app()->booted(function (): void {
                 default => null,
             };
 
-            return sprintf('<span class="flag-tag %s">%s</span>', $color, PropertyStatusEnum::getLabel($value));
+            return sprintf('<span class="flag-tag %s %s">%s</span>', $color, 'status-badge-' . $value, PropertyStatusEnum::getLabel($value));
         }, 999, 2);
 
         add_filter('real_estate_project_status_html', function (?string $html, string $value): string {
@@ -287,7 +321,7 @@ app()->booted(function (): void {
                 default => null,
             };
 
-            return sprintf('<span class="flag-tag %s">%s</span>', $color, ProjectStatusEnum::getLabel($value));
+            return sprintf('<span class="flag-tag %s %s">%s</span>', $color, 'status-badge-' . $value, ProjectStatusEnum::getLabel($value));
         }, 999, 2);
 
         CategoryForm::extend(function (CategoryForm $form): void {

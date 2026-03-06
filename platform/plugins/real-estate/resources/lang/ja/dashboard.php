@@ -109,4 +109,11 @@ return [
     'number_posts_free' => '無料:posts投稿',
     'total_package_price' => ':total合計（:percent%お得）',
     'dashboard' => 'ダッシュボード',
+    'language' => '言語',
+    'character_remain' => '残り文字数',
+    'password_update_success' => 'パスワードが正常に更新されました！',
+    'buy_credits' => 'クレジットを購入',
+    'currencies' => '通貨',
+    'go_to_homepage' => 'ホームページへ',
+    'hello' => 'こんにちは',
 ];

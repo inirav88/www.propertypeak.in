@@ -35,4 +35,11 @@ return [
     'total' => 'Total',
     'toggle_coupon_form_text' => 'Jums ir kupona kods?',
     'apply_coupon_code' => 'Apply',
+    'remove' => 'Noņemt',
+    'your_order' => 'Jūsu pasūtījums',
+    'coupon_code_applied' => 'Kupona kods: :code',
+    'invalid' => 'Kupona kods ir nederīgs vai beidzies derīguma termiņš.',
+    'applied_success' => 'Kupona kods veiksmīgi lietots!',
+    'not_used' => 'Vēl nav izmantots',
+    'removed_success' => 'Kupona kods veiksmīgi noņemts!',
 ];

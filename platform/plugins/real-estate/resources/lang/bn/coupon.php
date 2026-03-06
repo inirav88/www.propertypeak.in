@@ -35,4 +35,11 @@ return [
     'total' => 'মোট',
     'toggle_coupon_form_text' => 'আপনার কি কুপন কোড আছে?',
     'apply_coupon_code' => 'প্রয়োগ',
+    'invalid' => 'এই কুপনটি অবৈধ!',
+    'applied_success' => 'কুপন ":code" সফলভাবে প্রয়োগ করা হয়েছে!',
+    'not_used' => 'এই কুপনটি এখনও ব্যবহার করা হয়নি!',
+    'removed_success' => 'কুপন :code সফলভাবে সরানো হয়েছে!',
+    'remove' => 'সরান',
+    'your_order' => 'আপনার অর্ডার',
+    'coupon_code_applied' => 'কুপন কোড: :code',
 ];

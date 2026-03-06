@@ -5,6 +5,7 @@ namespace Botble\RealEstate\Importers;
 use Botble\ACL\Models\User;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Events\CreatedContentEvent;
+use Botble\Base\Facades\BaseHelper;
 use Botble\DataSynchronize\Contracts\Importer\WithMapping;
 use Botble\DataSynchronize\Importer\ImportColumn;
 use Botble\DataSynchronize\Importer\Importer;
@@ -12,6 +13,7 @@ use Botble\Location\Models\City;
 use Botble\Location\Models\Country;
 use Botble\Location\Models\State;
 use Botble\RealEstate\Enums\ProjectStatusEnum;
+use Botble\RealEstate\Facades\RealEstateHelper;
 use Botble\RealEstate\Models\Account;
 use Botble\RealEstate\Models\Category;
 use Botble\RealEstate\Models\Currency;
@@ -35,7 +37,7 @@ class ProjectImporter extends Importer implements WithMapping
 
     public function columns(): array
     {
-        return [
+        $columns = [
             ImportColumn::make('name')
                 ->rules(['required', 'string', 'max:255']),
             ImportColumn::make('description')
@@ -81,6 +83,15 @@ class ProjectImporter extends Importer implements WithMapping
                 ->rules(['nullable', 'numeric']),
             ImportColumn::make('latitude')
                 ->rules(['nullable', 'numeric']),
+        ];
+
+        if (RealEstateHelper::isEnabledZipCode()) {
+            $columns[] = ImportColumn::make('zip_code')
+                ->rules(['nullable', ...BaseHelper::getZipcodeValidationRule(true)]);
+        }
+
+        return [
+            ...$columns,
             ImportColumn::make('status')
                 ->rules(['nullable', 'string', Rule::in(ProjectStatusEnum::values())]),
             ImportColumn::make('categories')
@@ -139,9 +150,9 @@ class ProjectImporter extends Importer implements WithMapping
             ->with(['investor', 'categories', 'features', 'facilities', 'customFields', 'slugable'])
             ->get()
             ->map(function (Project $project) { // @phpstan-ignore-line
-                return [
+                $data = [
                     'name' => $project->name,
-                    'description' => Str::limit($project->description, 100),
+                    'description' => Str::limit($project->description),
                     'content' => Str::limit($project->content, 200),
                     'images' => is_array($project->images) ? implode(',', $project->images) : '',
                     'location' => $project->location,
@@ -162,6 +173,14 @@ class ProjectImporter extends Importer implements WithMapping
                     'author_type' => $project->author_type,
                     'longitude' => $project->longitude,
                     'latitude' => $project->latitude,
+                ];
+
+                if (RealEstateHelper::isEnabledZipCode()) {
+                    $data['zip_code'] = $project->zip_code;
+                }
+
+                return [
+                    ...$data,
                     'status' => $project->status,
                     'categories' => $project->categories->pluck('name')->implode(', '),
                     'features' => $project->features->pluck('name')->implode(', '),
@@ -181,7 +200,7 @@ class ProjectImporter extends Importer implements WithMapping
             return $projects->all();
         }
 
-        return [
+        $examples = [
             [
                 'name' => 'Sunset Heights Residential Complex',
                 'description' => 'Modern residential complex with luxury amenities and stunning city views.',
@@ -247,6 +266,13 @@ class ProjectImporter extends Importer implements WithMapping
                 'video_thumbnail' => '',
             ],
         ];
+
+        if (RealEstateHelper::isEnabledZipCode()) {
+            $examples[0]['zip_code'] = '90210';
+            $examples[1]['zip_code'] = '78701';
+        }
+
+        return $examples;
     }
 
     public function map(mixed $row): array
@@ -409,6 +435,10 @@ class ProjectImporter extends Importer implements WithMapping
             }
 
             $project->forceFill($projectData);
+
+            /**
+             * @var Project $project
+             */
             $project->save();
 
             if ($project->wasRecentlyCreated) {

@@ -35,4 +35,11 @@ return [
     'total' => 'סה"כ',
     'toggle_coupon_form_text' => 'יש לך קוד קופון?',
     'apply_coupon_code' => 'החל',
+    'remove' => 'הסר',
+    'your_order' => 'ההזמנה שלך',
+    'coupon_code_applied' => 'קוד קופון: :code',
+    'invalid' => 'קוד הקופון אינו חוקי או שפג תוקפו.',
+    'applied_success' => 'קוד הקופון הוחל בהצלחה!',
+    'not_used' => 'עדיין לא נעשה שימוש',
+    'removed_success' => 'קוד הקופון הוסר בהצלחה!',
 ];

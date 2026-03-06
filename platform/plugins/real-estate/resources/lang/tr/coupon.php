@@ -35,4 +35,11 @@ return [
     'total' => 'Toplam',
     'toggle_coupon_form_text' => 'Kupon kodunuz var mı?',
     'apply_coupon_code' => 'Uygula',
+    'invalid' => 'Bu kupon geçersiz!',
+    'applied_success' => 'Kupon ":code" başarıyla uygulandı!',
+    'not_used' => 'Bu kupon henüz kullanılmadı!',
+    'removed_success' => 'Kupon :code başarıyla kaldırıldı!',
+    'remove' => 'Kaldır',
+    'your_order' => 'Siparişiniz',
+    'coupon_code_applied' => 'Kupon kodu: :code',
 ];

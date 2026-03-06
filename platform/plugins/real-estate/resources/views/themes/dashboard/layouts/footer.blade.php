@@ -1,6 +1,6 @@
 @if (($currencies = get_all_currencies()) && $currencies->count() > 1)
     <footer>
-        <p class="inline-block">{{ __('Currencies') }}:
+        <p class="inline-block">{{ trans('plugins/real-estate::dashboard.currencies') }}:
             @foreach ($currencies as $currency)
                 <a
                     href="{{ route('public.change-currency', $currency->title) }}"

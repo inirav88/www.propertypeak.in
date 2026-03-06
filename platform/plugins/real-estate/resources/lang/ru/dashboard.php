@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Бесплатное сообщение(я) :posts',
     'total_package_price' => ':total Всего (Сохранить :percent%)',
     'dashboard' => 'Dashboard',
+    'character_remain' => 'Осталось символов',
+    'password_update_success' => 'Пароль успешно обновлен!',
+    'language' => 'Язык',
+    'buy_credits' => 'Купить кредиты',
+    'currencies' => 'Валюты',
+    'go_to_homepage' => 'Перейти на главную',
+    'hello' => 'Привет',
 ];

@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Ένας λογαριασμός μπορεί να αγοράσει x φορές',
     'subscribe_package' => 'Εγγραφή σε πακέτο',
     'add_credit_alert' => 'Προσθέστε την πίστωσή σας για να δημιουργήσετε τις δικές σας αναρτήσεις.',
+    'price_per_post' => ':price / ανά ανάρτηση',
+    'free_posts' => 'Δωρεάν :number ανάρτηση/εις',
+    'price_with_sale' => ':price Σύνολο :percentage_sale',
+    'save_percentage' => 'εξοικονόμηση :percentage %',
+    'features' => 'Χαρακτηριστικά',
+    'title' => 'Τίτλος',
+    'feature_example' => 'Π.χ.: 60-ημερές αναρτήσεις εργασίας',
 ];

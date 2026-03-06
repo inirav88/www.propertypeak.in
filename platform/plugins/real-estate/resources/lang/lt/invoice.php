@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'invoices' => 'Sąskaitos faktūros',
+    'manage_invoices' => 'Tvarkyti sąskaitas faktūras',
+    'invoice_detail' => 'Sąskaitos faktūros informacija',
     'name' => 'Invoices',
     'amount' => 'Amount',
     'code' => 'Code',
@@ -36,5 +39,14 @@ return [
         'setting_content' => 'Content',
         'preview' => 'Preview',
         'preview_heading' => 'Peržiūros sąskaitos faktūros šablonas',
+    ],
+    'detail' => [
+        'tax_amount' => 'Mokesčių suma',
+    ],
+    'template_variables' => [
+        'account_name' => 'Paskyros vardas',
+        'account_email' => 'Paskyros el. paštas',
+        'account_phone' => 'Paskyros telefonas',
+        'account_address' => 'Paskyros adresas',
     ],
 ];

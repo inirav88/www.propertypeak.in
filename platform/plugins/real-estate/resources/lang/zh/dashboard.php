@@ -109,4 +109,11 @@ return [
     'number_posts_free' => '免費：貼文',
     'total_package_price' => '：總計 總計（節省：百分比%）',
     'dashboard' => '儀表板',
+    'language' => '語言',
+    'character_remain' => '剩餘字數',
+    'password_update_success' => '密碼更新成功！',
+    'buy_credits' => '購買積分',
+    'currencies' => '貨幣',
+    'go_to_homepage' => '前往首頁',
+    'hello' => '您好',
 ];

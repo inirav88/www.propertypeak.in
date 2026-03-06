@@ -27,8 +27,8 @@ class AccountResource extends JsonResource
             ] + (RealEstateHelper::isEnabledCreditsSystem() ? [
                 'credits' => $this->credits,
                 'formatted_credits' => $this->credits === 1
-                    ? __('1 credit')
-                    : __(':count credits', ['count' => number_format($this->credits)]),
+                    ? trans('plugins/real-estate::account.credit_singular')
+                    : trans('plugins/real-estate::account.credit_plural', ['count' => number_format($this->credits)]),
             ] : []);
     }
 }

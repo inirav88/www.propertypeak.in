@@ -2,6 +2,8 @@
     Theme::set('pageTitle', __('Wishlist'));
 @endphp
 
+<h1 class="d-none">{{ __('Wishlist') }}</h1>
+
 <div class="flat-section">
     @if($properties->isNotEmpty() || $projects->isNotEmpty())
         <section class="flat-recommended">

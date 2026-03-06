@@ -35,4 +35,11 @@ return [
     'total' => 'Общо',
     'toggle_coupon_form_text' => 'Имате код за купон?',
     'apply_coupon_code' => 'Приложи',
+    'invalid' => 'Този купон е невалиден!',
+    'applied_success' => 'Купонът ":code" е приложен успешно!',
+    'not_used' => 'Този купон все още не е използван!',
+    'removed_success' => 'Купонът :code е премахнат успешно!',
+    'remove' => 'Премахване',
+    'your_order' => 'Вашата поръчка',
+    'coupon_code_applied' => 'Код на купон: :code',
 ];

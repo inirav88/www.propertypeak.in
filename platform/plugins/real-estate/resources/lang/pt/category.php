@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'name' => 'Categories',
+    'name' => 'Categorias',
     'property_categories' => 'Categorias de propriedades',
     'create' => 'Nova categoria',
     'edit' => 'Editar categoria',
     'menu' => 'Categorias de propriedade',
-    'none' => 'None',
+    'none' => 'Nenhuma',
     'total_properties' => 'Propriedades totais',
     'total_projects' => 'Total de projetos',
     'is_default' => 'É padrão',

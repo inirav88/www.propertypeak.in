@@ -68,4 +68,12 @@ return [
             ],
         ],
     ],
+    'form_content' => 'Innhold',
+    'form_message' => 'Melding',
+    'name_placeholder' => 'Johny Dane',
+    'phone_placeholder' => 'F.eks. 0123456789',
+    'email_placeholder' => 'email@example.com',
+    'message_placeholder' => 'Skriv inn meldingen din...',
+    'send_consult' => 'Send melding',
+    'dropdown_show_label' => 'Vis konsultasjonsvarslinger',
 ];

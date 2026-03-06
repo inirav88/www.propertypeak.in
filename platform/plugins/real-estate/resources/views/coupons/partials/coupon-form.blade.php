@@ -24,8 +24,8 @@
                             :label="trans('plugins/real-estate::coupon.type')"
                             name="type"
                             :options="[
-                                'percentage' => __('plugins/real-estate::coupon.types.percentage'),
-                                'fixed' => __('plugins/real-estate::coupon.types.fixed'),
+                                'percentage' => trans('plugins/real-estate::coupon.types.percentage'),
+                                'fixed' => trans('plugins/real-estate::coupon.types.fixed'),
                             ]"
                             :value="old('type', $coupon)"
                         />

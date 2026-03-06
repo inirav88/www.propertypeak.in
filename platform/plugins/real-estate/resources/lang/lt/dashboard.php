@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Nemokamas __Ph0__ įrašas (-ai)',
     'total_package_price' => '__Ph0__ Iš viso (išsaugokite __Ph1 __%)',
     'dashboard' => 'Dashboard',
+    'character_remain' => 'Liko :count simbolių',
+    'password_update_success' => 'Slaptažodis sėkmingai atnaujintas!',
+    'language' => 'Kalba',
+    'buy_credits' => 'Pirkti kreditus',
+    'currencies' => 'Valiutos',
+    'go_to_homepage' => 'Eiti į pagrindinį puslapį',
+    'hello' => 'Sveiki',
 ];

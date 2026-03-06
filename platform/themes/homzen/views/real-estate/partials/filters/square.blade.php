@@ -1,7 +1,7 @@
 @if (theme_option('real_estate_enable_filter_by_square', 'yes') == 'yes')
     @php
-        $minSquare = get_min_square() ?: 0;
-        $maxSquare = get_max_square() ?: 10000;
+        $minSquare = RealEstateHelper::getMinSquare() ?: 0;
+        $maxSquare = RealEstateHelper::getMaxSquare() ?: 10000;
     @endphp
 
     @if ($minSquare < $maxSquare)
@@ -17,8 +17,8 @@
             </div>
             <div
                 id="slider-range2"
-                data-min="{{ get_min_square() ?: 0 }}"
-                data-max="{{ get_max_square() ?: 10000 }}"
+                data-min="{{ $minSquare }}"
+                data-max="{{ $maxSquare }}"
                 data-unit="{{ setting('real_estate_square_unit', 'm²') }}"
             ></div>
             <div class="slider-labels">

@@ -44,6 +44,7 @@
                     data-fancybox="gallery2"
                     data-type="iframe"
                     class="btn-video"
+                    aria-label="{{ __('Play video') }}"
                 >
                     <span class="icon icon-play"></span>
                 </a>

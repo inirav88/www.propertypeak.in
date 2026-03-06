@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Tasuta :posts postitus(t)',
     'total_package_price' => ':total kokku (säästa :percent%)',
     'dashboard' => 'Töölaud',
+    'character_remain' => 'Tähemärke jäänud',
+    'password_update_success' => 'Parool edukalt uuendatud!',
+    'language' => 'Keel',
+    'buy_credits' => 'Osta krediiti',
+    'currencies' => 'Valuutad',
+    'go_to_homepage' => 'Mine avalehele',
+    'hello' => 'Tere',
 ];

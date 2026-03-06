@@ -10,53 +10,48 @@
     <div class="container">
         <ul class="cate-single-tab">
             <li class="active">
-                <a class="cate-single-item" href="#description">
+                <a  class="cate-single-item" href="#description">
                     {{ __('Description') }}
                 </a>
             </li>
             <li>
-                <a class="cate-single-item" href="#video">
+                <a  class="cate-single-item" href="#video">
                     {{ __('Video') }}
                 </a>
             </li>
-            @if($model->is_pg_property)
-                <li>
-                    <a class="cate-single-item" href="#pg-details">
-                        {{ __('PG Details') }}
-                    </a>
-                </li>
-            @endif
             <li>
-                <a class="cate-single-item" href="#amentities">
+                <a  class="cate-single-item" href="#amentities">
                     {{ __('Amenities') }}
                 </a>
             </li>
             <li>
-                <a class="cate-single-item" href="#nearby">
+                <a  class="cate-single-item" href="#nearby">
                     {{ __('Nearby') }}
                 </a>
             </li>
             @if (!$isProject && RealEstateHelper::isEnabledProjects() && $model->project_id && ($project = $model->project))
                 <li>
-                    <a class="cate-single-item" href="#project">
+                    <a  class="cate-single-item" href="#project">
                         {{ __('Project') }}
                     </a>
                 </li>
             @endif
-            <li>
-                <a class="cate-single-item" href="#location">
-                    {{ __('Location') }}
-                </a>
-            </li>
+            @if (theme_option('real_estate_show_location_on_detail_page', 'yes') === 'yes')
+                <li>
+                    <a  class="cate-single-item" href="#location">
+                        {{ __('Location') }}
+                    </a>
+                </li>
+            @endif
             @if (($model->formatted_floor_plans ?? collect())->isNotEmpty())
                 <li>
-                    <a class="cate-single-item" href="#floor-plans">
+                    <a  class="cate-single-item" href="#floor-plans">
                         {{ __('Floor Plans') }}
                     </a>
                 </li>
             @endif
             <li>
-                <a class="cate-single-item" href="#reviews">
+                <a  class="cate-single-item" href="#reviews">
                     {{ __('Reviews') }}
                 </a>
             </li>
@@ -78,14 +73,11 @@
                 </div>
                 {!! apply_filters('before_single_content_detail', null, $model) !!}
 
+                {!! dynamic_sidebar('top_property_detail_sidebar') !!}
+
                 <div class="wrapper-onepage" id="video">
                     @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.video'), ['class' => 'widget-box-single', 'model' => $model])
                 </div>
-                @if($model->is_pg_property)
-                    <div class="wrapper-onepage" id="pg-details">
-                        @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.pg-details'), ['class' => 'widget-box-single', 'model' => $model])
-                    </div>
-                @endif
                 <div class="wrapper-onepage" id="amentities">
                     @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.features'), ['class' => 'widget-box-single', 'model' => $model])
                 </div>
@@ -112,10 +104,12 @@
                 </div>
 
                 {!! apply_filters(
-    BASE_FILTER_PUBLIC_COMMENT_AREA,
-    null,
-    $model
-) !!}
+                    BASE_FILTER_PUBLIC_COMMENT_AREA,
+                    null,
+                    $model
+                ) !!}
+
+                {!! dynamic_sidebar('bottom_property_detail_sidebar') !!}
 
                 <div class="wrapper-onepage" id="reviews">
                     @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.reviews'), ['model' => $model, 'class' => 'widget-box-single'])
@@ -127,7 +121,7 @@
 
                     @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.contact'), ['class' => 'bg-white', 'model' => $model])
 
-                    @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.mortgage-calculator'), ['model' => $model])
+                    {!! dynamic_sidebar('property_detail_sidebar') !!}
 
                     {!! apply_filters('ads_render', null, 'detail_page_sidebar_after') !!}
                 </div>
@@ -139,5 +133,3 @@
 </section>
 
 @include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.related-properties'), ['model' => $model])
-
-@include(Theme::getThemeNamespace('views.real-estate.single-layouts.partials.mobile-sticky-footer'), ['model' => $model])

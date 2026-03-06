@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Akaun boleh membeli x kali',
     'subscribe_package' => 'Langgan pakej',
     'add_credit_alert' => 'Sila tambahkan kredit anda untuk membuat catatan anda sendiri.',
+    'price_per_post' => ':price / setiap siaran',
+    'free_posts' => 'Percuma :number siaran',
+    'price_with_sale' => ':price Jumlah :percentage_sale',
+    'save_percentage' => 'jimat :percentage %',
+    'features' => 'Ciri-ciri',
+    'title' => 'Tajuk',
+    'feature_example' => 'Contoh: Siaran Pekerjaan 60 Hari',
 ];

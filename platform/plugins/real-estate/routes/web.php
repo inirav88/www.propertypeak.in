@@ -86,6 +86,23 @@ Route::group(['namespace' => 'Botble\RealEstate\Http\Controllers', 'middleware' 
                     'permission' => 'invoice.index',
                 ]);
             });
+
+            Route::get('webhook', [
+                'as' => 'webhook',
+                'uses' => 'Settings\WebhookSettingController@edit',
+            ]);
+
+            Route::put('webhook', [
+                'as' => 'webhook.update',
+                'uses' => 'Settings\WebhookSettingController@update',
+                'permission' => 'real-estate.settings.webhook',
+            ]);
+
+            Route::post('webhook/test', [
+                'as' => 'webhook.test',
+                'uses' => 'Settings\WebhookTestController@test',
+                'permission' => 'real-estate.settings.webhook',
+            ]);
         });
 
         Route::group(['prefix' => 'properties', 'as' => 'property.'], function (): void {

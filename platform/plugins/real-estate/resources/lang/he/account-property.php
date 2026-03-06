@@ -7,4 +7,7 @@ return [
     'properties' => 'נכסים',
     'write_property' => 'כתוב נכס',
     'images' => 'תמונות (מקסימום :max תמונות)',
+    'renew' => 'חדש',
+    'not_enough_credit_renew' => 'אין לך מספיק נקודות לחידוש נכס זה!',
+    'renew_success' => 'הנכס חודש בהצלחה',
 ];

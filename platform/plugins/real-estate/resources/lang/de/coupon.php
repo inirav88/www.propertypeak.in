@@ -35,4 +35,11 @@ return [
     'total' => 'Gesamt',
     'toggle_coupon_form_text' => 'Sie haben einen Gutscheincode?',
     'apply_coupon_code' => 'Anwenden',
+    'invalid' => 'Dieser Gutschein ist ungültig!',
+    'applied_success' => 'Gutschein ":code" erfolgreich angewendet!',
+    'not_used' => 'Dieser Gutschein wurde noch nicht verwendet!',
+    'removed_success' => 'Gutschein :code erfolgreich entfernt!',
+    'remove' => 'Entfernen',
+    'your_order' => 'Ihre Bestellung',
+    'coupon_code_applied' => 'Gutscheincode: :code',
 ];

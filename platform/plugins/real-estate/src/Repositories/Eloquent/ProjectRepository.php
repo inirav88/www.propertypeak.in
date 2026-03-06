@@ -5,6 +5,7 @@ namespace Botble\RealEstate\Repositories\Eloquent;
 use Botble\Base\Models\BaseQueryBuilder;
 use Botble\Language\Facades\Language;
 use Botble\RealEstate\Facades\RealEstateHelper;
+use Botble\RealEstate\Repositories\Concerns\HasRoomFilter;
 use Botble\RealEstate\Repositories\Interfaces\ProjectInterface;
 use Botble\Support\Repositories\Eloquent\RepositoriesAbstract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -14,6 +15,8 @@ use Illuminate\Support\Collection;
 
 class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
 {
+    use HasRoomFilter;
+
     public function getProjects($filters = [], $params = []): Collection|LengthAwarePaginator
     {
         $filters = array_merge([
@@ -31,6 +34,7 @@ class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
             'state' => null,
             'state_id' => null,
             'location' => null,
+            'zip_code' => null,
             'sort_by' => null,
             'features' => null,
         ], $filters);
@@ -114,11 +118,7 @@ class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
         }
 
         if ($filters['blocks']) {
-            if ($filters['blocks'] < 5) {
-                $this->model = $this->model->where('number_block', $filters['blocks']);
-            } else {
-                $this->model = $this->model->where('number_block', '>=', $filters['blocks']);
-            }
+            $this->applyRoomFilter('number_block', $filters['blocks']);
         }
 
         if ($filters['min_floor'] !== null || $filters['max_floor'] !== null) {
@@ -192,6 +192,9 @@ class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
                             })
                             ->orWhereHas('state.translations', function (BaseQueryBuilder $query) use ($locationSearch): void {
                                 $query->addSearch('name', $locationSearch, false, false);
+                            })
+                            ->when(RealEstateHelper::isEnabledZipCode(), function (BaseQueryBuilder $query) use ($locationSearch): void {
+                                $query->orWhere('zip_code', $locationSearch);
                             });
                     });
             } else {
@@ -204,9 +207,16 @@ class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
                             })
                             ->orWhereHas('state', function (BaseQueryBuilder $query) use ($locationSearch): void {
                                 $query->addSearch('states.name', $locationSearch, false, false);
+                            })
+                            ->when(RealEstateHelper::isEnabledZipCode(), function (BaseQueryBuilder $query) use ($locationSearch): void {
+                                $query->orWhere('zip_code', $locationSearch);
                             });
                     });
             }
+        }
+
+        if ($filters['zip_code'] !== null) {
+            $this->model = $this->model->where('zip_code', $filters['zip_code']);
         }
 
         if (count($filters['category_ids'] ?? [])) {
@@ -226,8 +236,11 @@ class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
                 $this->model = $this->model
                     ->where(function ($query) use ($minPrice): void {
                         $query
-                            ->whereNull('price_from')
-                            ->orWhere('price_from', '>=', $minPrice);
+                            ->where('price_to', '>=', $minPrice)
+                            ->orWhere(function ($query) use ($minPrice): void {
+                                $query->whereNull('price_to')
+                                    ->where('price_from', '>=', $minPrice);
+                            });
                     });
             }
 
@@ -235,8 +248,11 @@ class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
                 $this->model = $this->model
                     ->where(function ($query) use ($maxPrice): void {
                         $query
-                            ->whereNull('price_to')
-                            ->orWhere('price_to', '<=', $maxPrice);
+                            ->where('price_from', '<=', $maxPrice)
+                            ->orWhere(function ($query) use ($maxPrice): void {
+                                $query->whereNull('price_from')
+                                    ->where('price_to', '<=', $maxPrice);
+                            });
                     });
             }
         }
@@ -262,6 +278,9 @@ class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
                                 foreach ($locationsSearch as $location) {
                                     $query->addSearch('name', $location, false);
                                 }
+                            })
+                            ->when(RealEstateHelper::isEnabledZipCode(), function (BaseQueryBuilder $query) use ($locationsSearch): void {
+                                $query->orWhereIn('zip_code', $locationsSearch);
                             });
                     });
             } else {
@@ -282,6 +301,9 @@ class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
                                 foreach ($locationsSearch as $location) {
                                     $query->addSearch('states.name', $location, false);
                                 }
+                            })
+                            ->when(RealEstateHelper::isEnabledZipCode(), function (BaseQueryBuilder $query) use ($locationsSearch): void {
+                                $query->orWhereIn('zip_code', $locationsSearch);
                             });
                     });
             }
@@ -311,7 +333,7 @@ class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
         return $this->advancedGet($params);
     }
 
-    public function getRelatedProjects(int $projectId, int $limit = 4, array $with = []): Collection|LengthAwarePaginator
+    public function getRelatedProjects(int|string $projectId, int $limit = 4, array $with = []): Collection|LengthAwarePaginator
     {
         $currentProject = $this->findById($projectId, ['categories']);
 

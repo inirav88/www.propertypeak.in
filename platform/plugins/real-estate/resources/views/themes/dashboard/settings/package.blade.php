@@ -25,7 +25,7 @@
                             <div class="box-package-price d-flex align-items-end">
                                 <h4 v-if="item.price">@{{ item.price_text }}</h4>
                                 <h4 v-else>@{{ item.number_posts_free }}</h4>
-                                <span class="text-muted" v-if="item.price">/@{{ item.number_of_listings }} {{ __('post(s)') }}</span>
+                                <span class="text-muted" v-if="item.price">/@{{ item.number_of_listings }} {{ trans('plugins/real-estate::dashboard.posts') }}</span>
                             </div>
                             <div class="ribbon ribbon-top ribbon-bookmark bg-green" v-if="item.percent_save_text">
                                 @{{ item.percent_save_text }}

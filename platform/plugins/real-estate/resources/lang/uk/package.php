@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Обліковий запис може придбати x разів',
     'subscribe_package' => 'Підписатися на пакет',
     'add_credit_alert' => 'Будь ласка, додайте свої кредити, щоб створювати власні пости.',
+    'price_per_post' => ':price / за пост',
+    'free_posts' => 'Безкоштовно :number пост(ів)',
+    'price_with_sale' => ':price Всього :percentage_sale',
+    'save_percentage' => 'економія :percentage %',
+    'features' => 'Особливості',
+    'title' => 'Заголовок',
+    'feature_example' => 'Напр.: 60-денне розміщення оголошень',
 ];

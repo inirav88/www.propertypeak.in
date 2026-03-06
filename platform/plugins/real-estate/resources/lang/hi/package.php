@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'एक खाता x बार खरीद सकता है',
     'subscribe_package' => 'पैकेज सब्सक्राइब करें',
     'add_credit_alert' => 'अपनी पोस्ट बनाने के लिए कृपया अपना क्रेडिट जोड़ें।',
+    'price_per_post' => ':price / प्रति पोस्ट',
+    'free_posts' => 'मुफ्त :number पोस्ट',
+    'price_with_sale' => ':price कुल :percentage_sale',
+    'save_percentage' => ':percentage % बचाएं',
+    'features' => 'विशेषताएं',
+    'title' => 'शीर्षक',
+    'feature_example' => 'उदाहरण: 60-दिन की संपत्ति पोस्टिंग',
 ];

@@ -116,18 +116,18 @@ class InvoiceHelper
     public function getVariables(): array
     {
         return [
-            'invoice.*' => __('Invoice information from database, ex: invoice.code, invoice.amount, ...'),
-            'account.*' => __('Bill payment user account information, ex: account.name, account.email, ...'),
-            'payment_method' => __('Payment method'),
-            'payment_status' => __('Payment status'),
-            'payment_description' => __('Payment description'),
-            'settings.using_custom_font_for_invoice' => __('Check site is using custom font for invoice or not'),
-            'settings.font_family' => __('The font family of invoice template'),
-            'settings.enable_invoice_stamp' => __('Check have enabled the invoice stamp'),
-            'settings.company_name_for_invoicing' => __('The company name of invoice'),
-            'settings.company_address_for_invoicing' => __('The company address of invoice'),
-            'settings.company_email_for_invoicing' => __('The company email of invoice'),
-            'settings.company_phone_for_invoicing' => __('The company phone number of invoice'),
+            'invoice.*' => trans('plugins/real-estate::invoice.template_variables.invoice_info'),
+            'account.*' => trans('plugins/real-estate::invoice.template_variables.account_info'),
+            'payment_method' => trans('plugins/real-estate::invoice.template_variables.payment_method'),
+            'payment_status' => trans('plugins/real-estate::invoice.template_variables.payment_status'),
+            'payment_description' => trans('plugins/real-estate::invoice.template_variables.payment_description'),
+            'settings.using_custom_font_for_invoice' => trans('plugins/real-estate::invoice.template_variables.using_custom_font'),
+            'settings.font_family' => trans('plugins/real-estate::invoice.template_variables.font_family'),
+            'settings.enable_invoice_stamp' => trans('plugins/real-estate::invoice.template_variables.enable_stamp'),
+            'settings.company_name_for_invoicing' => trans('plugins/real-estate::invoice.template_variables.company_name'),
+            'settings.company_address_for_invoicing' => trans('plugins/real-estate::invoice.template_variables.company_address'),
+            'settings.company_email_for_invoicing' => trans('plugins/real-estate::invoice.template_variables.company_email'),
+            'settings.company_phone_for_invoicing' => trans('plugins/real-estate::invoice.template_variables.company_phone'),
         ];
     }
 

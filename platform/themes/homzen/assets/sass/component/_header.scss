@@ -751,7 +751,7 @@
         }
     }
     .bottom-canvas {
-        padding: 30px 20px 100px;
+        padding: 30px 20px 150px;
         height: 100vh;
         overflow-y: auto;
     }
@@ -909,9 +909,7 @@
 .mobile-menu .navigation li > ul,
 .mobile-menu .navigation li > ul > li > ul {
     display: none;
-    background: rgba(237, 32, 39, 0.1);
     padding: 15px 20px;
-    border-radius: 10px;
 }
 
 .mobile-menu .navigation li > ul > li,
@@ -1062,9 +1060,8 @@
             padding-bottom: 19px;
 
             &:last-child {
-                border-bottom: 0;
-                padding-bottom: 0px;
-                margin-bottom: 0px;
+                margin-bottom: 0;
+                border-bottom: none;
             }
             .content {
                 color: $variant-2;
@@ -1231,9 +1228,7 @@
             }
         }
         .sub-nav-menu {
-            background: rgba(237, 32, 39, 0.1);
             padding: 15px 20px;
-            border-radius: 10px;
             .sub-nav-link {
                 padding: 7px 0px;
                 display: block;

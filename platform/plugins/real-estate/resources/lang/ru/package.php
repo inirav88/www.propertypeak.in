@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Аккаунт может совершить покупку x раз',
     'subscribe_package' => 'Подписаться на пакет',
     'add_credit_alert' => 'Пожалуйста, добавьте свой кредит, чтобы создавать свои собственные сообщения.',
+    'price_per_post' => ':price / за публикацию',
+    'free_posts' => 'Бесплатно :number публикаций',
+    'price_with_sale' => ':price Всего :percentage_sale',
+    'save_percentage' => 'экономия :percentage %',
+    'features' => 'Особенности',
+    'title' => 'Название',
+    'feature_example' => 'Например: 60-дневные публикации',
 ];

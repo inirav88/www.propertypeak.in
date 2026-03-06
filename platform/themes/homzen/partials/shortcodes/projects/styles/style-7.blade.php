@@ -18,9 +18,9 @@
                                             @endif
                                         </div>
                                         <div class="box-name">
-                                            <h5 class="title">
+                                            <h3 class="title">
                                                 <a href="{{ $project->url }}" class="link line-clamp-1">{{ $project->name }}</a>
-                                            </h5>
+                                            </h3>
                                             @if($project->short_address)
                                                 <p class="location">
                                                     <span class="icon icon-mapPin"></span>
@@ -62,7 +62,7 @@
                                         <div class="pricing-project">
                                             @if (!setting('real_estate_hide_price', false))
                                                 <div class="d-flex align-items-center">
-                                                    <h5>{{ $project->formatted_price }}</h5>
+                                                    <span class="h5">{{ $project->formatted_price }}</span>
                                                 </div>
                                             @endif
                                             @if (RealEstateHelper::isEnabledWishlist())
@@ -73,6 +73,7 @@
                                                             data-id="{{ $project->getKey() }}"
                                                             data-add-message="{{ __('Added ":name" to wishlist successfully!', ['name' => $project->name]) }}"
                                                             data-remove-message="{{ __('Removed ":name" from wishlist successfully!', ['name' => $project->name]) }}"
+                                                            aria-label="{{ __('Add to wishlist') }}"
                                                     >
                                                         <x-core::icon name="ti ti-heart" />
                                                     </button>

@@ -5,6 +5,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=1" name="viewport"/>
 
+        <link rel="preload" href="{{ Theme::asset()->url('fonts/icomoon.woff2') }}" as="font" type="font/woff2" crossorigin>
+
         <style>
             :root {
                 --primary-color: {{ theme_option('primary_color', '#db1d23') }};
@@ -14,6 +16,9 @@
                 --main-header-background-color: {{ theme_option('main_header_background_color', '#ffffff') }};
                 --main-header-text-color: {{ theme_option('main_header_text_color', '#161e2d') }};
                 --main-header-border-color: {{ theme_option('main_header_border_color', '#e4e4e4') }};
+                --footer-text-color: {{ theme_option('footer_text_color', '#a3abb0') }};
+                --footer-heading-color: {{ theme_option('footer_heading_color', '#ffffff') }};
+                --footer-hover-color: {{ theme_option('footer_hover_color', '#cd380f') }};
                 --map-marker-icon-image: url({{ theme_option('map_marker_image') ? RvMedia::getImageUrl(theme_option('map_marker_image')) : Theme::asset()->url('images/map-icon.png') }});
             }
         </style>
@@ -25,9 +30,9 @@
         {!! apply_filters(THEME_FRONT_BODY, null) !!}
 
         <div id="wrapper">
-            <div class="clearfix">
+            <main class="clearfix">
                 @yield('content')
-            </div>
+            </main>
         </div>
 
         {!! Theme::footer() !!}

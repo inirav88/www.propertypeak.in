@@ -18,42 +18,49 @@ class CareerSeeder extends BaseSeeder
         $careers = [
             [
                 'name' => 'Senior Full Stack Engineer, Creator Success Full Time',
-                'description' => 'Constantly changing work patterns and norms, and the need for organizational resiliency',
+                'description' => 'Lead development of innovative real estate solutions using modern technologies',
+                'location' => 'San Francisco, United States',
                 'image' => 'general/job-details-thumb.png',
             ],
             [
                 'name' => 'Data Science Specialist, Analytics Division',
-                'description' => 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit laborum — semper quis lectus nulla',
+                'description' => 'Drive data-driven decisions through advanced analytics and machine learning models',
+                'location' => 'New York, United States',
                 'image' => 'general/job-details-thumb.png',
             ],
             [
                 'name' => 'Product Marketing Manager, Growth Team',
-                'description' => 'Crafting compelling marketing strategies to drive user acquisition and retention',
+                'description' => 'Craft compelling marketing strategies to drive user acquisition and brand growth',
+                'location' => 'Los Angeles, United States',
                 'image' => 'general/job-details-thumb.png',
             ],
             [
                 'name' => 'UX/UI Designer, User Experience Team',
-                'description' => 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'description' => 'Design intuitive user interfaces that deliver exceptional customer experiences',
+                'location' => 'Seattle, United States',
                 'image' => 'general/job-details-thumb.png',
             ],
             [
                 'name' => 'Operations Manager, Supply Chain Division',
-                'description' => 'Ensuring smooth and efficient supply chain operations for timely product delivery',
+                'description' => 'Optimize operational workflows and ensure seamless business processes',
+                'location' => 'Chicago, United States',
                 'image' => 'general/job-details-thumb.png',
             ],
             [
                 'name' => 'Financial Analyst, Investment Group',
-                'description' => 'Analyzing market trends and investment opportunities for optimal financial outcomes',
+                'description' => 'Analyze market trends and investment opportunities for strategic decision-making',
+                'location' => 'Boston, United States',
                 'image' => 'general/job-details-thumb.png',
             ],
         ];
+
+        $salaries = ['$50,000 - $80,000', '$70,000 - $100,000', '$80,000 - $120,000', '$90,000 - $130,000', '$100,000 - $150,000', '$60,000 - $90,000'];
 
         foreach ($careers as $index => $item) {
             $index++;
 
             $career = Career::query()->create(array_merge(Arr::except($item, ['image', 'icon']), [
-                'location' => "{$this->fake()->city()}, {$this->fake()->country()}",
-                'salary' => format_price($this->fake()->numberBetween(500, 10000)),
+                'salary' => $salaries[array_rand($salaries)],
                 'content' => File::get(database_path('/seeders/contents/career-detail.html')),
             ]));
 

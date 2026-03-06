@@ -66,21 +66,21 @@ class Transaction extends BaseModel
 
         if ($this->user_id) {
             if ($this->type == TransactionTypeEnum::ADD) {
-                return __(
-                    'Added :credits credit(s) by admin ":user"',
+                return trans(
+                    'plugins/real-estate::transaction.added_credits',
                     ['credits' => $credits, 'user' => $this->user->name]
                 );
             }
 
-            return __(
-                'Removed :credits credit(s) by admin ":user"',
+            return trans(
+                'plugins/real-estate::transaction.removed_credits',
                 ['credits' => $credits, 'user' => $this->user->name]
             );
         }
 
-        $description = __('You have purchased :credits credit(s)', ['credits' => $credits]);
+        $description = trans('plugins/real-estate::transaction.purchased_credits', ['credits' => $credits]);
         if ($this->payment?->id) {
-            $description .= ' ' . __('via') . ' ' . $this->payment->payment_channel->label() . ' ' . $time .
+            $description .= ' ' . trans('plugins/real-estate::transaction.via') . ' ' . $this->payment->payment_channel->label() . ' ' . $time .
                 ': ' . number_format($this->payment->amount, 2) . $this->payment->currency;
         }
 

@@ -24,9 +24,9 @@
             </div>
             <div class="col-lg-7">
                 @if ($shortcode->title)
-                    <h5 class="text-capitalize title">
+                    <h2 class="h5 text-capitalize title">
                         {!! BaseHelper::clean($shortcode->title) !!}
-                    </h5>
+                    </h2>
                 @endif
                 <div class="tab-content content-box-privacy">
                     @foreach ($tabs as $key => $tab)

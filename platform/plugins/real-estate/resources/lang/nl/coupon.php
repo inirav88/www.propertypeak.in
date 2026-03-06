@@ -35,4 +35,11 @@ return [
     'total' => 'Totaal',
     'toggle_coupon_form_text' => 'Heeft u een kortingsboncode?',
     'apply_coupon_code' => 'Toepassen',
+    'invalid' => 'Deze coupon is ongeldig!',
+    'applied_success' => 'Coupon ":code" succesvol toegepast!',
+    'not_used' => 'Deze coupon is nog niet gebruikt!',
+    'removed_success' => 'Coupon :code succesvol verwijderd!',
+    'remove' => 'Verwijderen',
+    'your_order' => 'Uw bestelling',
+    'coupon_code_applied' => 'Couponcode: :code',
 ];

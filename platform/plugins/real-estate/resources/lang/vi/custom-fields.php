@@ -3,7 +3,7 @@
 return [
     'name' => 'Trường tùy chỉnh',
     'create' => 'Tạo nên',
-    'edit' => 'Edit :name',
+    'edit' => 'Chỉnh sửa :name',
     'type' => 'Kiểu',
     'options' => 'Tùy chọn',
     'option' => [

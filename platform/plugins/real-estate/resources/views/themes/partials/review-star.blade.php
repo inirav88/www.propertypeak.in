@@ -3,7 +3,7 @@
             <span class="rating-star">
                 <span class="rating-star-item" style="width: {{ $avgStar * 20 }}%"></span>
             </span>
-            <span>{{ __(':avg out of 5', ['avg' => number_format($avgStar, 1)]) }}</span>
+            <span>{{ trans('plugins/real-estate::property.avg_out_of_5', ['avg' => number_format($avgStar, 1)]) }}</span>
         @break
     @default
         <span class="rating-star">

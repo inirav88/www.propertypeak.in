@@ -68,4 +68,12 @@ return [
             ],
         ],
     ],
+    'form_content' => 'Sadržaj obrasca',
+    'form_message' => 'Vaša poruka',
+    'name_placeholder' => 'Unesite svoje ime',
+    'phone_placeholder' => 'Unesite broj telefona',
+    'email_placeholder' => 'Unesite svoju email adresu',
+    'message_placeholder' => 'Unesite svoju poruku',
+    'send_consult' => 'Pošalji konzultaciju',
+    'dropdown_show_label' => 'Odaberi',
 ];

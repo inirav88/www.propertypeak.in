@@ -534,7 +534,8 @@
     .footer-cl-4 {
         margin-left: 0px;
     }
-    .flat-title-page h2 {
+    .flat-title-page h2,
+    .flat-title-page .h2 {
         font-size: 46px;
         line-height: 58px;
     }
@@ -548,11 +549,13 @@
     .flat-latest-post .flat-blog-item {
         margin-bottom: 30px;
     }
-    h1 {
+    h1,
+    .h1 {
         font-size: 60px;
         line-height: 78px;
     }
-    h2 {
+    h2,
+    .h2 {
         font-size: 46px;
         line-height: 58px;
     }
@@ -803,8 +806,11 @@
         }
 
         .box-right {
+            max-width: 100%;
+
             img {
                 width: 100%;
+                border-radius: 0 0 20px 20px;
             }
         }
     }
@@ -987,6 +993,17 @@
 }
 
 @media only screen and (max-width: 767px) {
+    .grid-location-v2 {
+        grid-template-columns: 1fr;
+    }
+
+    .box-location-v3 {
+        .img-style {
+            width: 120px;
+            height: 120px;
+        }
+    }
+
     .flat-tab-form {
         .nav-tab-form {
             .nav-link-item {
@@ -1000,7 +1017,8 @@
             text-align: center;
         }
     }
-    h3 {
+    h3,
+    .h3 {
         font-size: 40px;
         line-height: 58px;
     }
@@ -1401,11 +1419,15 @@
     }
     h1,
     h2,
-    h3 {
+    h3,
+    .h1,
+    .h2,
+    .h3 {
         font-size: 40px;
         line-height: 58px;
     }
-    h4 {
+    h4,
+    .h4 {
         font-size: 32px;
         line-height: 40px;
     }

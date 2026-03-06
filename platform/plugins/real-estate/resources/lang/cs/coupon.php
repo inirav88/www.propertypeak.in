@@ -35,4 +35,11 @@ return [
     'total' => 'Celkem',
     'toggle_coupon_form_text' => 'Máte kód kupónu?',
     'apply_coupon_code' => 'Použít',
+    'invalid' => 'Tento kupón je neplatný!',
+    'applied_success' => 'Kupón ":code" byl úspěšně uplatněn!',
+    'not_used' => 'Tento kupón ještě nebyl použit!',
+    'removed_success' => 'Kupón :code byl úspěšně odebrán!',
+    'remove' => 'Odebrat',
+    'your_order' => 'Vaše objednávka',
+    'coupon_code_applied' => 'Kód kupónu: :code',
 ];

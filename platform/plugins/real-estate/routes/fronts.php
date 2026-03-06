@@ -3,7 +3,6 @@
 use Botble\Base\Http\Middleware\RequiresJsonRequestMiddleware;
 use Botble\RealEstate\Facades\RealEstateHelper;
 use Botble\RealEstate\Http\Controllers\CustomFieldController;
-use Botble\RealEstate\Http\Controllers\Fronts\AccountProjectController;
 use Botble\RealEstate\Http\Controllers\Fronts\AccountPropertyController;
 use Botble\RealEstate\Http\Controllers\Fronts\AccountReviewController;
 use Botble\RealEstate\Http\Controllers\Fronts\ConsultController;
@@ -51,23 +50,10 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                     ->name('public.properties-by-state');
             }
 
-            if (!RealEstateHelper::isDisabledPublicProfile()) {
+            if (! RealEstateHelper::isDisabledPublicProfile()) {
                 Route::get(SlugHelper::getPrefix(Account::class, 'agents') ?: 'agents', 'PublicController@getAgents')
                     ->name('public.agents');
-
-                Route::get('developers', 'PublicController@getDevelopers')
-                    ->name('public.developers');
-
-                // Custom routes for singular view
-                Route::get('developers/{slug}', 'PublicController@getAgent')->name('public.developer');
-                Route::get('agents/{slug}', 'PublicController@getAgent')->name('public.agent');
-
-                // Builder Microsite Route
-                Route::get('builders/{slug}/microsite', 'BuilderMicrositeController@show')->name('public.builder.microsite');
             }
-
-            Route::get('packages', 'PublicController@getPackages')
-                ->name('public.packages');
 
             Route::post('send-consult', 'PublicController@postSendConsult')
                 ->name('public.send.consult');
@@ -107,12 +93,6 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 ->name('public.ajax.review.index');
         });
 
-        Route::group(['middleware' => ['web', 'core', 'account', LocaleMiddleware::class]], function (): void {
-            Route::prefix('account')->name('public.account.')->group(function (): void {
-                Route::match(['GET', 'POST'], 'logout', [LoginController::class, 'logout'])->name('logout');
-            });
-        });
-
         Route::group(['middleware' => ['web', 'core', 'account', EnsureAccountIsApproved::class, 'account.not_blocked', LocaleMiddleware::class]], function (): void {
             Route::prefix('account')->name('public.account.')->group(function (): void {
                 Route::get('pending-approval', [PublicAccountController::class, 'getPendingApproval'])->name('pending-approval');
@@ -120,10 +100,7 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 Route::get('settings', [PublicAccountController::class, 'getSettings'])->name('settings');
                 Route::post('settings', [PublicAccountController::class, 'postSettings'])->name('post.settings');
                 Route::put('security', [PublicAccountController::class, 'postSecurity'])->name('post.security');
-
-                // Microsite Settings Routes
-                Route::get('settings/microsite', [PublicAccountController::class, 'getMicrositeSettings'])->name('settings.microsite');
-                Route::post('settings/microsite', [PublicAccountController::class, 'postMicrositeSettings']);
+                Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
                 Route::post('avatar', [PublicAccountController::class, 'postAvatar'])->name('avatar');
                 Route::get('packages', [PublicAccountController::class, 'getPackages'])->name('packages');
@@ -135,15 +112,6 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 });
                 Route::match(['GET', 'POST'], 'consults', [ConsultController::class, 'index'])->name('consults.index');
                 Route::get('consults/{id}', [ConsultController::class, 'show'])->name('consults.show')->wherePrimaryKey();
-
-                // Lead Management Routes
-                Route::prefix('leads')->name('leads.')->group(function (): void {
-                    Route::get('/', 'LeadController@index')->name('index');
-                    Route::get('/{id}', 'LeadController@show')->name('show')->wherePrimaryKey();
-                    Route::post('/{id}/status', 'LeadController@updateStatus')->name('update-status')->wherePrimaryKey();
-                    Route::post('/{id}/note', 'LeadController@addNote')->name('add-note')->wherePrimaryKey();
-                    Route::get('/export/csv', 'LeadController@export')->name('export');
-                });
 
                 Route::match(['GET', 'POST'], 'reviews', [AccountReviewController::class, 'index'])->name('reviews.index');
 
@@ -166,10 +134,6 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
                 Route::prefix('properties')->name('properties.')->group(function (): void {
                     Route::resource('', AccountPropertyController::class)->parameters(['' => 'property']);
                     Route::post('renew/{id}', [AccountPropertyController::class, 'renew'])->name('renew')->wherePrimaryKey();
-                });
-
-                Route::prefix('projects')->name('projects.')->group(function (): void {
-                    Route::resource('', AccountProjectController::class)->parameters(['' => 'project']);
                 });
 
                 Route::prefix('invoices')

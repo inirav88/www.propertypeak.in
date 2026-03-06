@@ -2,13 +2,13 @@
 
 return [
     'name' => 'Campos personalizados',
-    'create' => 'Create',
+    'create' => 'Criar',
     'edit' => 'Editar :name',
-    'type' => 'Type',
-    'options' => 'Options',
+    'type' => 'Tipo',
+    'options' => 'Opções',
     'option' => [
-        'label' => 'Label',
-        'value' => 'Value',
+        'label' => 'Etiqueta',
+        'value' => 'Valor',
         'add_row' => 'Adicionar nova linha',
         'add_from_global' => 'Adicionar campo personalizado global',
     ],
@@ -19,8 +19,8 @@ return [
     ],
     'enums' => [
         'fields' => [
-            'text' => 'Text',
-            'dropdown' => 'Dropdown',
+            'text' => 'Texto',
+            'dropdown' => 'Lista suspensa',
         ],
     ],
     'ask_for_select' => 'Selecione um campo personalizado',

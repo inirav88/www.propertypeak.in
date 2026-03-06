@@ -54,6 +54,7 @@ class Account extends BaseModel implements
         'avatar_id',
         'dob',
         'phone',
+        'whatsapp',
         'description',
         'gender',
         'company',
@@ -62,23 +63,14 @@ class Account extends BaseModel implements
         'city_id',
         'is_featured',
         'is_public_profile',
-        'type',
+        'hide_phone',
+        'hide_email',
         'blocked_at',
         'blocked_reason',
         'is_verified',
         'verified_at',
         'verified_by',
         'verification_note',
-        'microsite_enabled',
-        'microsite_slug',
-        'microsite_logo',
-        'microsite_banner',
-        'microsite_primary_color',
-        'microsite_secondary_color',
-        'microsite_about',
-        'microsite_social_links',
-        'microsite_website',
-        'microsite_address',
     ];
 
     protected $hidden = [
@@ -92,11 +84,14 @@ class Account extends BaseModel implements
         'package_end_date' => 'datetime',
         'is_featured' => 'boolean',
         'is_public_profile' => 'boolean',
+        'hide_phone' => 'boolean',
+        'hide_email' => 'boolean',
         'is_verified' => 'boolean',
         'first_name' => SafeContent::class,
         'last_name' => SafeContent::class,
         'username' => SafeContent::class,
         'phone' => SafeContent::class,
+        'whatsapp' => SafeContent::class,
         'description' => SafeContent::class,
         'company' => SafeContent::class,
         'password' => 'hashed',
@@ -105,8 +100,6 @@ class Account extends BaseModel implements
         'blocked_reason' => SafeContent::class,
         'verified_at' => 'datetime',
         'verification_note' => SafeContent::class,
-        'microsite_enabled' => 'boolean',
-        'microsite_social_links' => 'array',
     ];
 
     public function activityLogs(): HasMany
@@ -168,15 +161,11 @@ class Account extends BaseModel implements
     {
         return Attribute::make(
             get: function () {
-                if (!$this->shouldShowVerifiedBadge()) {
+                if (! $this->is_verified) {
                     return '';
                 }
 
-                $badgeType = $this->getBadgeType();
-
-                return view('plugins/real-estate::partials.verified-badge', [
-                    'badgeType' => $badgeType
-                ])->render();
+                return view('plugins/real-estate::partials.verified-badge', ['size' => 'sm'])->render();
             }
         );
     }
@@ -184,23 +173,23 @@ class Account extends BaseModel implements
     protected function firstName(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => ucfirst($value),
-            set: fn($value) => ucfirst($value),
+            get: fn ($value) => ucfirst($value),
+            set: fn ($value) => ucfirst($value),
         );
     }
 
     protected function lastName(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => ucfirst($value),
-            set: fn($value) => ucfirst($value),
+            get: fn ($value) => ucfirst($value),
+            set: fn ($value) => ucfirst($value),
         );
     }
 
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn() => trim($this->first_name . ' ' . $this->last_name),
+            get: fn () => trim($this->first_name . ' ' . $this->last_name),
         );
     }
 
@@ -229,7 +218,7 @@ class Account extends BaseModel implements
     protected function fullName(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->name
+            get: fn () => $this->name
         );
     }
 
@@ -237,7 +226,7 @@ class Account extends BaseModel implements
     {
         return Attribute::make(
             get: function ($value) {
-                if (!RealEstateHelper::isEnabledCreditsSystem()) {
+                if (! RealEstateHelper::isEnabledCreditsSystem()) {
                     return 0;
                 }
 
@@ -249,7 +238,7 @@ class Account extends BaseModel implements
     protected function isBlocked(): Attribute
     {
         return Attribute::make(
-            get: fn() => !is_null($this->blocked_at)
+            get: fn () => ! is_null($this->blocked_at)
         );
     }
 
@@ -265,7 +254,7 @@ class Account extends BaseModel implements
 
     public function canPost(): bool
     {
-        return !RealEstateHelper::isEnabledCreditsSystem() || $this->credits > 0;
+        return ! RealEstateHelper::isEnabledCreditsSystem() || $this->credits > 0;
     }
 
     public function transactions(): HasMany
@@ -296,11 +285,11 @@ class Account extends BaseModel implements
 
     public function canReview(Project|Property $model): bool
     {
-        if (!auth('account')->check()) {
+        if (! auth('account')->check()) {
             return false;
         }
 
-        return !$model
+        return ! $model
             ->reviews()
             ->whereNot('status', ReviewStatusEnum::REJECTED)
             ->where('account_id', auth('account')->id())
@@ -310,86 +299,5 @@ class Account extends BaseModel implements
     public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class);
-    }
-
-    public function isBuilder(): bool
-    {
-        return $this->type === 'builder';
-    }
-
-    public function getUrlAttribute(): string
-    {
-        if ($this->type === 'builder') {
-            return route('public.developer', $this->username);
-        }
-
-        return route('public.agent', $this->username);
-    }
-
-    /**
-     * Check if account has a specific feature in their package
-     */
-    public function hasPackageFeature(string $featureText): bool
-    {
-        $package = $this->packages->first();
-
-        if (!$package) {
-            return false;
-        }
-
-        // Check for specific columns first
-        if ($featureText === 'microsite' && $package->microsite_enabled) {
-            return true;
-        }
-
-        $features = $package->features ?? [];
-
-        if (is_string($features)) {
-            $features = json_decode($features, true) ?? [];
-        }
-
-        foreach ($features as $feature) {
-            if (isset($feature['value']) && str_contains(strtolower($feature['value']), strtolower($featureText))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Check if account should display verified badge
-     */
-    public function shouldShowVerifiedBadge(): bool
-    {
-        // Check if manually verified by admin
-        if ($this->is_verified) {
-            return true;
-        }
-
-        // Check if package includes verified badge feature
-        return $this->hasPackageFeature('verified badge') ||
-            $this->hasPackageFeature('verified + premium badge') ||
-            $this->hasPackageFeature('verified + professional badge');
-    }
-
-    /**
-     * Get the badge type based on package
-     */
-    public function getBadgeType(): ?string
-    {
-        if (!$this->shouldShowVerifiedBadge()) {
-            return null;
-        }
-
-        if ($this->hasPackageFeature('verified + premium badge')) {
-            return 'premium';
-        }
-
-        if ($this->hasPackageFeature('verified + professional badge')) {
-            return 'professional';
-        }
-
-        return 'verified';
     }
 }

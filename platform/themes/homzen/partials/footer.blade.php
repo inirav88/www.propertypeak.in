@@ -37,6 +37,5 @@
                 </div>
             </div>
         @endif
-        {!! Theme::partial('whatsapp-button') !!}
     </footer>
 @endif

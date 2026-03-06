@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Sąskaita gali įsigyti x kartų',
     'subscribe_package' => 'Prenumeruokite paketą',
     'add_credit_alert' => 'Pridėkite savo kreditą, kad sukurtumėte savo įrašus.',
+    'price_per_post' => ':price už įrašą',
+    'free_posts' => ':posts nemokami įrašai',
+    'price_with_sale' => ':price (sutaupykite :discount)',
+    'save_percentage' => 'Sutaupykite :percentage%',
+    'features' => 'Funkcijos',
+    'title' => 'Paketai',
+    'feature_example' => ':limit savybės skelbimas',
 ];

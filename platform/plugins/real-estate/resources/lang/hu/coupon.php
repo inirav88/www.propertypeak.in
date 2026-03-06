@@ -35,4 +35,11 @@ return [
     'total' => 'Összesen',
     'toggle_coupon_form_text' => 'Van kuponkódja?',
     'apply_coupon_code' => 'Alkalmazás',
+    'remove' => 'Eltávolítás',
+    'your_order' => 'Az Ön rendelése',
+    'coupon_code_applied' => 'Kuponkód: :code',
+    'invalid' => 'A kuponkód érvénytelen vagy lejárt.',
+    'applied_success' => 'Kuponkód sikeresen alkalmazva!',
+    'not_used' => 'Még nem használt',
+    'removed_success' => 'Kuponkód sikeresen eltávolítva!',
 ];

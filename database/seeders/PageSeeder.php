@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Botble\Base\Supports\BaseSeeder;
-
+use Botble\CookieConsent\Database\Traits\HasCookieConsentSeeder;
 use Botble\Location\Models\City;
 use Botble\Location\Models\State;
 use Botble\Page\Database\Traits\HasPageSeeder;
@@ -13,6 +13,7 @@ use Illuminate\Support\Arr;
 class PageSeeder extends BaseSeeder
 {
     use HasPageSeeder;
+    use HasCookieConsentSeeder;
 
     public function run(): void
     {
@@ -156,6 +157,21 @@ class PageSeeder extends BaseSeeder
                             'title' => 'Meet Our Agents',
                             'subtitle' => 'Our Teams',
                             'account_ids' => '1,2,3,4',
+                            'enable_lazy_loading' => 'yes',
+                        ],
+                    ],
+                    [
+                        'name' => 'mortgage-calculator',
+                        'attributes' => [
+                            'style' => 'default',
+                            'layout' => 'horizontal',
+                            'form_style' => 'modern',
+                            'form_size' => 'xl',
+                            'form_alignment' => 'center',
+                            'form_margin' => '50px 0',
+                            'form_title' => 'Mortgage Calculator',
+                            'form_description' => 'Calculate your monthly mortgage payments',
+                            'background_color' => '#f7f7f7',
                             'enable_lazy_loading' => 'yes',
                         ],
                     ],
@@ -328,10 +344,25 @@ class PageSeeder extends BaseSeeder
                         ],
                     ],
                     [
+                        'name' => 'mortgage-calculator',
+                        'attributes' => [
+                            'style' => 'default',
+                            'layout' => 'horizontal',
+                            'form_style' => 'modern',
+                            'form_size' => 'xl',
+                            'form_alignment' => 'center',
+                            'form_margin' => '50px 0',
+                            'form_title' => 'Mortgage Calculator',
+                            'form_description' => 'Calculate your monthly mortgage payments',
+                            'background_color' => '#f7f7f7',
+                            'enable_lazy_loading' => 'yes',
+                        ],
+                    ],
+                    [
                         'name' => 'testimonials',
                         'attributes' => [
                             'style' => 3,
-                            'title' => 'What’s People Say’s',
+                            'title' => 'What\'s People Say\'s',
                             'subtitle' => 'Our Testimonials',
                             'description' => 'Our seasoned team excels in real estate with years of successful market navigation, offering informed decisions and optimal results.',
                             'testimonial_ids' => '1,2,3,4',
@@ -465,6 +496,21 @@ class PageSeeder extends BaseSeeder
                         ],
                     ],
                     [
+                        'name' => 'mortgage-calculator',
+                        'attributes' => [
+                            'style' => 'default',
+                            'layout' => 'horizontal',
+                            'form_style' => 'modern',
+                            'form_size' => 'xl',
+                            'form_alignment' => 'center',
+                            'form_margin' => '50px 0',
+                            'form_title' => 'Mortgage Calculator',
+                            'form_description' => 'Calculate your monthly mortgage payments',
+                            'background_color' => '#f7f7f7',
+                            'enable_lazy_loading' => 'yes',
+                        ],
+                    ],
+                    [
                         'name' => 'blog-posts',
                         'attributes' => [
                             'style' => 2,
@@ -564,6 +610,21 @@ class PageSeeder extends BaseSeeder
                         ],
                     ],
                     [
+                        'name' => 'mortgage-calculator',
+                        'attributes' => [
+                            'style' => 'default',
+                            'layout' => 'horizontal',
+                            'form_style' => 'modern',
+                            'form_size' => 'xl',
+                            'form_alignment' => 'center',
+                            'form_margin' => '50px 0',
+                            'form_title' => 'Mortgage Calculator',
+                            'form_description' => 'Calculate your monthly mortgage payments',
+                            'background_color' => '#f7f7f7',
+                            'enable_lazy_loading' => 'yes',
+                        ],
+                    ],
+                    [
                         'name' => 'properties',
                         'attributes' => [
                             'style' => 6,
@@ -580,7 +641,7 @@ class PageSeeder extends BaseSeeder
                         'name' => 'testimonials',
                         'attributes' => [
                             'style' => 2,
-                            'title' => 'What’s People Say’s',
+                            'title' => 'What\'s People Say\'s',
                             'subtitle' => 'OUR TESTIMONIALS',
                             'testimonial_ids' => '1,2,3,4',
                             'enable_lazy_loading' => 'yes',
@@ -780,10 +841,25 @@ class PageSeeder extends BaseSeeder
                         ],
                     ],
                     [
+                        'name' => 'mortgage-calculator',
+                        'attributes' => [
+                            'style' => 'default',
+                            'layout' => 'horizontal',
+                            'form_style' => 'modern',
+                            'form_size' => 'xl',
+                            'form_alignment' => 'center',
+                            'form_margin' => '50px 0',
+                            'form_title' => 'Mortgage Calculator',
+                            'form_description' => 'Calculate your monthly mortgage payments',
+                            'background_color' => '#f7f7f7',
+                            'enable_lazy_loading' => 'yes',
+                        ],
+                    ],
+                    [
                         'name' => 'testimonials',
                         'attributes' => [
                             'style' => 1,
-                            'title' => 'What’s People Say’s',
+                            'title' => 'What\'s People Say\'s',
                             'subtitle' => 'TOP PROPERTIES',
                             'description' => 'Our seasoned team excels in real estate with years of successful market navigation, offering informed decisions and optimal results.',
                             'testimonial_ids' => '1,2,3,4',
@@ -799,6 +875,20 @@ class PageSeeder extends BaseSeeder
                             'subtitle' => 'LATEST NEWS',
                             'type' => 'recent',
                             'limit' => 4,
+                            'enable_lazy_loading' => 'yes',
+                        ],
+                    ],
+                    [
+                        'name' => 'mortgage-calculator',
+                        'attributes' => [
+                            'style' => 'default',
+                            'layout' => 'horizontal',
+                            'form_style' => 'modern',
+                            'form_size' => 'lg',
+                            'form_alignment' => 'center',
+                            'form_title' => 'Mortgage Calculator',
+                            'form_description' => 'Calculate your monthly mortgage payments',
+                            'background_color' => '#f7f7f7',
                             'enable_lazy_loading' => 'yes',
                         ],
                     ],
@@ -1155,8 +1245,8 @@ class PageSeeder extends BaseSeeder
                 'template' => 'no-layout',
             ],
             [
-                'name' => 'Cookie Policy',
-                'content' => '<h2>Cookie Policy</h2><p>This website uses cookies to ensure you get the best experience.</p>',
+                'name' => $this->getCookieConsentPageName(),
+                'content' => $this->getCookieConsentPageContent(),
                 'metadata' => [
                     'breadcrumb' => 'yes',
                 ],

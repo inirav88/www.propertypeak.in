@@ -35,4 +35,11 @@ return [
     'total' => 'Total',
     'toggle_coupon_form_text' => 'У вас есть код купона?',
     'apply_coupon_code' => 'Apply',
+    'invalid' => 'Этот купон недействителен!',
+    'applied_success' => 'Купон ":code" успешно применен!',
+    'not_used' => 'Этот купон еще не использован!',
+    'removed_success' => 'Купон :code успешно удален!',
+    'remove' => 'Удалить',
+    'your_order' => 'Ваш заказ',
+    'coupon_code_applied' => 'Код купона: :code',
 ];

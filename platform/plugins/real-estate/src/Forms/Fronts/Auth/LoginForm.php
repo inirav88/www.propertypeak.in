@@ -24,8 +24,8 @@ class LoginForm extends AuthForm
             ->setUrl(route('public.account.login.post'))
             ->setValidatorClass(LoginRequest::class)
             ->icon('ti ti-lock')
-            ->heading(__('Login to your account'))
-            ->description(__('Your personal data will be used to support your experience throughout this website, to manage access to your account.'))
+            ->heading(trans('plugins/real-estate::account.login_heading'))
+            ->description(trans('plugins/real-estate::account.register_description'))
             ->when(
                 theme_option('login_background'),
                 fn (AuthForm $form, string $background) => $form->banner($background)
@@ -34,8 +34,8 @@ class LoginForm extends AuthForm
                 'email',
                 EmailField::class,
                 EmailFieldOption::make()
-                    ->label(__('Email'))
-                    ->placeholder(__('Email address'))
+                    ->label(trans('plugins/real-estate::account.email'))
+                    ->placeholder(trans('plugins/real-estate::account.email_placeholder'))
                     ->icon('ti ti-mail')
                     ->toArray()
             )
@@ -43,8 +43,8 @@ class LoginForm extends AuthForm
                 'password',
                 PasswordField::class,
                 TextFieldOption::make()
-                    ->label(__('Password'))
-                    ->placeholder(__('Password'))
+                    ->label(trans('plugins/real-estate::account.form.password'))
+                    ->placeholder(trans('plugins/real-estate::account.form.password'))
                     ->icon('ti ti-lock')
                     ->toArray()
             )
@@ -55,7 +55,7 @@ class LoginForm extends AuthForm
                 'remember',
                 OnOffCheckboxField::class,
                 CheckboxFieldOption::make()
-                    ->label(__('Remember me'))
+                    ->label(trans('plugins/real-estate::account.remember_me'))
                     ->wrapperAttributes(['class' => 'col-6'])
                     ->toArray()
             )
@@ -63,7 +63,7 @@ class LoginForm extends AuthForm
                 'forgot_password',
                 HtmlField::class,
                 [
-                    'html' => Html::link(route('public.account.password.request'), __('Forgot password?'), attributes: ['class' => 'text-decoration-underline']),
+                    'html' => Html::link(route('public.account.password.request'), trans('plugins/real-estate::account.forgot_password_question'), attributes: ['class' => 'text-decoration-underline']),
                     'wrapper' => [
                         'class' => 'col-6 text-end',
                     ],
@@ -72,14 +72,14 @@ class LoginForm extends AuthForm
             ->add('closeRow', HtmlField::class, [
                 'html' => '</div>',
             ])
-            ->submitButton(__('Login'), 'ti ti-arrow-narrow-right')
+            ->submitButton(trans('plugins/real-estate::account.login'), 'ti ti-arrow-narrow-right')
             ->when(RealEstateHelper::isRegisterEnabled(), function (LoginForm $form): void {
                 $form->add('register', HtmlField::class, [
                     'html' => sprintf(
                         '<div class="mt-3 text-center">%s <a href="%s" class="text-decoration-underline">%s</a></div>',
-                        __("Don't have an account?"),
+                        trans('plugins/real-estate::account.dont_have_account'),
                         route('public.account.register'),
-                        __('Register now')
+                        trans('plugins/real-estate::account.register_now')
                     ),
                 ]);
             })

@@ -74,9 +74,9 @@
                             class="btn-import"
                             type="submit"
                             color="primary"
-                            data-uploading-text="{{ __('plugins/real-estate::import.uploading') }}"
-                            data-validating-text="{{ __('plugins/real-estate::import.validating') }}"
-                            data-importing-text="{{ __('plugins/real-estate::import.importing') }}"
+                            data-uploading-text="{{ trans('plugins/real-estate::import.uploading') }}"
+                            data-validating-text="{{ trans('plugins/real-estate::import.validating') }}"
+                            data-importing-text="{{ trans('plugins/real-estate::import.importing') }}"
                         >
                             {{ trans('plugins/real-estate::property.import_properties') }}
                         </x-core::button>

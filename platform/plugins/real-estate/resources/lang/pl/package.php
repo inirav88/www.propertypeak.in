@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Konto umożliwia zakup x razy',
     'subscribe_package' => 'Subskrybuj pakiet',
     'add_credit_alert' => 'Dodaj swoje środki, aby tworzyć własne posty.',
+    'price_per_post' => ':price / za post',
+    'free_posts' => 'Bezpłatnie :number postów',
+    'price_with_sale' => ':price Razem :percentage_sale',
+    'save_percentage' => 'oszczędność :percentage %',
+    'features' => 'Funkcje',
+    'title' => 'Tytuł',
+    'feature_example' => 'Np.: 60-dniowe ogłoszenia',
 ];

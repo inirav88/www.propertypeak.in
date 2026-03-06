@@ -9,7 +9,7 @@
             @foreach($locations as $location)
                 <div class="box-location-v3 hover-img not-overlay hover-btn-view">
                     <div class="img-style">
-                        {{ RvMedia::image($location->image, $location->name, 'medium-square', attributes: ['style' => 'max-width: 150px']) }}
+                        {{ RvMedia::image($location->image, $location->name, 'medium-square') }}
                     </div>
                     <div class="content">
                         <h6>

@@ -39,9 +39,9 @@ class PropertyPeriodEnum extends Enum
     public function shortLabel(): string
     {
         return match ($this->value) {
-            self::DAY => __('Day'),
-            self::WEEK => __('Week'),
-            self::MONTH => __('Month'),
+            self::DAY => trans('plugins/real-estate::property.periods_short.day'),
+            self::WEEK => trans('plugins/real-estate::property.periods_short.week'),
+            self::MONTH => trans('plugins/real-estate::property.periods_short.month'),
             default => '',
         };
     }

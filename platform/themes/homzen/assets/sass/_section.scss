@@ -32,7 +32,8 @@
     padding: 50px 0;
     background-color: $surface;
 
-    h2 {
+    h2,
+    .h2 {
         text-align: center;
         color: $on-surface;
         letter-spacing: 2px;
@@ -416,9 +417,10 @@
 }
 
 .flat-blog-detail {
-    h3 {
+    .h2 {
         margin-top: 12px;
         margin-bottom: 16px;
+        font-size: 44px;
     }
 
     .post-navigation {
@@ -1460,9 +1462,22 @@
 
     .img-style {
         border-radius: 0;
+        flex-shrink: 0;
+        width: 150px;
+        height: 150px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
 
     .content {
+        flex: 1;
+        min-width: 0;
+        padding-right: 16px;
+
         p {
             margin-top: 4px;
             font-size: 16px;
@@ -3255,6 +3270,18 @@
     position: relative;
     margin-bottom: -7%;
 
+    .box-imgage-detail {
+        display: block;
+        aspect-ratio: 4/3;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
     .navigation {
         &.swiper-nav-next {
             left: 40px;
@@ -3341,7 +3368,6 @@
                 letter-spacing: 0.8px;
                 font-weight: 700;
                 color: $variant-1;
-                opacity: 0.8;
             }
 
             .meta {
@@ -3417,6 +3443,36 @@
     }
 }
 
+.property-disclaimer {
+    background-color: #fdf6e3;
+    padding: 24px 28px;
+    border-left: 4px solid #d4a017;
+    border-radius: 4px;
+
+    .property-disclaimer-title {
+        font-weight: 700;
+        margin-bottom: 12px;
+        font-size: 24px;
+    }
+
+    .property-disclaimer-body {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.7;
+        color: #555;
+
+        strong, b {
+            font-weight: 700;
+        }
+
+        .property-disclaimer-agent {
+            color: #c0392b;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+    }
+}
+
 .single-property-desc {
     .title {
         margin-bottom: 16px;
@@ -3452,7 +3508,6 @@
                 color: $variant-1;
                 font-weight: 400;
                 display: block;
-                opacity: 0.8;
             }
 
             .box-icon {
@@ -3745,8 +3800,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: $variant-1;
-            opacity: 0.8;
+            color: $on-surface;
             margin-inline-end: 10px;
         }
     }
@@ -4078,6 +4132,7 @@
             object-fit: cover;
         }
     }
+
 }
 
 .banner-property-2 {
@@ -4125,6 +4180,13 @@
     .image-sw-single {
         border-radius: 16px;
         overflow: hidden;
+        aspect-ratio: 16/9;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
 
     .box-navigation {
@@ -4271,13 +4333,68 @@
         .faq-body {
             border-top: 1px solid $outline;
             padding: 12px 0px 20px;
-            color: $variant-1;
-            font-size: 18px;
-            line-height: 28px;
+            color: $on-surface;
+            font-size: 16px;
+            line-height: 30px;
+
+            p {
+                font-size: 16px;
+                line-height: 30px;
+                color: $on-surface;
+            }
+
+            p:first-child {
+                margin-top: 0;
+            }
+
+            p:last-child {
+                margin-bottom: 0;
+            }
         }
 
         &:not(:last-child) {
             margin-bottom: 12px;
+        }
+    }
+}
+
+// Style 2: Minimal - divider lines
+.box-faq--minimal {
+    .faq-item {
+        border: none;
+        border-radius: 0;
+        padding: 0;
+        border-bottom: 1px solid $outline;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .faq-body {
+            border-top: none;
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 0;
+        }
+    }
+}
+
+// Style 3: Filled - background + shadow
+.box-faq--filled {
+    .faq-item {
+        border: none;
+        border-radius: 16px;
+        background-color: $surface;
+        box-shadow: $shadow-1;
+        padding: 0 25px;
+
+        .faq-body {
+            border-top: 1px solid $outline;
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 16px;
         }
     }
 }

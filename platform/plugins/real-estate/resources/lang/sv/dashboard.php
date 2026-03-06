@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Gratis __ph0__ post (er)',
     'total_package_price' => '__Ph0__ Totalt (spara __ph1 __%)',
     'dashboard' => 'Dashboard',
+    'character_remain' => 'Tecken kvar',
+    'password_update_success' => 'Losenord uppdaterat!',
+    'language' => 'Sprak',
+    'buy_credits' => 'Kop krediter',
+    'currencies' => 'Valutor',
+    'go_to_homepage' => 'Ga till startsidan',
+    'hello' => 'Hej',
 ];

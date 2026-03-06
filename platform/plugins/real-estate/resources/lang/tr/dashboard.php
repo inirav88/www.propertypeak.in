@@ -109,4 +109,11 @@ return [
     'number_posts_free' => ':posts ücretsiz gönderi',
     'total_package_price' => ':total Toplam (Tasarruf :percent%)',
     'dashboard' => 'Kontrol Paneli',
+    'language' => 'Dil',
+    'character_remain' => ':count karakter kaldi',
+    'password_update_success' => 'Sifre basariyla guncellendi!',
+    'buy_credits' => 'Kredi Satin Al',
+    'currencies' => 'Para Birimleri',
+    'go_to_homepage' => 'Ana Sayfaya Git',
+    'hello' => 'Merhaba',
 ];

@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Δωρεάν :posts ανάρτηση/εις',
     'total_package_price' => ':total Σύνολο (Εξοικονόμηση :percent%)',
     'dashboard' => 'Πίνακας ελέγχου',
+    'character_remain' => 'Χαρακτήρες που απομένουν',
+    'password_update_success' => 'Ο κωδικός ενημερώθηκε επιτυχώς!',
+    'language' => 'Γλώσσα',
+    'buy_credits' => 'Αγορά πιστώσεων',
+    'currencies' => 'Νομίσματα',
+    'go_to_homepage' => 'Μετάβαση στην αρχική σελίδα',
+    'hello' => 'Γεια σας',
 ];

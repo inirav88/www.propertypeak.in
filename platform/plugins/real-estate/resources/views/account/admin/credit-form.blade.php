@@ -1,22 +1,22 @@
 <x-core::form :url="route('account.credits.add', $account->id)">
     <x-core::form.text-input
-        :label="__('Number of credits')"
+        :label="trans('plugins/real-estate::account.number_of_credits')"
         name="credits"
         type="number"
         value="0"
-        :placeholder="__('Number of credits')"
+        :placeholder="trans('plugins/real-estate::account.number_of_credits')"
     />
 
     <x-core::form.select
-        :label="__('Action')"
+        :label="trans('plugins/real-estate::account.action')"
         name="type"
         :options="Botble\RealEstate\Enums\TransactionTypeEnum::labels()"
-        :placeholder="__('Number of credits')"
+        :placeholder="trans('plugins/real-estate::account.number_of_credits')"
     />
 
     <x-core::form.textarea
-        :label="__('Description')"
+        :label="trans('plugins/real-estate::account.description')"
         name="description"
-        :placeholder="__('Description')"
+        :placeholder="trans('plugins/real-estate::account.description')"
     />
 </x-core::form>

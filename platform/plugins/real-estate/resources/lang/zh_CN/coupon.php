@@ -35,4 +35,11 @@ return [
     'total' => '总计',
     'toggle_coupon_form_text' => '您有优惠券代码?',
     'apply_coupon_code' => '应用',
+    'remove' => '删除',
+    'your_order' => '您的订单',
+    'coupon_code_applied' => '优惠券代码：:code',
+    'invalid' => '此优惠券无效！',
+    'applied_success' => '成功应用优惠券":code"！',
+    'not_used' => '此优惠券尚未使用！',
+    'removed_success' => '成功删除优惠券:code！',
 ];

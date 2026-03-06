@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Gratis :posts opslag',
     'total_package_price' => ':total Total (Spar :percent%)',
     'dashboard' => 'Dashboard',
+    'character_remain' => 'Tegn tilbage',
+    'password_update_success' => 'Adgangskode opdateret!',
+    'language' => 'Sprog',
+    'buy_credits' => 'Kob kreditter',
+    'currencies' => 'Valutaer',
+    'go_to_homepage' => 'Ga til forsiden',
+    'hello' => 'Hej',
 ];

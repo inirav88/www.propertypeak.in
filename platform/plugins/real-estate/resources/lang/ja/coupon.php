@@ -35,4 +35,11 @@ return [
     'total' => '合計',
     'toggle_coupon_form_text' => 'クーポンコードをお持ちですか？',
     'apply_coupon_code' => '適用',
+    'invalid' => 'このクーポンは無効です！',
+    'applied_success' => 'クーポン":code"が正常に適用されました！',
+    'not_used' => 'このクーポンはまだ使用されていません！',
+    'removed_success' => 'クーポン:codeが正常に削除されました！',
+    'remove' => '削除',
+    'your_order' => 'ご注文',
+    'coupon_code_applied' => 'クーポンコード: :code',
 ];

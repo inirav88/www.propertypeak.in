@@ -53,14 +53,13 @@ class PropertyForm extends FormAbstract
             ->addScriptsDirectly([
                 'vendor/core/plugins/real-estate/js/real-estate.js',
                 'vendor/core/plugins/real-estate/js/components.js',
-                'vendor/core/plugins/real-estate/js/pg-property.js',
             ]);
 
         $projects = Project::query()
             ->select('name', 'id')
             ->latest()
             ->get()
-            ->mapWithKeys(fn(Project $item) => [$item->getKey() => $item->name]) // @phpstan-ignore-line
+            ->mapWithKeys(fn (Project $item) => [$item->getKey() => $item->name]) // @phpstan-ignore-line
             ->all();
 
         $currencies = Currency::query()->latest('is_default')->oldest('id')->pluck('title', 'id')->all();
@@ -111,9 +110,9 @@ class PropertyForm extends FormAbstract
 
             $oldSelectedFacilities = old('facilities', []);
 
-            if (!empty($oldSelectedFacilities)) {
+            if (! empty($oldSelectedFacilities)) {
                 foreach ($oldSelectedFacilities as $oldSelectedFacility) {
-                    if (!isset($oldSelectedFacility['id']) || !isset($oldSelectedFacility['distance'])) {
+                    if (! isset($oldSelectedFacility['id']) || ! isset($oldSelectedFacility['distance'])) {
                         continue;
                     }
 
@@ -133,9 +132,9 @@ class PropertyForm extends FormAbstract
                 return $html . view(
                     'plugins/real-estate::partials.forms.duplicate-button',
                     [
-                        'url' => route('property.duplicate-property', $this->getModel()->id),
-                        'label' => trans('plugins/real-estate::property.duplicate'),
-                    ]
+                            'url' => route('property.duplicate-property', $this->getModel()->id),
+                            'label' => trans('plugins/real-estate::property.duplicate'),
+                        ]
                 )->render();
             });
         }
@@ -273,6 +272,7 @@ class PropertyForm extends FormAbstract
                 ],
                 'attr' => [
                     'placeholder' => trans('plugins/real-estate::property.form.number_bedroom'),
+                    'step' => '0.5',
                 ],
             ])
             ->add('number_bathroom', NumberField::class, [
@@ -282,6 +282,7 @@ class PropertyForm extends FormAbstract
                 ],
                 'attr' => [
                     'placeholder' => trans('plugins/real-estate::property.form.number_bathroom'),
+                    'step' => '0.5',
                 ],
             ])
             ->add('number_floor', NumberField::class, [
@@ -346,21 +347,24 @@ class PropertyForm extends FormAbstract
             ->add('rowClose2', HtmlField::class, [
                 'html' => '</div>',
             ])
-            ->add('never_expired', OnOffField::class, [
-                'label' => trans('plugins/real-estate::property.never_expired'),
-                'default_value' => true,
-                'help_block' => [
-                    'text' => __('You can change Properties Expired Time (days) in Admin → Settings → Real Estate → General'),
-                ],
-            ])
-            ->when(RealEstateHelper::isEnabledAutoRenew(), function (FormAbstract $form): void {
-                $form->add('auto_renew', OnOffField::class, [
-                    'label' => trans('plugins/real-estate::property.renew_notice', ['days' => RealEstateHelper::propertyExpiredDays()]),
-                    'default_value' => false,
-                    'help_block' => [
-                        'text' => __('You need to set up a cronjob in Admin → Platform Administration → Cronjob first. Once configured, it will automatically renew posts if the author has sufficient credits.'),
-                    ],
-                ]);
+            ->when(RealEstateHelper::isPropertyExpirationEnabled(), function (FormAbstract $form): void {
+                $form
+                    ->add('never_expired', OnOffField::class, [
+                        'label' => trans('plugins/real-estate::property.never_expired'),
+                        'default_value' => false,
+                        'help_block' => [
+                            'text' => trans('plugins/real-estate::property.never_expired_helper'),
+                        ],
+                    ])
+                    ->when(RealEstateHelper::isEnabledAutoRenew(), function (FormAbstract $form): void {
+                        $form->add('auto_renew', OnOffField::class, [
+                            'label' => trans('plugins/real-estate::property.renew_notice', ['days' => RealEstateHelper::propertyExpiredDays()]),
+                            'default_value' => false,
+                            'help_block' => [
+                                'text' => trans('plugins/real-estate::property.auto_renew_helper'),
+                            ],
+                        ]);
+                    });
             })
             ->add(
                 'private_notes',
@@ -435,12 +439,6 @@ class PropertyForm extends FormAbstract
                         ],
                     ])
             )
-            ->add(
-                'pg_fields',
-                HtmlField::class,
-                HtmlFieldOption::make()
-                    ->content(view('plugins/real-estate::partials.pg-fields', ['model' => $this->getModel()])->render())
-            )
             ->addMetaBoxes([
                 'features' => [
                     'title' => trans('plugins/real-estate::property.form.features'),
@@ -491,7 +489,7 @@ class PropertyForm extends FormAbstract
                     ->value($this->getModel()->getKey() ? $this->getModel()->unique_id : $this->getModel()->generateUniqueId())
                     ->maxLength(120)
             )
-            ->when(!empty($projects), function () use ($projects): void {
+            ->when(! empty($projects), function () use ($projects): void {
                 $this
                     ->add('project_id', 'customSelect', [
                         'label' => trans('plugins/real-estate::property.form.project'),
@@ -514,7 +512,7 @@ class PropertyForm extends FormAbstract
                     ->emptyValue(trans('plugins/real-estate::property.select_account'))
                     ->allowClear()
             )
-            ->when(RealEstateHelper::isEnabledCustomFields() && (!setting('real_estate_show_all_custom_fields_in_form_by_default', false) || $this->getModel()->custom_fields_array), function (FormAbstract $form): void {
+            ->when(RealEstateHelper::isEnabledCustomFields() && (! setting('real_estate_show_all_custom_fields_in_form_by_default', false) || $this->getModel()->custom_fields_array), function (FormAbstract $form): void {
                 Assets::addScriptsDirectly('vendor/core/plugins/real-estate/js/custom-fields.js');
 
                 $customFields = CustomField::query()->select(['name', 'id', 'type'])->get();

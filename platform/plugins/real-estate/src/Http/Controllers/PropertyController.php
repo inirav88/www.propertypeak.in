@@ -6,6 +6,9 @@ use Botble\Base\Facades\Assets;
 use Botble\Base\Facades\EmailHandler;
 use Botble\Base\Http\Actions\DeleteResourceAction;
 use Botble\RealEstate\Enums\ModerationStatusEnum;
+use Botble\RealEstate\Events\PropertyCreated;
+use Botble\RealEstate\Events\PropertyDeleted;
+use Botble\RealEstate\Events\PropertyUpdated;
 use Botble\RealEstate\Facades\RealEstateHelper;
 use Botble\RealEstate\Forms\PropertyForm;
 use Botble\RealEstate\Http\Requests\PropertyRequest;
@@ -15,7 +18,6 @@ use Botble\RealEstate\Services\SaveFacilitiesService;
 use Botble\RealEstate\Services\SavePropertyCustomFieldService;
 use Botble\RealEstate\Services\StorePropertyCategoryService;
 use Botble\RealEstate\Tables\PropertyTable;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PropertyController extends BaseController
@@ -50,7 +52,7 @@ class PropertyController extends BaseController
         SavePropertyCustomFieldService $savePropertyCustomFieldService
     ) {
         $request->merge([
-            'expire_date' => Carbon::now()->addDays(RealEstateHelper::propertyExpiredDays()),
+            'expire_date' => RealEstateHelper::calculatePropertyExpireDate(),
             'images' => array_filter($request->input('images', [])),
             'author_type' => Account::class,
         ]);
@@ -66,7 +68,12 @@ class PropertyController extends BaseController
             $property = $form->getModel();
             $property->fill($request->input());
             $property->moderation_status = ModerationStatusEnum::APPROVED;
-            $property->never_expired = $request->input('never_expired');
+            $property->never_expired = RealEstateHelper::isPropertyExpirationEnabled()
+                ? $request->input('never_expired')
+                : true;
+            $property->auto_renew = RealEstateHelper::isPropertyExpirationEnabled()
+                ? $request->input('auto_renew', false)
+                : false;
             $property->featured_priority = $request->input('featured_priority') ?: 0;
             $property->save();
 
@@ -80,6 +87,8 @@ class PropertyController extends BaseController
 
             $saveFacilitiesService->execute($property, $request->input('facilities', []));
             $propertyCategoryService->execute($request, $property);
+
+            event(new PropertyCreated($property));
         });
 
         return $this
@@ -112,9 +121,11 @@ class PropertyController extends BaseController
     ) {
         $property = Property::query()->findOrFail($id);
 
+        $originalImages = $property->images ?? [];
+
         PropertyForm::createFromModel($property)
             ->setRequest($request)
-            ->saving(function (PropertyForm $form) use ($propertyCategoryService, $saveFacilitiesService, $savePropertyCustomFieldService): void {
+            ->saving(function (PropertyForm $form) use ($propertyCategoryService, $saveFacilitiesService, $savePropertyCustomFieldService, $originalImages): void {
                 $request = $form->getRequest();
 
                 /**
@@ -124,7 +135,12 @@ class PropertyController extends BaseController
                 $property->fill($request->except(['expire_date']));
                 $property->author_type = Account::class;
                 $property->images = array_filter($request->input('images', []));
-                $property->never_expired = $request->input('never_expired');
+                $property->never_expired = RealEstateHelper::isPropertyExpirationEnabled()
+                    ? $request->input('never_expired')
+                    : true;
+                $property->auto_renew = RealEstateHelper::isPropertyExpirationEnabled()
+                    ? $request->input('auto_renew', false)
+                    : false;
                 $property->featured_priority = $request->input('featured_priority') ?: 0;
                 $property->save();
 
@@ -138,6 +154,8 @@ class PropertyController extends BaseController
 
                 $saveFacilitiesService->execute($property, $request->input('facilities', []));
                 $propertyCategoryService->execute($request, $property);
+
+                event(new PropertyUpdated($property, $originalImages));
             });
 
         return $this
@@ -149,7 +167,18 @@ class PropertyController extends BaseController
 
     public function destroy(Property $property)
     {
-        return DeleteResourceAction::make($property);
+        $propertyData = [
+            'id' => $property->getKey(),
+            'unique_id' => $property->unique_id,
+            'name' => $property->name,
+            'deleted_at' => now()->toIso8601String(),
+        ];
+
+        $response = DeleteResourceAction::make($property);
+
+        event(new PropertyDeleted($propertyData));
+
+        return $response;
     }
 
     public function approve(Property $property)

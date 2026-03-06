@@ -2,7 +2,7 @@
     <div class="container">
         {!! Theme::partial('shortcode-heading', ['shortcode' => $shortcode, 'centered' => false]) !!}
 
-        <div class="row wow fadeInUpSmall" data-wow-delay=".4s" data-wow-duration="2000ms">
+        <div class="row">
             @foreach($posts as $post)
                 <div class="box col-lg-3 col-sm-6">
                     <div class="flat-blog-item hover-img not-overlay style-1">

@@ -30,7 +30,7 @@ class AccountPropertyTable extends PropertyTable
                 Action::make('renew')
                     ->route('public.account.properties.renew')
                     ->icon('ti ti-refresh')
-                    ->label(__('Renew'))
+                    ->label(trans('plugins/real-estate::account-property.renew'))
                     ->color('info')
                     ->attributes([
                         'data-bb-toggle' => 'property-renew-modal',

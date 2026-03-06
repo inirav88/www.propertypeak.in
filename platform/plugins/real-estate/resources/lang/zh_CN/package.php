@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => '一个账号可以购买 x 次',
     'subscribe_package' => '订阅套餐',
     'add_credit_alert' => '请添加您的积分以创建您自己的帖子。',
+    'price_per_post' => ':price / 每条',
+    'free_posts' => '免费 :number 条',
+    'price_with_sale' => ':price 总计 :percentage_sale',
+    'save_percentage' => '节省 :percentage %',
+    'features' => '功能',
+    'title' => '标题',
+    'feature_example' => '例如：60天房源发布',
 ];

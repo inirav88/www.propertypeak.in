@@ -35,4 +35,11 @@ return [
     'total' => 'Kabuuan',
     'toggle_coupon_form_text' => 'Mayroon kang coupon code?',
     'apply_coupon_code' => 'Mag-apply',
+    'remove' => 'Alisin',
+    'your_order' => 'Ang iyong order',
+    'coupon_code_applied' => 'Coupon code: :code',
+    'invalid' => 'Ang coupon na ito ay hindi valid!',
+    'applied_success' => 'Matagumpay na ginamit ang coupon ":code"!',
+    'not_used' => 'Ang coupon na ito ay hindi pa nagagamit!',
+    'removed_success' => 'Matagumpay na inalis ang coupon :code!',
 ];

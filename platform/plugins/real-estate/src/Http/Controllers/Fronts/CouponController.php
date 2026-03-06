@@ -33,7 +33,7 @@ class CouponController extends BaseController
             return $this
                 ->httpResponse()
                 ->setError()
-                ->setMessage(__('This coupon is invalid!'));
+                ->setMessage(trans('plugins/real-estate::coupon.invalid'));
         }
 
         $discountAmount = $couponService->getDiscountAmount(
@@ -47,7 +47,7 @@ class CouponController extends BaseController
 
         return $this
             ->httpResponse()
-            ->setMessage(__('Applied coupon ":code" successfully!', ['code' => $coupon->code]));
+            ->setMessage(trans('plugins/real-estate::coupon.applied_success', ['code' => $coupon->code]));
     }
 
     public function remove()
@@ -56,7 +56,7 @@ class CouponController extends BaseController
             return $this
                 ->httpResponse()
                 ->setError()
-                ->setMessage(__('This coupon is not used yet!'));
+                ->setMessage(trans('plugins/real-estate::coupon.not_used'));
         }
 
         Session::forget('applied_coupon_code');
@@ -64,7 +64,7 @@ class CouponController extends BaseController
 
         return $this
             ->httpResponse()
-            ->setMessage(__('Removed coupon :code successfully!', ['code' => session('applied_coupon_code')]));
+            ->setMessage(trans('plugins/real-estate::coupon.removed_success', ['code' => session('applied_coupon_code')]));
     }
 
     public function refresh(string $id, CouponService $service)

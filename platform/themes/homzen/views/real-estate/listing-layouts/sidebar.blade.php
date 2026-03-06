@@ -19,6 +19,15 @@
 
     <section class="flat-section-v6 flat-recommended flat-sidebar">
         <div class="container">
+            @if (isset($category) && $category)
+                <h3 class="fw-7 mb-3">{{ __('Properties in :name', ['name' => $category->name]) }}</h3>
+                @if ($category->content)
+                    <div class="category-content mb-4">
+                        {!! BaseHelper::clean($category->content) !!}
+                    </div>
+                @endif
+            @endif
+
             @include(Theme::getThemeNamespace('views.real-estate.partials.listing-top'))
 
             {!! apply_filters('ads_render', null, 'listing_page_before') !!}

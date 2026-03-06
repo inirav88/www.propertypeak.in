@@ -35,4 +35,11 @@ return [
     'total' => 'Total',
     'toggle_coupon_form_text' => 'Jūs turite kupono kodą?',
     'apply_coupon_code' => 'Apply',
+    'remove' => 'Pašalinti',
+    'your_order' => 'Jūsų užsakymas',
+    'coupon_code_applied' => 'Kupono kodas: :code',
+    'invalid' => 'Kupono kodas negalioja arba baigėsi galiojimas.',
+    'applied_success' => 'Kupono kodas sėkmingai pritaikytas!',
+    'not_used' => 'Dar nenaudota',
+    'removed_success' => 'Kupono kodas sėkmingai pašalintas!',
 ];

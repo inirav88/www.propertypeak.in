@@ -63,12 +63,14 @@
     59 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
     60 => 'Mews\\Purifier\\PurifierServiceProvider',
     61 => 'Mollie\\Laravel\\MollieServiceProvider',
-    62 => 'Carbon\\Laravel\\ServiceProvider',
-    63 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    64 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
-    65 => 'Yajra\\DataTables\\ButtonsServiceProvider',
-    66 => 'Yajra\\DataTables\\HtmlServiceProvider',
-    67 => 'Yajra\\DataTables\\DataTablesServiceProvider',
+    62 => 'Mollie\\Laravel\\MollieSocialiteServiceProvider',
+    63 => 'Carbon\\Laravel\\ServiceProvider',
+    64 => 'Termwind\\Laravel\\TermwindServiceProvider',
+    65 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
+    66 => 'Yajra\\DataTables\\ButtonsServiceProvider',
+    67 => 'Yajra\\DataTables\\HtmlServiceProvider',
+    68 => 'Yajra\\DataTables\\DataTablesServiceProvider',
+    69 => 'App\\Modules\\RealEstate\\Providers\\RealEstateServiceProvider',
   ),
   'eager' => 
   array (
@@ -122,6 +124,7 @@
     47 => 'Yajra\\DataTables\\ButtonsServiceProvider',
     48 => 'Yajra\\DataTables\\HtmlServiceProvider',
     49 => 'Yajra\\DataTables\\DataTablesServiceProvider',
+    50 => 'App\\Modules\\RealEstate\\Providers\\RealEstateServiceProvider',
   ),
   'deferred' => 
   array (
@@ -171,12 +174,15 @@
     'Illuminate\\Queue\\Console\\ForgetFailedCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Queue\\Console\\ListenCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Queue\\Console\\MonitorCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
+    'Illuminate\\Queue\\Console\\PauseCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Queue\\Console\\PruneBatchesCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Queue\\Console\\PruneFailedJobsCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Queue\\Console\\RestartCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
+    'Illuminate\\Queue\\Console\\ResumeCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Queue\\Console\\RetryCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Queue\\Console\\RetryBatchCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Queue\\Console\\WorkCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
+    'Illuminate\\Foundation\\Console\\ReloadCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Foundation\\Console\\RouteCacheCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Foundation\\Console\\RouteClearCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Foundation\\Console\\RouteListCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
@@ -281,6 +287,7 @@
     'Botble\\Slug\\SlugHelper' => 'Botble\\Slug\\Providers\\SlugServiceProvider',
     'Laravel\\Socialite\\Contracts\\Factory' => 'Laravel\\Socialite\\SocialiteServiceProvider',
     'command.tinker' => 'Laravel\\Tinker\\TinkerServiceProvider',
+    'Laravel\\Socialite\\SocialiteManager' => 'Mollie\\Laravel\\MollieSocialiteServiceProvider',
   ),
   'when' => 
   array (
@@ -336,6 +343,9 @@
     array (
     ),
     'Laravel\\Tinker\\TinkerServiceProvider' => 
+    array (
+    ),
+    'Mollie\\Laravel\\MollieSocialiteServiceProvider' => 
     array (
     ),
   ),

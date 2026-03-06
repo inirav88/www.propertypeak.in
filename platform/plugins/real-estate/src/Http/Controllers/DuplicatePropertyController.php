@@ -35,7 +35,7 @@ class DuplicatePropertyController extends BaseController
         $newProperty->updated_at = Carbon::now();
 
         if (! $newProperty->never_expired) {
-            $newProperty->expire_date = Carbon::now()->addDays(RealEstateHelper::propertyExpiredDays());
+            $newProperty->expire_date = RealEstateHelper::calculatePropertyExpireDate();
         }
 
         $newProperty->save();

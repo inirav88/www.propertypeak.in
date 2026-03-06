@@ -613,9 +613,73 @@ $(() => {
 
     if ($.isFunction($.fn.niceSelect)) {
         $('.select_js').niceSelect()
+
+        // Add clear (X) button to search form dropdowns (except #location which has its own handler)
+        $('.form-sl .select_js, .widget-filter-search .select_js').not('#location').each(function() {
+            const $select = $(this);
+            const $niceSelect = $select.next('.nice-select');
+            if (!$niceSelect.length) return;
+
+            // Add clear button
+            $niceSelect.append('<span class="nice-select-value-clear">&times;</span>');
+
+            // Show if already has a selected value
+            if ($select.val()) {
+                $niceSelect.addClass('has-value');
+            }
+
+            // Update has-value class when selection changes via niceSelect click
+            $niceSelect.find('.option').on('click', function() {
+                const val = String($(this).data('value'));
+                $niceSelect.toggleClass('has-value', val !== '');
+            });
+
+            // Clear button click: reset to first option ("All")
+            $niceSelect.find('.nice-select-value-clear').on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                $select.val('');
+                $niceSelect.find('.current').text($select.find('option:first').text());
+                $niceSelect.find('.option').removeClass('selected');
+                $niceSelect.find('.option:first').addClass('selected');
+                $niceSelect.removeClass('has-value open');
+            });
+        });
     }
 
-    new WOW().init()
+    // =========MULTI SELECT DROPDOWN=========
+    $(document)
+        .on('click', '.multi-select-trigger', function (e) {
+            e.stopPropagation()
+            const $dropdown = $(this).closest('.multi-select-dropdown')
+
+            // Close other open dropdowns
+            $('.multi-select-dropdown.open').not($dropdown).removeClass('open')
+            // Close any open nice-selects
+            $('.nice-select.open').removeClass('open')
+
+            $dropdown.toggleClass('open')
+        })
+        .on('click', '.multi-select-options', function (e) {
+            e.stopPropagation()
+        })
+        .on('change', '.multi-select-dropdown input[type="checkbox"]', function () {
+            const $dropdown = $(this).closest('.multi-select-dropdown')
+            const selected = []
+
+            $dropdown.find('input[type="checkbox"]:checked').each(function () {
+                selected.push($(this).val())
+            })
+
+            const allLabel = $dropdown.data('all-label') || 'All'
+            $dropdown.find('.multi-select-label').text(selected.length ? selected.join(', ') : allLabel)
+            $dropdown.find('input[type="hidden"]').val(selected.join(','))
+        })
+
+    $(document).on('click', function () {
+        $('.multi-select-dropdown.open').removeClass('open')
+    })
 
     //Submenu Dropdown Toggle
     if ($('.main-header li.dropdown2 ul').length) {
@@ -949,6 +1013,28 @@ $(() => {
             return
         }
 
+        function buildPriceRange(min, max) {
+            const span = max - min
+
+            if (span <= 500000) {
+                return { min: [min], max: [max] }
+            }
+
+            const low = min + span * 0.08
+            const mid = min + span * 0.3
+
+            const stepLow = Math.max(1000, Math.round(low / 50 / 1000) * 1000)
+            const stepMid = Math.max(5000, Math.round((mid - low) / 40 / 5000) * 5000)
+            const stepHigh = Math.max(10000, Math.round((max - mid) / 40 / 10000) * 10000)
+
+            return {
+                'min': [min, stepLow],
+                '50%': [Math.round(low), stepMid],
+                '75%': [Math.round(mid), stepHigh],
+                'max': [max],
+            }
+        }
+
         const priceSlider = () => {
             $('.noUi-handle').on('click', function () {
                 $(this).width(50)
@@ -982,16 +1068,23 @@ $(() => {
                     rangeSlider.noUiSlider.destroy()
                 }
 
-                noUiSlider.create(rangeSlider, {
-                    start: [parseInt($minInput.val() || $element.data('min')) || 0, parseInt($maxInput.val() || $element.data('max')) || 0],
-                    step: 1,
-                    range: {
-                        min: [parseInt($element.data('min'))],
-                        max: [parseInt($element.data('max'))],
-                    },
+                const min = parseInt($element.data('min')) || 0
+                const max = parseInt($element.data('max')) || 0
+                const priceRange = buildPriceRange(min, max)
+                const isLinear = !priceRange['50%']
+
+                const sliderOptions = {
+                    start: [parseInt($minInput.val() || min) || 0, parseInt($maxInput.val() || max) || 0],
+                    range: priceRange,
                     format: moneyFormat,
                     connect: true,
-                })
+                }
+
+                if (isLinear) {
+                    sliderOptions.step = 1
+                }
+
+                noUiSlider.create(rangeSlider, sliderOptions)
 
                 rangeSlider.noUiSlider.on('update', function (values, handle) {
                     $element.find('[data-bb-toggle="range-from-value"]').html(values[0])
@@ -1529,6 +1622,41 @@ $(() => {
             })
     }
 
+    const initProjectsTab = () => {
+        $(document)
+            .off('click', '[data-bb-toggle="projects-tab"] [data-bs-toggle="tab"]')
+            .on('click', '[data-bb-toggle="projects-tab"] [data-bs-toggle="tab"]', (e) => {
+                const currentTarget = $(e.currentTarget)
+                const tab = currentTarget.closest('[data-bb-toggle="projects-tab"]')
+                const data = tab.data('attributes')
+
+                data['category_id'] = currentTarget.data('bb-value')
+
+                const parentTab = currentTarget.closest('.flat-tab-recommended')
+
+                $.ajax({
+                    url: tab.data('url'),
+                    method: 'GET',
+                    dataType: 'json',
+                    data: data,
+                    beforeSend: () => {
+                        parentTab.append('<div class="loading-spinner"></div>')
+                    },
+                    success: ({data}) => {
+                        parentTab.find('[data-bb-toggle="projects-tab-slot"]').html(data)
+
+                        if (typeof Theme.lazyLoadInstance !== 'undefined') {
+                            Theme.lazyLoadInstance.update()
+                        }
+
+                        initWishlist()
+                    },
+                    error: (error) => Theme.handleError(error),
+                    complete: () => parentTab.find('.loading-spinner').remove(),
+                })
+            })
+    }
+
     const initServices = () => {
         if ($('.tf-sw-benefit').length > 0) {
             new Swiper('.tf-sw-benefit', {
@@ -1583,40 +1711,59 @@ $(() => {
     }
 
     initImageSlider()
-    initImageSlider()
     initLocation()
     initPropertiesTab()
+    initProjectsTab()
     initPropertyCategories()
     initProperties()
     initServices()
     initTestimonials()
 
     $('[data-bb-toggle="detail-map"]').each((index, element) => {
-        const $element = $(element)
+        const initDetailMap = () => {
+            const $element = $(element)
 
-        const map = L.map($element.prop('id'), {
-            attributionControl: false,
-            scrollWheelZoom: false, // Disable scroll wheel zoom completely
-            dragging: !L.Browser.mobile, // Disable dragging on mobile only
-            touchZoom: true, // Keep pinch zoom enabled on mobile
-        }).setView($element.data('center'), 14)
+            const map = L.map($element.prop('id'), {
+                attributionControl: false,
+                scrollWheelZoom: false,
+                dragging: !L.Browser.mobile,
+                touchZoom: true,
+            }).setView($element.data('center'), 14)
 
-        L.tileLayer($element.data('tile-layer'), {
-            maxZoom: $element.data('max-zoom') || 22,
-        }).addTo(map)
+            L.tileLayer($element.data('tile-layer'), {
+                maxZoom: $element.data('max-zoom') || 22,
+            }).addTo(map)
 
-        L.marker($element.data('center'), {
-            icon: L.divIcon({
-                iconSize: L.point(50, 50),
-                className: 'map-marker-home',
-            }),
-        })
-            .addTo(map)
-            .bindPopup($('#map-popup-content').html())
-            .openPopup()
+            L.marker($element.data('center'), {
+                icon: L.divIcon({
+                    iconSize: L.point(50, 50),
+                    className: 'map-marker-home',
+                    html: '<span role="img" aria-label="' + ($element.data('label') || 'Location marker') + '"></span>',
+                }),
+            })
+                .addTo(map)
+                .bindPopup($('#map-popup-content').html())
+                .openPopup()
 
-        if (typeof Theme.lazyLoadInstance !== 'undefined') {
-            Theme.lazyLoadInstance.update()
+            setTimeout(() => map.invalidateSize(), 100)
+
+            if (typeof Theme.lazyLoadInstance !== 'undefined') {
+                Theme.lazyLoadInstance.update()
+            }
+        }
+
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        initDetailMap()
+                        observer.disconnect()
+                    }
+                })
+            }, { rootMargin: '200px' })
+            observer.observe(element)
+        } else {
+            initDetailMap()
         }
     })
 
@@ -1902,16 +2049,24 @@ $(() => {
             const $form = $(e.currentTarget).closest('form')
 
             $form.find('input[name="page"]').val(url.searchParams.get('page'))
+            $form.data('pagination-click', true)
             $form.trigger('submit')
         })
         .on('submit', '.filter-form', (e) => {
             e.preventDefault()
 
+            const $form = $(e.currentTarget)
+
+            if ($form.data('pagination-click')) {
+                $form.removeData('pagination-click')
+            } else {
+                $form.find('input[name="page"]').val('')
+            }
+
             $('.wd-search-form').removeClass('show')
             $('.search-box-offcanvas').removeClass('active')
 
             const $dataListing = $('[data-bb-toggle="data-listing"]')
-            const $form = $(e.currentTarget)
             const cleanedFormData = cleanFormData($form.serializeArray())
 
             const nextHref = $form.prop('action') + cleanedFormData.queryString
@@ -2133,7 +2288,19 @@ $(() => {
                 initServices()
 
                 break
+
+            case 'projects':
+                if (attributes.style === '2') {
+                    initProjectsTab()
+                }
+
+                break
         }
+
+        document.querySelectorAll('.shortcode-lazy-loading-loaded .wow:not(.animated)').forEach((el) => {
+            el.style.visibility = 'visible'
+            el.classList.add('animated')
+        })
     })
 
     if ($("[data-countdown]").length > 0) {
@@ -2164,8 +2331,17 @@ $(() => {
             if (!$locationNiceSelect.find('.nice-select-search-wrapper').length) {
                 const $list = $locationNiceSelect.find('.list');
 
-                // Add search input at the top of the list
-                $list.prepend('<div class="nice-select-search-wrapper"><input type="text" class="nice-select-search" placeholder="Search for a city..."/></div>');
+                // Add search input at the top of the list with clear button
+                const searchPlaceholder = $('#location').data('search-placeholder') || 'Search for a city...';
+                $list.prepend('<div class="nice-select-search-wrapper"><input type="text" class="nice-select-search" placeholder="' + searchPlaceholder + '"/><span class="nice-select-search-clear">&times;</span></div>');
+
+                // Add clear value button (replaces caret when a city is selected)
+                $locationNiceSelect.append('<span class="nice-select-value-clear">&times;</span>');
+
+                // Show clear button if a city is already selected on page load
+                if ($('#location').val()) {
+                    $locationNiceSelect.addClass('has-value');
+                }
 
                 // Add loading indicator at the bottom of the list
                 $list.append('<div class="nice-select-loader" style="display:none;"><div class="spinner"></div></div>');
@@ -2182,16 +2358,27 @@ $(() => {
             const $list = $niceSelect.find('.list');
 
             // Search input handler
+            const $clearBtn = $niceSelect.find('.nice-select-search-clear');
             $searchInput.on('input', function() {
                 searchTerm = $(this).val();
                 page = 1;
                 allItemsLoaded = false;
 
-                // Clear existing options except the placeholder "All" option
-                $list.find('.option:not(:first-child)').remove();
-                $('#location').find('option:not(:first-child)').remove();
+                // Show/hide clear button
+                $clearBtn.toggle(searchTerm.length > 0);
+
+                // Clear existing city options (keep "All" option with empty value)
+                $list.find('.option').not('[data-value=""]').remove();
+                $('#location').find('option').not('[value=""]').remove();
 
                 loadCities($niceSelect);
+            });
+
+            // Clear search button handler
+            $clearBtn.on('click', function(e) {
+                e.stopPropagation();
+                $searchInput.val('').trigger('input');
+                $searchInput.focus();
             });
 
             // Scroll event for infinite loading
@@ -2217,6 +2404,37 @@ $(() => {
             // Prevent dropdown from closing when clicking search
             $searchInput.on('click', function(e) {
                 e.stopPropagation();
+            });
+
+            // Prevent NiceSelect from intercepting space/enter keys while typing in search
+            $searchInput.on('keydown', function(e) {
+                e.stopPropagation();
+            });
+
+            // Clear value button (X that replaces caret) - resets selection to "All"
+            $niceSelect.find('.nice-select-value-clear').on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                const $select = $('#location');
+
+                // Reset to "All"
+                $select.val('');
+                $niceSelect.find('.current').text($select.find('option[value=""]').text());
+                $niceSelect.find('.option').removeClass('selected');
+                $niceSelect.find('.option[data-value=""]').addClass('selected');
+                $niceSelect.removeClass('has-value');
+
+                // Reset search state and reload cities
+                searchTerm = '';
+                $searchInput.val('');
+                $clearBtn.hide();
+                page = 1;
+                allItemsLoaded = false;
+
+                $list.find('.option').not('[data-value=""]').remove();
+                $select.find('option').not('[value=""]').remove();
+                loadCities($niceSelect);
             });
         }
 
@@ -2278,31 +2496,65 @@ $(() => {
             const $select = $('#location');
             const $list = $niceSelect.find('.list');
             const $loader = $niceSelect.find('.nice-select-loader');
+            const selectedVal = $select.val();
 
             if (!append) {
-                // Clear existing options except first one (All)
-                $list.find('.option:not(:first-child)').remove();
-                $select.find('option:not(:first-child)').remove();
+                // Clear all city options (keep "All" option with empty value)
+                $list.find('.option').not('[data-value=""]').remove();
+                $select.find('option').not('[value=""]').remove();
             }
 
             cities.forEach(function(city) {
+                const isSelected = String(city.id) === String(selectedVal);
+
                 // Add to the original select
-                $select.append(`<option value="${city.id}">${city.text}</option>`);
+                $select.append('<option value="' + city.id + '"' + (isSelected ? ' selected' : '') + '>' + city.text + '</option>');
 
                 // Add to nice select list before the loader
-                $loader.before(`<li data-value="${city.id}" class="option">${city.text}</li>`);
+                $loader.before('<li data-value="' + city.id + '" class="option' + (isSelected ? ' selected' : '') + '">' + city.text + '</li>');
             });
 
-            // Re-attach click handlers to new items
+            // If the selected city wasn't in this batch, preserve its value in the hidden select
+            if (selectedVal && !$select.find('option[value="' + selectedVal + '"]').length) {
+                $select.append('<option value="' + selectedVal + '" selected>' + $niceSelect.find('.current').text() + '</option>');
+            }
+
+            // Re-attach click handlers to all options
             $list.find('.option').off('click').on('click', function(e) {
                 e.stopPropagation();
-                const val = $(this).data('value');
+                const val = String($(this).data('value'));
                 const text = $(this).text();
 
-                $select.val(val);
                 $niceSelect.find('.current').text(text);
+                $niceSelect.find('.option').removeClass('selected');
+                $(this).addClass('selected');
+
+                // Reset search state so next open shows full alphabetical list
+                searchTerm = '';
+                $niceSelect.find('.nice-select-search').val('');
+                $niceSelect.find('.nice-select-search-clear').hide();
+                page = 1;
+                allItemsLoaded = false;
 
                 $niceSelect.removeClass('open');
+
+                // Toggle clear button visibility (show X instead of caret when a city is selected)
+                $niceSelect.toggleClass('has-value', val !== '');
+
+                // Update hidden select value
+                if (val) {
+                    if (!$select.find('option[value="' + val + '"]').length) {
+                        $select.append('<option value="' + val + '">' + text + '</option>');
+                    }
+                    $select.val(val);
+                } else {
+                    $select.val('');
+                }
+
+                // Reload full city list in background for next dropdown open
+                $list.find('.option').not('[data-value=""]').remove();
+                $select.find('option').not('[value=""]').not(':selected').remove();
+                loadCities($niceSelect);
             });
         }
 

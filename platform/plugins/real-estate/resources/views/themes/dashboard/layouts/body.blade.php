@@ -70,7 +70,7 @@
                 {!! apply_filters('real_estate_account_dashboard_header_buttons_before', null) !!}
 
                 <a href="{{ route('public.index') }}" target="_blank" class="text-uppercase">
-                    {{ __('Go to homepage') }}
+                    {{ trans('plugins/real-estate::dashboard.go_to_homepage') }}
                     <x-core::icon name="ti ti-arrow-right" />
                 </a>
 

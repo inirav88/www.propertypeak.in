@@ -401,7 +401,7 @@ app()->booted(function (): void {
                             're_projects.is_featured' => true,
                         ] + RealEstateHelper::getProjectDisplayQueryConditions())
                     ->with(RealEstateHelper::getProjectRelationsQuery())
-                    ->orderBy('re_projects.created_at', 'DESC')
+                    ->latest('re_projects.created_at')
                     ->limit((int) $shortcode->limit ?: (int) theme_option('number_of_featured_projects', 6))
                     ->get();
             }

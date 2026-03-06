@@ -35,4 +35,11 @@ return [
     'total' => 'Total',
     'toggle_coupon_form_text' => 'კუპონის კოდი გაქვთ?',
     'apply_coupon_code' => 'Apply',
+    'remove' => 'წაშლა',
+    'your_order' => 'თქვენი შეკვეთა',
+    'coupon_code_applied' => 'კუპონის კოდი: :code',
+    'invalid' => 'კუპონის კოდი არასწორია ან ვადაგასულია.',
+    'applied_success' => 'კუპონის კოდი წარმატებით გამოყენებულია!',
+    'not_used' => 'ჯერ არ გამოყენებულა',
+    'removed_success' => 'კუპონის კოდი წარმატებით წაიშალა!',
 ];

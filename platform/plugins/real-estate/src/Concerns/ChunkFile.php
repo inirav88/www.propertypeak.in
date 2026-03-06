@@ -13,7 +13,7 @@ trait ChunkFile
         $filePath = storage_path($basePath . '/' . $fileName);
 
         if (! File::exists($filePath)) {
-            throw new Exception(__('Your file is not found. Please try uploading again.'));
+            throw new Exception(trans('plugins/real-estate::account.file_not_found'));
         }
 
         return $filePath;

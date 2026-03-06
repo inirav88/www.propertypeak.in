@@ -109,4 +109,11 @@ return [
     'number_posts_free' => '免费 :posts 条',
     'total_package_price' => '总计 :total (节省 :percent%)',
     'dashboard' => '控制面板',
+    'language' => '语言',
+    'character_remain' => '剩余字数',
+    'password_update_success' => '密码更新成功!',
+    'buy_credits' => '购买积分',
+    'currencies' => '货币',
+    'go_to_homepage' => '前往首页',
+    'hello' => '您好',
 ];

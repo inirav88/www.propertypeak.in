@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name' => 'Reports',
+    'name' => 'Relatórios',
     'property_statistics' => 'Estatísticas de propriedade',
     'project_statistics' => 'Estatísticas do Projeto',
     'account_statistics' => 'Estatísticas da conta',
@@ -18,16 +18,16 @@ return [
     'total_accounts' => 'Total de contas',
     'new_accounts_this_month' => 'Novas contas este mês',
     'transaction_id' => 'ID da transação',
-    'account' => 'Account',
-    'amount' => 'Amount',
+    'account' => 'Conta',
+    'amount' => 'Montante',
     'created_at' => 'Criado em',
     'payment_method' => 'Método de pagamento',
-    'status' => 'Status',
+    'status' => 'Estado',
     'no_transactions' => 'Nenhuma transação encontrada',
     'no_data' => 'Não há dados disponíveis',
-    'location' => 'Location',
-    'count' => 'Count',
-    'month' => 'Month',
-    'year' => 'Year',
+    'location' => 'Localização',
+    'count' => 'Total',
+    'month' => 'Mês',
+    'year' => 'Ano',
     'property_count' => 'Contagem de propriedades',
 ];

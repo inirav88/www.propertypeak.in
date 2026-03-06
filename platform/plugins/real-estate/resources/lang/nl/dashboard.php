@@ -109,4 +109,5 @@ return [
     'number_posts_free' => 'Gratis :posts bericht(en)',
     'total_package_price' => ':total Totaal (Bespaar :percent%)',
     'dashboard' => 'Dashboard',
+    'language' => 'Taal',
 ];

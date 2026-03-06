@@ -68,4 +68,12 @@ return [
             ],
         ],
     ],
+    'form_content' => 'Innehall',
+    'form_message' => 'Meddelande',
+    'name_placeholder' => 'Johny Dane',
+    'phone_placeholder' => 'T.ex. 0123456789',
+    'email_placeholder' => 'email@example.com',
+    'message_placeholder' => 'Skriv ditt meddelande...',
+    'send_consult' => 'Skicka meddelande',
+    'dropdown_show_label' => 'Visa konsultationsnotifikationer',
 ];

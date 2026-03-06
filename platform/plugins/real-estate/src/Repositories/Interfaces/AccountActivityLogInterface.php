@@ -7,5 +7,5 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface AccountActivityLogInterface extends RepositoryInterface
 {
-    public function getAllLogs(int $accountId, int $paginate = 10): LengthAwarePaginator;
+    public function getAllLogs(int|string $accountId, int $paginate = 10): LengthAwarePaginator;
 }

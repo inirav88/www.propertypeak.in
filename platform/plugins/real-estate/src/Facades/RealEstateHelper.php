@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool isLoginEnabled()
  * @method static bool isDisabledPublicProfile()
  * @method static int propertyExpiredDays()
+ * @method static \Carbon\Carbon|null calculatePropertyExpireDate(?\Carbon\Carbon $baseDate = null)
+ * @method static bool isPropertyExpirationEnabled()
  * @method static int getRenewBeforeExpiredDays()
  * @method static array getPropertyRelationsQuery()
  * @method static array getProjectRelationsQuery()
@@ -51,6 +53,11 @@ use Illuminate\Support\Facades\Facade;
  * @method static array enabledPropertyTypes()
  * @method static array|string|null getDefaultPageSlug()
  * @method static string|null getPageSlug(?string $key)
+ * @method static int getMinSquare()
+ * @method static int getMaxSquare()
+ * @method static int getMinFlat()
+ * @method static int getMaxFlat()
+ * @method static \Illuminate\Support\Collection getPublishedFeatures()
  *
  * @see \Botble\RealEstate\Supports\RealEstateHelper
  */

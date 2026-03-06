@@ -4,13 +4,19 @@ namespace Botble\RealEstate\Http\Controllers\Settings;
 
 use Botble\Base\Facades\Assets;
 use Botble\Base\Facades\BaseHelper;
+use Botble\Base\Supports\Breadcrumb;
 use Botble\RealEstate\Http\Requests\Settings\InvoiceTemplateSettingRequest;
 use Botble\RealEstate\Supports\InvoiceHelper;
-use Botble\Setting\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\File;
 
-class InvoiceTemplateSettingController extends SettingController
+class InvoiceTemplateSettingController extends BaseSettingController
 {
+    protected function breadcrumb(): Breadcrumb
+    {
+        return parent::breadcrumb()
+            ->add(trans('plugins/real-estate::settings.invoice_template.name'));
+    }
+
     public function edit(InvoiceHelper $invoiceHelper)
     {
         $this->pageTitle(trans('plugins/real-estate::settings.invoice_template.name'));

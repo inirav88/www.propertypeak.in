@@ -12,7 +12,7 @@
                 <p class="dia_chi"><i class="fas fa-map-marker-alt"></i> {{ $project->short_address }}</p>
             @endif
             @if ($project->price_from || $project->price_to)
-                <p class="bold500">{{ __('Price') }}: {{ $project->formatted_price }}</p>
+                <p class="bold500">{{ trans('plugins/real-estate::general.price') }}: {{ $project->formatted_price }}</p>
             @endif
         </a>
     </div>

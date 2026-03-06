@@ -10,7 +10,7 @@
                         <div class="name h7 fw-7 text-black">
                             {{ $review->author->name }} {!! $review->author->badge !!}
                         </div>
-                        <span class="mt-4 d-inline-block date body-3 text-variant-2">
+                        <span class="mt-4 d-inline-block date body-3 text-variant-1">
                     {{ Theme::formatDate($review->created_at) }}
                 </span>
                     </div>

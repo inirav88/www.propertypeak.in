@@ -16,6 +16,7 @@
                         data-id="{{ $project->getKey() }}"
                         data-add-message="{{ __('Added ":name" to wishlist successfully!', ['name' => $project->name]) }}"
                         data-remove-message="{{ __('Removed ":name" from wishlist successfully!', ['name' => $project->name]) }}"
+                        aria-label="{{ __('Add to wishlist') }}"
                 >
                     <x-core::icon name="ti ti-heart" />
                 </button>

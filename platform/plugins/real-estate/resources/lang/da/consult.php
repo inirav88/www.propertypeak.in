@@ -68,4 +68,12 @@ return [
             ],
         ],
     ],
+    'form_content' => 'Indhold',
+    'form_message' => 'Besked',
+    'name_placeholder' => 'Johny Dane',
+    'phone_placeholder' => 'F.eks. 0123456789',
+    'email_placeholder' => 'email@example.com',
+    'message_placeholder' => 'Indtast din besked...',
+    'send_consult' => 'Send besked',
+    'dropdown_show_label' => 'Vis konsultationsnotifikationer',
 ];

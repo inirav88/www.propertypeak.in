@@ -1,4 +1,4 @@
-<label for="select-type" class="control-label">{{ __('Choices') }}</label>
+<label for="select-type" class="control-label">{{ trans('plugins/real-estate::filters.choices') }}</label>
 <div class="dropdown mb-2 select-dropdown" data-text-default="{{ $labelDefault }}">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuChoise" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
@@ -51,8 +51,8 @@
 
             <div class="dropdown-item">
                 <div class='form-group'>
-                    <button class="btn btn-primary">{{ __('OK') }}</button>
-                    <button type="button" class="btn btn-primary bg-secondary float-right btn-clear">{{ __('Clear') }}</button>
+                    <button class="btn btn-primary">{{ trans('plugins/real-estate::filters.ok') }}</button>
+                    <button type="button" class="btn btn-primary bg-secondary float-right btn-clear">{{ trans('plugins/real-estate::filters.clear') }}</button>
                 </div>
             </div>
         @else
@@ -65,8 +65,8 @@
             <div class="dropdown-item">
                 <div class="form-group">
                     <div class="col-xs-auto">
-                        <button class="btn btn-primary">{{ __('OK') }}</button>
-                        <button type="button" class="btn btn-primary bg-secondary float-right btn-clear">{{ __('Clear') }}</button>
+                        <button class="btn btn-primary">{{ trans('plugins/real-estate::filters.ok') }}</button>
+                        <button type="button" class="btn btn-primary bg-secondary float-right btn-clear">{{ trans('plugins/real-estate::filters.clear') }}</button>
                     </div>
                 </div>
             </div>

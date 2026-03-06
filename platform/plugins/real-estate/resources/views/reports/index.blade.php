@@ -171,7 +171,7 @@
                             </x-core::table>
                         </div>
                     @else
-                        <x-core::empty-state :title="__('No data available')" />
+                        <x-core::empty-state :title="trans('plugins/real-estate::report.no_data_available')" />
                     @endif
                 </x-core::card.body>
             </x-core::card>
@@ -216,7 +216,7 @@
                             </x-core::table>
                         </div>
                     @else
-                        <x-core::empty-state :title="__('No transactions found')" />
+                        <x-core::empty-state :title="trans('plugins/real-estate::report.no_transactions_found')" />
                     @endif
                 </x-core::card.body>
             </x-core::card>

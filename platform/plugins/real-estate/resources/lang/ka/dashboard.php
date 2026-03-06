@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'უფასო __ph0__ პოსტი (s)',
     'total_package_price' => '__Ph0__ სულ (დაზოგე __ph1 __%)',
     'dashboard' => 'Dashboard',
+    'character_remain' => 'დარჩენილი სიმბოლოები',
+    'password_update_success' => 'პაროლი წარმატებით განახლდა!',
+    'language' => 'ენა',
+    'buy_credits' => 'კრედიტების შეძენა',
+    'currencies' => 'ვალუტები',
+    'go_to_homepage' => 'მთავარ გვერდზე გადასვლა',
+    'hello' => 'გამარჯობა',
 ];

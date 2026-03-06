@@ -27,10 +27,15 @@
                     <option value="{{ $perPage }}" @selected(BaseHelper::stringify(request()->integer('per_page', 12)) == $perPage)>{{ $perPage }}</option>
                 @endforeach
             </select>
+            @php
+                $defaultSortBy = theme_option('real_estate_default_sort_order', '');
+                $currentSortBy = BaseHelper::stringify(request()->query('sort_by'));
+            @endphp
             <select name="sort_by" id="sort_by" class="list-sort select_js">
-                <option value="">{{ __('Default') }}</option>
+                <option value="{{ $defaultSortBy }}" @selected(! $currentSortBy || $currentSortBy === $defaultSortBy)>{{ __('Default') }}</option>
                 @foreach (RealEstateHelper::getSortByList() as $key => $sortBy)
-                    <option value="{{ $key }}" @selected(BaseHelper::stringify(request()->query('sort_by')) === $key)>{{ $sortBy }}</option>
+                    @continue($key === $defaultSortBy)
+                    <option value="{{ $key }}" @selected($currentSortBy === $key)>{{ $sortBy }}</option>
                 @endforeach
             </select>
         </div>

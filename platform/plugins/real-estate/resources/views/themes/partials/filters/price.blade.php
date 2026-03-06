@@ -7,12 +7,12 @@
 @endphp
 
 <div class="col-sm-3 px-md-1">
-    <label for="min_price" class="control-label">{{ __('Price from') . $symbol }}</label>
+    <label for="min_price" class="control-label">{{ trans('plugins/real-estate::filters.price_from') . $symbol }}</label>
     <input type="number" name="min_price" class="form-control min-input" id="min_price"
-           value="{{ BaseHelper::stringify(request()->input('min_price')) }}" placeholder="{{ __('From') }}" min="0" step="1">
+           value="{{ BaseHelper::stringify(request()->input('min_price')) }}" placeholder="{{ trans('plugins/real-estate::filters.from') }}" min="0" step="1">
 </div>
 <div class="col-sm-3 px-md-1">
-    <label for="max_price" class="control-label">{{ __('Price to') . $symbol }}</label>
+    <label for="max_price" class="control-label">{{ trans('plugins/real-estate::filters.price_to') . $symbol }}</label>
     <input type="number" name="max_price" class="form-control max-input" id="max_price"
-           value="{{ BaseHelper::stringify(request()->input('max_price')) }}" placeholder="{{ __('To') }}" min="0" step="1">
+           value="{{ BaseHelper::stringify(request()->input('max_price')) }}" placeholder="{{ trans('plugins/real-estate::filters.to') }}" min="0" step="1">
 </div>

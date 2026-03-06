@@ -10,7 +10,7 @@ return [
 
     'events' => [
         'beforeRenderTheme' => function (Theme $theme): void {
-            $version = get_cms_version() . '.4';
+            $version = get_cms_version() . '.1';
 
             $boostrapCss = BaseHelper::isRtlEnabled() ? 'bootstrap.rtl.min.css' : 'bootstrap.min.css';
 

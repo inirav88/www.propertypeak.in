@@ -7,7 +7,7 @@ return [
     'import_failed_message' => 'Impor gagal, silakan periksa error di bawah!',
     'row' => 'Baris',
     'attribute' => 'Atribut',
-    'errors' => 'Error',
+    'errors' => 'Kesalahan',
     'failures' => 'Kegagalan',
     'results' => 'Hasil: :success berhasil, :failed gagal',
     'rules' => 'Aturan',

@@ -27,7 +27,7 @@ class ResetPasswordController extends Controller
     {
         abort_unless(RealEstateHelper::isLoginEnabled(), 404);
 
-        SeoHelper::setTitle(__('Reset Password'));
+        SeoHelper::setTitle(trans('plugins/real-estate::account.reset_password_heading'));
 
         Theme::addBodyAttributes(['id' => 'page-auth-reset-password']);
 

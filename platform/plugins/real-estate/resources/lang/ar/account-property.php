@@ -7,4 +7,7 @@ return [
     'properties' => 'العقارات',
     'write_property' => 'كتابة عقار',
     'images' => 'الصور (أقصى حد :max صورة)',
+    'renew' => 'تجديد',
+    'not_enough_credit_renew' => 'ليس لديك رصيد كافٍ لتجديد هذا العقار!',
+    'renew_success' => 'تم تجديد العقار بنجاح',
 ];

@@ -38,6 +38,8 @@ class CategorySeeder extends BaseSeeder
             'ti ti-bell',
         ];
 
+        shuffle($icons);
+
         foreach ($categories as $key => $category) {
             $category = Category::query()->create([
                 'name' => $category,
@@ -45,7 +47,7 @@ class CategorySeeder extends BaseSeeder
                 'is_default' => $key === 0,
             ]);
 
-            MetaBox::saveMetaBoxData($category, 'icon', $this->fake()->unique()->randomElement($icons));
+            MetaBox::saveMetaBoxData($category, 'icon', $icons[$key % count($icons)]);
 
             SlugHelper::createSlug($category);
         }

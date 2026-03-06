@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Акаунт може да купува x пъти',
     'subscribe_package' => 'Абониране за пакет',
     'add_credit_alert' => 'Моля, добавете вашия кредит, за да създавате собствени публикации.',
+    'price_per_post' => ':price / за публикация',
+    'free_posts' => 'Безплатно :number публикация(и)',
+    'price_with_sale' => ':price Общо :percentage_sale',
+    'save_percentage' => 'икономия :percentage %',
+    'features' => 'Характеристики',
+    'title' => 'Заглавие',
+    'feature_example' => 'Напр.: 60-дневни обяви за работа',
 ];

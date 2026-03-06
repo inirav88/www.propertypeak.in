@@ -2,12 +2,18 @@
 
 namespace Botble\RealEstate\Http\Controllers\Settings;
 
+use Botble\Base\Supports\Breadcrumb;
 use Botble\RealEstate\Forms\Settings\GeneralSettingForm;
 use Botble\RealEstate\Http\Requests\Settings\GeneralSettingRequest;
-use Botble\Setting\Http\Controllers\SettingController;
 
-class GeneralSettingController extends SettingController
+class GeneralSettingController extends BaseSettingController
 {
+    protected function breadcrumb(): Breadcrumb
+    {
+        return parent::breadcrumb()
+            ->add(trans('plugins/real-estate::settings.general.name'));
+    }
+
     public function edit()
     {
         $this->pageTitle(trans('plugins/real-estate::settings.general.name'));

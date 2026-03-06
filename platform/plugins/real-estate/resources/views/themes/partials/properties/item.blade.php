@@ -7,7 +7,7 @@
             <div class="top">
                 <div class="d-flex gap-8">
                     @if($property->is_featured)
-                        <span class="flag-tag success">{{ __('Featured') }}</span>
+                        <span class="flag-tag success">{{ trans('plugins/real-estate::general.featured') }}</span>
                     @endif
                     {!! $property->status->toHtml() !!}
                 </div>

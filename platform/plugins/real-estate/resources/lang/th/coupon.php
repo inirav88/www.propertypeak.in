@@ -35,4 +35,11 @@ return [
     'total' => 'รวม',
     'toggle_coupon_form_text' => 'คุณมีรหัสคูปองหรือไม่?',
     'apply_coupon_code' => 'ใช้งาน',
+    'invalid' => 'คูปองนี้ไม่ถูกต้อง!',
+    'applied_success' => 'ใช้คูปอง ":code" สำเร็จ!',
+    'not_used' => 'คูปองนี้ยังไม่ได้ใช้!',
+    'removed_success' => 'ลบคูปอง :code สำเร็จ!',
+    'remove' => 'ลบ',
+    'your_order' => 'คำสั่งซื้อของคุณ',
+    'coupon_code_applied' => 'รหัสคูปอง: :code',
 ];

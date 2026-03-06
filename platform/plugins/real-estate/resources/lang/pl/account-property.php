@@ -7,4 +7,7 @@ return [
     'properties' => 'Properties',
     'write_property' => 'Napisz właściwość',
     'images' => 'Obrazy (maksymalnie :max obrazów)',
+    'renew' => 'Odnów',
+    'not_enough_credit_renew' => 'Nie masz wystarczających środków, aby odnowić tę nieruchomość!',
+    'renew_success' => 'Nieruchomość odnowiona pomyślnie',
 ];

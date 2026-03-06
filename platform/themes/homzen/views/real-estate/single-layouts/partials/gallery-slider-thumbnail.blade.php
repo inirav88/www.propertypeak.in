@@ -9,7 +9,11 @@
                 @foreach($model->images as $image)
                     <div class="swiper-slide">
                         <div class="image-sw-single">
-                            {{ RvMedia::image($image, $model->name) }}
+                            @if ($loop->first)
+                                {{ RvMedia::image($image, $model->name, attributes: ['fetchpriority' => 'high'], lazy: false) }}
+                            @else
+                                {{ RvMedia::image($image, $model->name) }}
+                            @endif
                         </div>
                     </div>
                 @endforeach

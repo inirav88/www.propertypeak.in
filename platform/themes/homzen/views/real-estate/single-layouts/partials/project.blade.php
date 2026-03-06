@@ -12,9 +12,9 @@
                 </a>
             </div>
             <div class="project-info">
-                <h5 class="title">
+                <div class="title">
                     <a href="{{ $project->url }}">{{ $project->name }}</a>
-                </h5>
+                </div>
                 <div class="text-variant-1">
                     {{ Str::limit($project->description, 120) }}
                 </div>

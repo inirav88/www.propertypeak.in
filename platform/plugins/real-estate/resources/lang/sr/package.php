@@ -16,4 +16,11 @@ return [
     'account_limit_placeholder' => 'Налог може да купи к пута',
     'subscribe_package' => 'Претплатите се на пакет',
     'add_credit_alert' => 'Молимо вас да додате свој кредит за креирање сопствених постова.',
+    'price_per_post' => ':price / по објави',
+    'free_posts' => 'Бесплатно :number објава',
+    'price_with_sale' => ':price Укупно :percentage_sale',
+    'save_percentage' => 'уштеда :percentage %',
+    'features' => 'Карактеристике',
+    'title' => 'Наслов',
+    'feature_example' => 'Нпр.: 60-дневно оглашавање',
 ];

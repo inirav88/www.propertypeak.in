@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'मुफ्त :posts पोस्ट',
     'total_package_price' => ':total कुल (बचत :percent%)',
     'dashboard' => 'डैशबोर्ड',
+    'language' => 'भाषा',
+    'character_remain' => 'अक्षर शेष',
+    'password_update_success' => 'पासवर्ड सफलतापूर्वक अपडेट हो गया!',
+    'buy_credits' => 'क्रेडिट खरीदें',
+    'currencies' => 'मुद्राएं',
+    'go_to_homepage' => 'होमपेज पर जाएं',
+    'hello' => 'नमस्ते',
 ];

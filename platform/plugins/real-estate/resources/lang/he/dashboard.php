@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'חינם :posts פוסט(ים)',
     'total_package_price' => ':total סה"כ (חיסכון :percent%)',
     'dashboard' => 'לוח בקרה',
+    'character_remain' => 'תווים שנותרו',
+    'password_update_success' => 'הסיסמה עודכנה בהצלחה!',
+    'language' => 'שפה',
+    'buy_credits' => 'קנה נקודות',
+    'currencies' => 'מטבעות',
+    'go_to_homepage' => 'עבור לדף הבית',
+    'hello' => 'שלום',
 ];

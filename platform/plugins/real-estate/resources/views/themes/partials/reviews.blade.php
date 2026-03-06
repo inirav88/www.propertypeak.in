@@ -7,7 +7,7 @@
 @if(RealEstateHelper::isEnabledReview())
     @php($canReview = auth('account')->check() && auth('account')->user()->canReview($model))
     <div>
-        <h4>{{ __('Write a review') }}</h4>
+        <h4>{{ trans('plugins/real-estate::review.write_a_review') }}</h4>
         <form action="{{ route('public.ajax.review.store', $model->slug) }}" method="post" class="space-y-3 review-form">
             @csrf
             <input type="hidden" name="reviewable_type" value="{{ get_class($model) }}">
@@ -19,13 +19,13 @@
                 </select>
             </div>
             <div class="form-group">
-                <textarea name="content" id="content" class="form-control" placeholder="{{ __('Enter your message') }}" @disabled(! $canReview)>{{ old('content') }}</textarea>
+                <textarea name="content" id="content" class="form-control" placeholder="{{ trans('plugins/real-estate::review.enter_your_message') }}" @disabled(! $canReview)>{{ old('content') }}</textarea>
             </div>
             @guest('account')
-                <p class="text-danger">{{ __('Please log in to write review!') }}</p>
+                <p class="text-danger">{{ trans('plugins/real-estate::review.please_log_in_to_write_review') }}</p>
             @endguest
             <button @class(['btn btn-primary']) @disabled(! $canReview)>
-                {{ __('Submit review') }}
+                {{ trans('plugins/real-estate::review.submit_review') }}
             </button>
         </form>
     </div>
@@ -36,7 +36,7 @@
         @if($model->reviews_count)
             <div class="row">
                 <div class="col-md-6">
-                    <h5><span class="reviews-count">{{ __(':count Review(s)', ['count' => $model->reviews_count]) }}</span></h5>
+                    <h5><span class="reviews-count">{{ trans('plugins/real-estate::property.count_reviews', ['count' => $model->reviews_count]) }}</span></h5>
                 </div>
                 <div class="col-md-6 text-right">
                     @include('plugins/real-estate::themes.partials.review-star', ['avgStar' => $model->reviews_avg_star, 'count' => $model->reviews_count, 'style' => 2])

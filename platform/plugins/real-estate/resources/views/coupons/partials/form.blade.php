@@ -4,7 +4,7 @@
 >
     <x-core::card>
         <x-core::card.header>
-            <x-core::card.title>{{ __('Your order') }}</x-core::card.title>
+            <x-core::card.title>{{ trans('plugins/real-estate::coupon.your_order') }}</x-core::card.title>
         </x-core::card.header>
         <x-core::card.body>
             <dl>
@@ -48,14 +48,14 @@
     @if (session('applied_coupon_code'))
         <x-core::alert>
             <div class="d-flex justify-content-between align-items-center">
-                {!! BaseHelper::clean(__('Coupon code: :code', ['code' => '<strong class="ms-1">' . session('applied_coupon_code') . '</strong>'])) !!}
+                {!! BaseHelper::clean(trans('plugins/real-estate::coupon.coupon_code_applied', ['code' => '<strong class="ms-1">' . session('applied_coupon_code') . '</strong>'])) !!}
 
                 <a
                     class="remove-coupon-code text-danger"
                     data-url="{{ route('public.account.coupon.remove') }}"
                     role="button"
                     data-bs-toggle="tooltip"
-                    title="{{ __('Remove') }}"
+                    title="{{ trans('plugins/real-estate::coupon.remove') }}"
                 >
                     <x-core::icon name="ti ti-x" />
                 </a>

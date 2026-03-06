@@ -35,4 +35,11 @@ return [
     'total' => 'कुल',
     'toggle_coupon_form_text' => 'क्या आपके पास कूपन कोड है?',
     'apply_coupon_code' => 'लागू करें',
+    'invalid' => 'यह कूपन अमान्य है!',
+    'applied_success' => 'कूपन ":code" सफलतापूर्वक लागू किया गया!',
+    'not_used' => 'यह कूपन अभी तक उपयोग नहीं किया गया है!',
+    'removed_success' => 'कूपन :code सफलतापूर्वक हटाया गया!',
+    'remove' => 'हटाएं',
+    'your_order' => 'आपका ऑर्डर',
+    'coupon_code_applied' => 'कूपन कोड: :code',
 ];

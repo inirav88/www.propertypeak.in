@@ -2,7 +2,7 @@
     <div class="row">
         @foreach($posts as $post)
             <div class="box col-lg-4 col-md-6">
-                <div class="flat-blog-item hover-img wow fadeIn" data-wow-delay=".2s" data-wow-duration="2000ms">
+                <div class="flat-blog-item hover-img">
                     <a class="img-style" href="{{ $post->url }}">
                         {{ RvMedia::image($post->image, $post->name, 'medium-rectangle') }}
                         <span class="date-post">{{ Theme::formatDate($post->created_at) }}</span>

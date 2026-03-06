@@ -109,4 +109,11 @@ return [
     'number_posts_free' => 'Ingyenes :posts bejegyzés(ek)',
     'total_package_price' => ':total Összesen (Megtakarítás :percent%)',
     'dashboard' => 'Irányítópult',
+    'character_remain' => ':count karakter maradt',
+    'password_update_success' => 'Jelszó sikeresen frissítve!',
+    'language' => 'Nyelv',
+    'buy_credits' => 'Kreditek vásárlása',
+    'currencies' => 'Pénznemek',
+    'go_to_homepage' => 'Ugrás a kezdőlapra',
+    'hello' => 'Helló',
 ];
