@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-md-6 text-center d-none d-md-block">
                             <img src="{{ RvMedia::getImageUrl(theme_option('builder_package_image', '')) }}"
-                                onerror="this.src='/vendor/core/plugins/real-estate/images/builder.png'" alt="Builders"
+                                onerror="this.onerror=null;this.style.display='none'" alt="Builders"
                                 class="img-fluid rounded-3 shadow-sm" style="max-height: 300px;">
                         </div>
                     </div>
@@ -109,7 +109,7 @@
                         </div>
                         <div class="col-md-6 text-center d-none d-md-block order-md-1">
                             <img src="{{ RvMedia::getImageUrl(theme_option('agent_package_image', '')) }}"
-                                onerror="this.src='/vendor/core/plugins/real-estate/images/agent.png'" alt="Agents"
+                                onerror="this.onerror=null;this.style.display='none'" alt="Agents"
                                 class="img-fluid rounded-3 shadow-sm" style="max-height: 300px;">
                         </div>
                     </div>
@@ -153,7 +153,7 @@
                         </div>
                         <div class="col-md-6 text-center d-none d-md-block">
                             <img src="{{ RvMedia::getImageUrl(theme_option('owner_package_image', '')) }}"
-                                onerror="this.src='/vendor/core/plugins/real-estate/images/owner.png'" alt="Owners"
+                                onerror="this.onerror=null;this.style.display='none'" alt="Owners"
                                 class="img-fluid rounded-3 shadow-sm" style="max-height: 300px;">
                         </div>
                     </div>
